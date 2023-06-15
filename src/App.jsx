@@ -12,6 +12,8 @@ import TodayNews from "./components/Pages/TodayNews"
 import BreakingNewsPage from "./components/Pages/BreakingNewsPage"
 import CategoryArchive from "./category/CategoryArchive"
 import SingleCategory from "./category/SingleCategory"
+import ForgetPassword from "./components/Pages/ForgetPassword"
+import ResetPassword from "./components/Pages/ResetPassword"
 
 
 
@@ -49,6 +51,8 @@ function App() {
           <Route path='/category' element={<CategoryArchive />} />
           <Route path="/category/:category" element={<SingleCategory />}  />
           <Route path="/category/:category/:category" element={<SingleCategory />}  />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </UserContext.Provider>
     </>
