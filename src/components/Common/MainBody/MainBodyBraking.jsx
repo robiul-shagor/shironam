@@ -1,7 +1,7 @@
 import React from 'react'
 
 import NewsCard from '../NewsCard/NewsCard'
-import SideBar from '../sideBar/sideBar'
+import SideBar from '../SideBar/SideBar'
 import { UserContext } from '../../../App';
 import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import TabForBreakingPage from '../BreakingNews/TabForBreakingPage';
