@@ -11,6 +11,7 @@ const SingleCategory = () => {
     
     const [newsItem, setNewsItem ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+
     useEffect(() => {
         const getData = async() => {
             const bearer_token = `Bearer ${userData.token}`;
@@ -39,10 +40,7 @@ const SingleCategory = () => {
     }
 
     const categoryData = Capitalize(category);
-
     
-
-
   return (
     <div className='home'>
         <Header />
