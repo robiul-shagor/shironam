@@ -52,7 +52,6 @@ export default {
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms')({
         strategy: 'base',
-    }),
-    require('@tailwindcss/line-clamp'),
+    })
   ],
 }
