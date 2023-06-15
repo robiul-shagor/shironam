@@ -1,10 +1,9 @@
-import React from 'react'
-import BreakingNews from '../BreakingNews/BreakingNews'
-import NewsCard from '../NewsCard/NewsCard'
-import SideBar from '../sideBar/sideBar'
-import { UserContext } from '../../../App';
+import React from 'react';
+import BreakingNews from '../BreakingNews/BreakingNews';
+import NewsCard from '../NewsCard/NewsCard';
 import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import SidebarNonUser from '../SideBar/SidebarNonUser';
+import SideBar from '../SideBar/SideBar';
 
 const MainBody = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
