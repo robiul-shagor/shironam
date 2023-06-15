@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* variable */
+    --color__white: #ffffff;
+    --color__black: #000000;
+    --color__body: #F0F1F3;
+    --color__theme: #F9020B;
+    --color__green: #00AC17;
+    --color__blue: #3858E9;
+  }
+  html {
+    font-size: 56%;
+  }
+  @screen md {
+    html {
+      font-size: 52.5%;
+    }
+  }
+  @screen xl {
+    html {
+      font-size: 58.5%;
+    }
+  }
+  @screen 2xl {
+    html {
+        font-size: 62.5%;
+    }
+  }
+  body {
+      @apply box-border text-[1.6rem] leading-[1.7]
+  }
+  svg, img {
+      @apply inline
+  }
+  label {
+      @apply inline-block leading-none mb-3.5 text-[1.6rem];
+  }
+  p {        
+      @apply text-2xl text-black dark:text-white;
+      line-height: 2em;
+  }
+  input {
+      @apply shadow-none outline-none;
+  }
+  input:focus, textarea {
+      box-shadow: none !important;
+      outline: none !important;
+  }
+  .form-control {
+      border: 0.1rem solid #707070;
+      @apply shadow-none outline-0 px-6 py-4 h-20 block w-full appearance-none font-normal leading-normal transition-all rounded-md text-[1.6rem];
+  }
+  .form-check {
+      @apply flex items-center;
+  }
+  .form-check input {
+      @apply hidden ;
+  }
+  .form-check label {
+      @apply relative pl-11 cursor-pointer leading-8 select-none mb-0;
+  }
+  .form-check label::before {
+      content: '';
+      border: 0.1rem solid #707070;
+      @apply absolute top-0 left-0 w-8 h-8 rounded-md transition-all;
+  }
+  label::after {
+      content: '';
+      border: 0.18rem solid var(--color__white);
+      @apply absolute top-[.55rem] left-[0.45rem] w-[1.15rem] h-[.6rem] border-t-0 border-r-0 -rotate-45 transition-all opacity-0 invisible;
+  }
+  .form-check input:checked + label::before {
+      @apply bg-[#707070];
+  }
+  .form-check input:checked + label::after {
+      @apply opacity-100 visible;
+  }
+  h1 {
+      @apply text-5xl font-heading;
+  }
+  h2 {
+      @apply text-4xl font-heading;
+  }
+  h3 {
+      @apply text-2xl font-heading;
+  }
+  h4 {
+      @apply text-xl font-heading;
+  }
+  h5 {
+      @apply text-lg font-heading;
+  }
+  h6 {
+      @apply text-sm font-heading;
+  }
+  .stretched-link::before {
+      @apply absolute inset-0 z-[1] content-[''];
+  }
+}
+@layer components {
+  .btn-elevated {
+      @apply bg-white dark:bg-gray-900 dark:border-gray-900 hover:bg-gray-100 text-[1.6rem] py-5 px-4 border border-gray-400 rounded flex items-center justify-center gap-x-6;
+  }
+  .btn-dark-full {
+      @apply w-full bg-black text-white shadow-none outline-none py-6 leading-normal rounded-md text-[1.6rem];
+  }
+  .nav-tabs button[area-selected=true] {
+      @apply bg-theme;
+  }
+}
+
+.user_authentication .line {
+  @apply text-center relative before:content-[''] before:h-[.1rem] before:w-full before:bg-[#c2c2c2] before:absolute before:top-2/4 before:left-0 before:translate-y-2/4 before:-z-10;
+}
+
+/* Set Interest Wrapper */
+@screen lg {
+  .interest_form .items_wrapper {
+      max-height: 60rem;
+      overflow-y: scroll;
+      padding-right: 1rem;   
+  }
+}
+.interest_form .items_wrapper::-webkit-scrollbar {
+  @apply w-4
+}   
+.interest_form .items_wrapper::-webkit-scrollbar-track {
+  background-color: rgba(0,0,0,.1);
+}   
+.interest_form .items_wrapper::-webkit-scrollbar-thumb {
+  @apply bg-[#B7B7B7]
+}
+.interest_form .item input + label::after {
+  @apply -rotate-45 left-4 top-4;
+}
+.interest_form .item input:checked + label.check-circle {
+  @apply bg-theme
+}
+.interest_form .item input:checked + label::after {
+  @apply opacity-100 visible
+}
+@screen md {
+  header [aria-labelledby="dropdown_search"] {
+      inset: inherit !important;
+      top: 5.5rem !important;
+      right: 0 !important;
+      color: black;
+  }
+}
+@screen 3xl {
+  header [aria-labelledby="user_profile_menu"],
+  header [aria-labelledby="dropdown_notification"] {
+      transform: translateY(40px) translateX(-50%) !important;
+      left: 50% !important;
+  }
+  header [aria-labelledby="dropdown_lang"] {
+      inset: 5.45rem 0 auto auto !important; 
+  }
+  header [aria-labelledby="dropdown_category"] {
+      inset: 0 0 auto auto !important; 
+  }
+}
+header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar {
+  @apply w-4
+}
+header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
+  @apply shadow-[inset_0_0_2px_rgba(#23a6d5,1)]
+}
+.cat_floating_sidebar::-webkit-scrollbar {
+  @apply w-[.5rem]
+}
+.cat_floating_sidebar::-webkit-scrollbar-track {
+  @apply bg-[#F1F5F9]
+}
+.cat_floating_sidebar::-webkit-scrollbar-thumb {
+  @apply shadow-[inset_0_0_2px_rgba(#23a6d5,1)] bg-[#CBD5E1];
+}
+.post-item .post-category li + li::before {
+  content: '\f054';
+  @apply font-fontAwesome inline-block ml-4 mr-2;
+}
+.theme_switcher {
+  @apply bg-[#f1f1f1] dark:bg-dark cursor-pointer w-[5.7rem] flex items-center justify-between py-1 px-[.8rem] h-[2.7rem] rounded-[3rem] relative;
+}
+.theme_switcher i {
+  @apply text-[1.4rem]
+}
+.theme_switcher span {
+  transition: all 0.3s ease;
+  @apply absolute top-1/2  w-[2.2rem] h-[2.2rem] rounded-full bg-white dark:bg-[#505050] -translate-y-1/2 translate-x-[2.4rem] dark:translate-x-[-.5rem];
+}
+
+.dark .theme_switcher span {
+  --tw-translate-x: -.5rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  --tw-bg-opacity: 1;
+  background-color: rgb(80 80 80 / var(--tw-bg-opacity));
+}
