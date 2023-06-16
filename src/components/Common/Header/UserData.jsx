@@ -9,7 +9,6 @@ const UserData = () => {
 
    //Get user details
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-  console.log(userData);
 
   const navigate = useNavigate();
 
