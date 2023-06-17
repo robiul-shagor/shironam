@@ -21,31 +21,45 @@ const EditProfile = () => {
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
   const bearer_token = `Bearer ${userData.token}`;
 
+  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [success, setSuccess] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+
   const handleFileChange = async(event) => {
-    await axios.post('/update-profile-picture', {images: event.target.files[0] }, {headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'Access-Control-Allow-Origin': '*',
+    const images = event.target.files[0];
+    await axios.post('/update-profile-picture', {images: [event.target.files[0]] }, {headers: {
+      'Authorization': bearer_token
     }})
     .then(res => {
-      console.log(res.data)
+      console.log(res);
       //setProfileImage(event.target.files[0]);
     });
   }
 
   const updateProfile = async(event) => {
     event.preventDefault();
-      try {
-        axios.put('/profile-update', {
-          name: firstName +' '+ lastName,
-          country_id: contry,
-          city_id: city,
-          date_of_birth: birthDate,
-          gender: gender,
-          phone: phone
-        })
-        .then(res => {
-            console.log(res.data);
-        });   
+    try {
+      await axios.put('/profile-update', {
+        name: firstName +' '+ lastName,
+        country_id: contry,
+        city_id: city,
+        date_of_birth: birthDate,
+        gender: gender,
+        phone: phone
+      }, {headers: {
+        'Authorization': bearer_token
+      }})
+      .then(res => {
+        if( res.data.status == 'Error' ) {
+          setError('error');
+          setErrorMessage(res.data.message);
+        } else {
+          setSuccess('success');
+          setSuccessMessage(res.data.message);
+        }
+      });
     } catch (e) {
         console.log(e);
     }
@@ -70,20 +84,16 @@ const EditProfile = () => {
             axios.get('/me', config)
             .then(res => {
               //setCountryList(res.data.data);
-                console.log(res.data.normal_user);
+                //console.log(res.data.normal_user);
                 res.data.normal_user.name && setFristName(res.data.normal_user.name);
                 res.data.normal_user.email && setEmail(res.data.normal_user.email);
                 res.data.normal_user.phone && setPhone(res.data.normal_user.phone);
             });   
             
-
-
-            
-            
-            // axios.get('/country-list/{18}', config)
+            // axios.get('/country-list/18', config)
             // .then(res => {
             //   setCityList(res.data.data);
-            //     //console.log(res.data);
+           
             // });
 
         } catch (e) {
@@ -93,7 +103,7 @@ const EditProfile = () => {
     getData();
   }, [])
 
-  console.log(profileImage);
+  //console.log(city);
 
   return (
     <div className='edit-profile-wrapper'>
@@ -197,6 +207,20 @@ const EditProfile = () => {
                               Update
                           </button>
                       </div>
+                      
+                      { error && (
+                        <div className="flex items-center bg-theme text-white text-sm font-bold mt-8 px-4 py-3" role="alert">
+                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                            <p className='text-white'>{errorMessage}</p>
+                        </div>
+                      ) }
+
+                      { success && (
+                        <div className="flex items-center bg-theme_blue text-white text-sm font-bold mt-8 px-4 py-3" role="alert">
+                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                            <p className='text-white'>{successMessage}</p>
+                        </div>
+                      ) }
                   </div>
               </div>
             </form>

@@ -44,6 +44,7 @@ const CategoryBody = () => {
         getData();
     }, [])
 
+
     const startIndex = 0; // Start index of the range (inclusive)
     const endIndex = 4; // End index of the range (exclusive)
     const itemsToShow = newsSample.slice(startIndex, endIndex);
