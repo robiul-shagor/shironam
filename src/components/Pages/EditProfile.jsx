@@ -26,6 +26,11 @@ const EditProfile = () => {
   const [success, setSuccess] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const config = {
+      headers: {
+        'Authorization': bearer_token
+      }
+  };
 
   const handleFileChange = async(event) => {
     const images = event.target.files[0];
@@ -65,15 +70,21 @@ const EditProfile = () => {
     }
   }
 
+  const handleCountryChange = (event) => {
+    setCountry(event.target.value); // Update the selectedOption state
+  };
+
+  // Perform any desired actions when the select option changes
+  useEffect(() => {
+    contry && axios.get('/city-list/'+ contry, config)
+    .then(res => {
+      setCityList(res.data.cities);
+    });
+  }, [contry]); // Include contry as a dependency
+
   useEffect(() => {
     const getData = async() => {
         try {
-            const config = {
-                headers: {
-                  'Authorization': bearer_token
-                }
-            };
-
             axios.get('/country-list', config)
             .then(res => {
               setCountryList(res.data.data);
@@ -89,13 +100,6 @@ const EditProfile = () => {
                 res.data.normal_user.email && setEmail(res.data.normal_user.email);
                 res.data.normal_user.phone && setPhone(res.data.normal_user.phone);
             });   
-            
-            // axios.get('/country-list/18', config)
-            // .then(res => {
-            //   setCityList(res.data.data);
-           
-            // });
-
         } catch (e) {
             console.log(e);
         }
@@ -103,7 +107,7 @@ const EditProfile = () => {
     getData();
   }, [])
 
-  //console.log(city);
+  
 
   return (
     <div className='edit-profile-wrapper'>
@@ -117,7 +121,7 @@ const EditProfile = () => {
                 <input type="file" id="user_profile_photo" hidden onChange={handleFileChange} />
                 <img src="../assets/media/user-avatar.png" className="user_profile_photo rounded-full w-[6.2rem] h-[6.2rem]" alt="profile Thumb" />
                 <div className="text-inner">
-                  <h2 className="font-sans font-bold text-3xl">Alex Jhone</h2>
+                  <h2 className="font-sans font-bold text-3xl">{ firstName +' '+ lastName }</h2>
                   <label htmlFor="user_profile_photo" className="text-blue-600 cursor-pointer text-xl">Change profile photo</label>
                 </div>
               </div>
@@ -173,7 +177,7 @@ const EditProfile = () => {
                       
                       <div className="input-group">
                           <label>Country</label>
-                          <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={contry} onChange={ (e) => setCountry( e.target.value ) }>
+                          <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={contry} onChange={ handleCountryChange }>
                               <option value="*">Select Country</option>
                               { contryList && contryList.map((item, index) => (
                                 <option value={item.id} key={ index }>{item.name}</option>
@@ -184,8 +188,9 @@ const EditProfile = () => {
                           <label>City</label>
                           <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={city} onChange={ (e) => setCity( e.target.value ) }>
                               <option value="*">Select City</option>
-                              <option value="10">Dhaka</option>
-
+                              { cityList && cityList.map((item, index) => (
+                                <option value={item.id} key={ index }>{item.name}</option>
+                              )) }
                           </select>
                       </div>
                   </div>

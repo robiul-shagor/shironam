@@ -44,6 +44,7 @@ const CategoryBody = () => {
         getData();
     }, [])
 
+    console.log(newsItem);
 
     const startIndex = 0; // Start index of the range (inclusive)
     const endIndex = 4; // End index of the range (exclusive)
@@ -52,68 +53,16 @@ const CategoryBody = () => {
     return (
         <div className="main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] py-8 pb-32">
             <div className="breaking_news_slider mb-12">
-                <BreakingNews navigation="false" />
-
-                <div className="container">
-                    <Swiper
-                        spaceBetween={50}
-                        slidesPerView={2}
-                        autoplay={{
-                            delay: 2500,
-                            disableOnInteraction: false,
-                          }}
-                          pagination={{
-                            clickable: true,
-                          }}
-                          navigation={true}
-                          modules={[Autoplay, Pagination, Navigation]}
-                        >
-                        { itemsToShow.map( (swiperData, index) => (
-                            <SwiperSlide key={index}>
-                                <div className="group breaking-news-item relative before:content-[''] before:absolute before:inset-0  before:bg-gradient-to-b before:from-transparent before:to-black before:pointer-events-none before:z-[1] overflow-hidden">
-                                    <img 
-                                        src={swiperData.thumbnail} 
-                                        alt="" 
-                                        className="news-thumbnail w-full object-cover transition duration-500 transform group-hover:scale-105"
-                                        />
-                                    <p className="news_title text-white text-3xl lg:font-medium bottom-0 absolute p-6 z-[2]">
-                                        {swiperData.summary_en}
-                                    </p>
-                                </div>
-                            </SwiperSlide>
-                        ) ) }
-                    </Swiper>
-                </div>
+                <BreakingNews />
             </div>
 
             <div className="container">
-                <ul className="inline-flex flex-wrap gap-[.6rem] sm:gap-6 pt-5 lg:pt-10 mb-10">
-                    <li>
-                        <Link to='/' className='current [&.current]:bg-theme [&.current]:border-theme [&.current]:text-white border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
-                            <i className="fal fa-th-large"></i> &nbsp;
-                            News Feed
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/today-news' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
-                            <i className="fal fa-newspaper"></i> &nbsp;
-                            Today News
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/breaking-news' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
-                            <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
-                            Breakings
-                        </Link>
-                    </li>
-                </ul>
-
                 <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-10 clear-both dark:text-white">
                     { newsItem.map((item, index) => (    
                         item.name ? (    
-                            <div className="news_category_item group relative shadow-lg dark:shadow-slate-100/10 rounded-xl overflow-hidden" key={index}>
+                            <div className="news_category_item group relative shadow-lg dark:shadow-slate-100/10 rounded-xl overflow-hidden" key={index} data-news-id={item.id}>
                                 <img 
-                                    src={item.category_image } 
+                                    src={ item.category_image } 
                                     className="w-full h-[180px] sm:h-[220px] object-cover object-center" 
                                     alt=""/>
 
@@ -130,7 +79,7 @@ const CategoryBody = () => {
                                         </li>
                                         <li className="text-xl">
                                             <i className="far fa-eye"></i>
-                                            2
+                                            {item.view}
                                         </li>
                                         <li className="ml-auto leading-none">
                                             <i className="fal fa-arrow-up rotate-45"></i>
@@ -140,39 +89,58 @@ const CategoryBody = () => {
                                 <Link to={`/category/${item.slug}`} className='absolute inset-0 link-stretched'/>
                             </div>     
                         ) : (
-                            <div className="news_category_item ads ads-4in1 overflow-hidden col-span-2 row-span-2" key={index}>
-                                <div className="grid grid-cols-2 relative gap-8 sm:gap-10">
-                                    { item.media[0].original_url && (
-                                        <div className="rounded-xl overflow-hidden">
-                                            <a href={item.action_url} className="stretched-link">
-                                                <img src={item.media[0].original_url} alt=""/>
-                                            </a>
-                                        </div>
-                                    ) }                
-                                    { item.media[1].original_url && (
-                                        <div className="rounded-xl overflow-hidden">
-                                            <img src={item.media[1].original_url} alt=""/>
-                                        </div>
-                                    ) }                 
-                                    
-                                    { item.media[2].original_url && (
-                                        <div className="rounded-xl overflow-hidden">
-                                            <img src={item.media[2].original_url} alt=""/>
-                                        </div>
-                                    ) }          
-                                    
-                                    { item.media[3].original_url && (         
-                                        <div className="relative rounded-xl overflow-hidden">
-                                            <img src={item.media[3].original_url} alt=""/>
-                                            <div className="absolute bottom-0 left-0 right-0 action flex items-center px-8 py-4 text-[1.4rem] justify-between text-white z-[1] before:content-[''] before:absolute before:inset-0 before:backdrop-blur-2xl before:-z-[1]">
-                                                <span className="leading-normal">{ item.button_title }</span>
-                                                <i className="fal fa-arrow-right -rotate-45"></i>
-                                            </div>
-                                        </div>
-                                    ) }
+                            ( item.placement_title === "Single Category") ? (
+                                <div className="news_category_item group relative shadow-lg dark:shadow-slate-100/10 rounded-xl overflow-hidden" key={index} data-ads-id={item.id}>
+                                    <img src={item.media[0].original_url} className="w-full h-[180px] sm:h-[220px] object-cover object-center" alt=" Title" />
 
+                                    <div className="text-info relative">
+                                        <div className="action flex items-center px-8 py-4 text-[1.4rem] justify-between bg-theme_blue text-white">
+                                            <span className="leading-normal">{item.button_title}</span>
+                                            <i className="fal fa-arrow-right -rotate-45"></i>
+                                        </div>
+                                        <ul className="flex items-center justify-between py-6 text-xl px-8">
+                                            <li>
+                                                Sponsored by: <a href="#" className="font-semibold">{item.sponsor}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <a href={item.action_url} className="absolute inset-0 link-stretched"></a>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className="news_category_item ads ads-4in1 overflow-hidden col-span-2 row-span-2" key={index} data-ads-id={item.id}>
+                                    <div className="grid grid-cols-2 relative gap-8 sm:gap-10">
+                                        { (item.media[0].original_url) && (
+                                            <div className="rounded-xl overflow-hidden">
+                                                <a href={item.action_url} className="stretched-link">
+                                                    <img src={item.media[0].original_url} alt=""/>
+                                                </a>
+                                            </div>
+                                        ) }                
+                                        { item.media[1].original_url && (
+                                            <div className="rounded-xl overflow-hidden">
+                                                <img src={item.media[1].original_url} alt=""/>
+                                            </div>
+                                        ) }                 
+                                        
+                                        { item.media[2].original_url && (
+                                            <div className="rounded-xl overflow-hidden">
+                                                <img src={item.media[2].original_url} alt=""/>
+                                            </div>
+                                        ) }          
+                                        
+                                        { item.media[3].original_url && (         
+                                            <div className="relative rounded-xl overflow-hidden">
+                                                <img src={item.media[3].original_url} alt=""/>
+                                                <div className="absolute bottom-0 left-0 right-0 action flex items-center px-8 py-4 text-[1.4rem] justify-between text-white z-[1] before:content-[''] before:absolute before:inset-0 before:backdrop-blur-2xl before:-z-[1]">
+                                                    <span className="leading-normal">{ item.button_title }</span>
+                                                    <i className="fal fa-arrow-right -rotate-45"></i>
+                                                </div>
+                                            </div>
+                                        ) }
+
+                                    </div>
+                                </div>
+                            ) 
                         )
                     )) }
                     
