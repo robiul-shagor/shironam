@@ -44,7 +44,7 @@ const Login = () => {
           setPassword(storedPassword);
           setRememberMe(true);
         }
-      }, []);
+    }, []);
 
     const handleRememberMeChange = (event) => {
         setRememberMe(event.target.checked);
