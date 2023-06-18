@@ -14,6 +14,10 @@ import CategoryArchive from "./category/CategoryArchive"
 import SingleCategory from "./category/SingleCategory"
 import ForgetPassword from "./components/Pages/ForgetPassword"
 import ResetPassword from "./components/Pages/ResetPassword"
+import AboutUs from "./components/Pages/AboutUs"
+import Contact from "./components/Pages/Contact"
+import Advertisement from "./components/Pages/Advertisement"
+import PrivacyPolicy from "./components/Pages/PrivacyPolicy"
 
 
 
@@ -53,6 +57,10 @@ function App() {
           <Route path="/category/:category/:category" element={<SingleCategory />}  />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<Contact />} />
+          <Route path="/advertisement" element={<Advertisement />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </UserContext.Provider>
     </>

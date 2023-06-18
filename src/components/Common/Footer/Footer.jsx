@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -34,13 +35,13 @@ const Footer = () => {
                 <div className="widget col-span-6 md:col-span-5 lg:col-span-4">
                     <ul className="footer_top_menu gap-6 grid grid-cols-2">
                         <li className="inline mr-6">
-                            <a href="#" className="text-2xl hover:underline ">About Us</a>
+                            <Link to='/about-us' className='text-2xl hover:underline'>About Us</Link>
                         </li>
                         <li className="inline mr-6">
-                            <a href="#" className="text-2xl hover:underline ">Advertisement</a>
+                            <Link to='/advertisement' className='text-2xl hover:underline'>Advertisement</Link>
                         </li>
                         <li className="inline mr-6">
-                            <a href="#" className="text-2xl hover:underline ">Contact Us</a>
+                            <Link to='/contact-us' className='text-2xl hover:underline'>Contact Us</Link>
                         </li>
                         <li className="inline mr-6">
                             <a href="#" className="text-2xl hover:underline ">Newsletter</a>
@@ -49,7 +50,7 @@ const Footer = () => {
                             <a href="#" className="text-2xl hover:underline ">Apps</a>
                         </li>
                         <li className="inline mr-6">
-                            <a href="#" className="text-2xl hover:underline ">Privacy & Policy</a>
+                            <Link to='/privacy-policy' className='text-2xl hover:underline'>Privacy & Policy</Link>
                         </li>
                     </ul>
                 </div>

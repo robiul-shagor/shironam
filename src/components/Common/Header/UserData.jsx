@@ -48,7 +48,7 @@ const UserData = () => {
             <div 
                 aria-labelledby="user_profile_menu"
                 data-te-dropdown-menu-ref 
-                className="border absolute right-0 top-0 min-w-max auto z-10 rounded-md p-12 bg-white shadow-lg [&[data-te-dropdown-show]]:block overflow-hidden dark:bg-[#272727]" 
+                className="border absolute right-0 min-w-max auto z-10 rounded-md p-12 bg-white shadow-lg [&[data-te-dropdown-show]]:block overflow-hidden dark:bg-[#272727]" 
                 >
                 <div role="none">
                     <h4 className="font-sans mb-4 text-[1.4rem]">My Profile</h4>
