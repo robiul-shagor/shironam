@@ -83,7 +83,7 @@ const EditProfile = () => {
         city_id: parseInt(city),
         date_of_birth: birthDate,
         gender: parseInt(gender),
-        phone: parseInt(phone),
+        phone: phone,
         marital_status: parseInt(maritalStatus),
         occupation: parseInt(occupation)
       }, {headers: {
@@ -128,7 +128,7 @@ const EditProfile = () => {
             axios.get('/me', config)
             .then(res => {
               //setCountryList(res.data.data);
-                console.log(res.data.normal_user);
+                //console.log(res.data.normal_user);
                 res.data.normal_user.name && setFristName(res.data.normal_user.name);
                 res.data.normal_user.last_name && setLastName(res.data.normal_user.last_name);
                 res.data.normal_user.email && setEmail(res.data.normal_user.email);
@@ -138,7 +138,7 @@ const EditProfile = () => {
                 res.data.normal_user.occupation && setOccupation(res.data.normal_user.occupation);
                 res.data.normal_user.country && setCountry(res.data.normal_user.country);
                 res.data.normal_user.city && setCity(res.data.normal_user.city);
-                res.data.normal_user.genders && setGender(res.data.normal_user.genders);
+                res.data.normal_user.gender && setGender(res.data.normal_user.gender);
             });             
             
             axios.get('/profile-picture', config)
@@ -157,18 +157,6 @@ const EditProfile = () => {
     };
     getData();
   }, [])
-
-  console.log({
-    name: firstName,
-    last_name: lastName,
-    country_id: parseInt(contry),
-    city_id: parseInt(city),
-    date_of_birth: birthDate,
-    gender: parseInt(gender),
-    marital_status: parseInt(maritalStatus),
-    occupation: parseInt(occupation),
-    phone: parseInt(phone)
-  })
   
   return (
     <div className='edit-profile-wrapper'>

@@ -55,6 +55,8 @@ const NewsCard = () => {
         };
     }, [])
 
+    console.log(newsItem);
+
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">
         {newsItem.map((newsData, index) => (
@@ -160,8 +162,7 @@ const NewsCard = () => {
                     ) }
                 </div>
             </div>
-        ))};
-
+        ))}
 
         <div className="post-item max-[767px]:p-6 bg-white dark:bg-transparent">
             <nav className="pagination md:mt-20 md:mb-10">
@@ -188,7 +189,6 @@ const NewsCard = () => {
                 </ul>
             </nav>
         </div>
-
         <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
         {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:first-of-type{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
     </div>

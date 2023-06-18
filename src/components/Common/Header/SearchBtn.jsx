@@ -1,9 +1,11 @@
 import {React, useState} from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const SearchBtn = () => {
     const [searchbtn, setSerchBtn] = useState(false);
     const [searchData, setSerchData] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const navigate = useNavigate();
 
     const handleSearchBtn = event => {
@@ -13,8 +15,13 @@ const SearchBtn = () => {
   
     const searchHandler = event => {
         event.preventDefault();
+
+        const keyword = event.target.value;
+        // Update the search parameter in the URL
+        searchParams.set('keyword', keyword);
+        setSearchParams(searchParams);
   
-        sessionStorage.setItem("userSearch", JSON.stringify(event.target.value));
+        //sessionStorage.setItem("userSearch", JSON.stringify(event.target.value));
         navigate('/search');
     };
     
