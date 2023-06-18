@@ -25,6 +25,7 @@ const EditProfile = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [staticdata, setStaticData] = useState('');
 
   const config = {
       headers: {
@@ -32,10 +33,39 @@ const EditProfile = () => {
       }
   };
 
+  // const [selectedImage, setSelectedImage] = useState(null);
+
+  // const handleImageChange = (event) => {
+  //   setSelectedImage(event.target.files[0]);
+  // };
+
+  // const handleFormSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('image', selectedImage);
+
+  //     console.log(selectedImage);
+
+  //     const response = await axios.post('/update-profile-picture', formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //         'Authorization': bearer_token,
+  //       },
+  //     });
+
+  //     console.log('Image uploaded successfully!', response.data);
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
+
   const handleFileChange = async(event) => {
     const images = event.target.files[0];
     await axios.post('/update-profile-picture', {images: [event.target.files[0]] }, {headers: {
-      'Authorization': bearer_token
+      'Authorization': bearer_token,
+      'Content-Type': 'multipart/form-data',
     }})
     .then(res => {
       console.log(res);
@@ -47,12 +77,15 @@ const EditProfile = () => {
     event.preventDefault();
     try {
       await axios.put('/profile-update', {
-        name: firstName +' '+ lastName,
-        country_id: contry,
-        city_id: city,
+        name: firstName,
+        last_name: lastName,
+        country_id: parseInt(contry),
+        city_id: parseInt(city),
         date_of_birth: birthDate,
-        gender: gender,
-        phone: phone
+        gender: parseInt(gender),
+        phone: parseInt(phone),
+        marital_status: parseInt(maritalStatus),
+        occupation: parseInt(occupation)
       }, {headers: {
         'Authorization': bearer_token
       }})
@@ -95,10 +128,28 @@ const EditProfile = () => {
             axios.get('/me', config)
             .then(res => {
               //setCountryList(res.data.data);
-                //console.log(res.data.normal_user);
+                console.log(res.data.normal_user);
                 res.data.normal_user.name && setFristName(res.data.normal_user.name);
+                res.data.normal_user.last_name && setLastName(res.data.normal_user.last_name);
                 res.data.normal_user.email && setEmail(res.data.normal_user.email);
                 res.data.normal_user.phone && setPhone(res.data.normal_user.phone);
+                res.data.normal_user.dob && setBirthDate(res.data.normal_user.dob);
+                res.data.normal_user.marital_status && setMaritalStatus(res.data.normal_user.marital_status);
+                res.data.normal_user.occupation && setOccupation(res.data.normal_user.occupation);
+                res.data.normal_user.country && setCountry(res.data.normal_user.country);
+                res.data.normal_user.city && setCity(res.data.normal_user.city);
+                res.data.normal_user.genders && setGender(res.data.normal_user.genders);
+            });             
+            
+            axios.get('/profile-picture', config)
+            .then(res => {
+              setProfileImage(res.data.image);
+              //console.log(res.data.image);
+            });         
+            
+            axios.get('/personal-static-data', config)
+            .then(res => {
+              setStaticData(res.data);
             });   
         } catch (e) {
             console.log(e);
@@ -107,8 +158,18 @@ const EditProfile = () => {
     getData();
   }, [])
 
+  console.log({
+    name: firstName,
+    last_name: lastName,
+    country_id: parseInt(contry),
+    city_id: parseInt(city),
+    date_of_birth: birthDate,
+    gender: parseInt(gender),
+    marital_status: parseInt(maritalStatus),
+    occupation: parseInt(occupation),
+    phone: parseInt(phone)
+  })
   
-
   return (
     <div className='edit-profile-wrapper'>
       <Header />
@@ -116,10 +177,14 @@ const EditProfile = () => {
         <div className="container">
           <div className="profile-inner max-w-screen-md xl:max-w-screen-lg mx-auto sm:shadow-lg sm:p-28 rounded-lg dark:text-white">
             <h3 className="mb-8 font-sans font-semibold ">Profile Settings</h3>
+            {/* <form onSubmit={handleFormSubmit}>
+              <input type="file" onChange={handleImageChange} />
+              <button type="submit">Upload Image</button>
+            </form> */}
             <form action="#" className="profile-edit-form" onSubmit={updateProfile}>
               <div className="card flex items-center gap-x-4 mb-20">     
                 <input type="file" id="user_profile_photo" hidden onChange={handleFileChange} />
-                <img src="../assets/media/user-avatar.png" className="user_profile_photo rounded-full w-[6.2rem] h-[6.2rem]" alt="profile Thumb" />
+                <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="user_profile_photo rounded-full w-[6.2rem] h-[6.2rem]" alt="profile Thumb" />
                 <div className="text-inner">
                   <h2 className="font-sans font-bold text-3xl">{ firstName +' '+ lastName }</h2>
                   <label htmlFor="user_profile_photo" className="text-blue-600 cursor-pointer text-xl">Change profile photo</label>
@@ -146,32 +211,27 @@ const EditProfile = () => {
                           <label>Gender</label>
                           <select name="gender" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={gender} onChange={ (e) => setGender( e.target.value ) }>
                               <option value="*">Select Gender</option>
-                              <option value="male">Male</option>
-                              <option value="female">Female</option>
-                              <option value="others">Others</option>
+                              { staticdata &&  staticdata.genders.map( (item, index) => (
+                                <option value={item.id} key={ index }>{item.name_en}</option>
+                              ) ) }
                           </select>
                       </div>
                       <div className="input-group">
                           <label>Marital Status</label>
                           <select name="marital_status" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={maritalStatus} onChange={ (e) => setMaritalStatus( e.target.value ) }>
                               <option value="*">Select Status</option>
-                              <option value="married">Married</option>
-                              <option value="unmarried">Unmarried</option>
-                              <option value="others">Others</option>
+                              { staticdata &&  staticdata.marital_status.map( (item, index) => (
+                                <option value={item.id} key={ index }>{item.name_en}</option>
+                              ) ) }
                           </select>
                       </div>
                       <div className="input-group">
                           <label>Occupation</label>
                           <select name="gender" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={occupation} onChange={ (e) => setOccupation( e.target.value ) }>
                               <option value="*">Select Occupation</option>
-                              <option value="">Advertising Manager</option>
-                              <option value="">Naval Architect</option>
-                              <option value="">Accountant (General)</option>
-                              <option value="">Tax Accountant</option>
-                              <option value="">Civil Engineer</option>
-                              <option value="">Cardiologist</option>
-                              <option value="">Chef</option>
-                              <option value="">Others</option>
+                              { staticdata &&  staticdata.occupations.map( (item, index) => (
+                                <option value={item.id} key={ index }>{item.name_en}</option>
+                              ) ) }
                           </select>
                       </div>
                       
@@ -201,7 +261,7 @@ const EditProfile = () => {
                   <div className="form-row space-y-8">
                       <div className="input-group">
                           <label>Email</label>
-                          <input type="email" className="form-control dark:bg-slate-800 focus:border-gray-800" name="email" placeholder="jhone_alex@yahoo.com" value={email} onChange={ (e) => setEmail( e.target.value ) } required />
+                          <input type="email" className="form-control dark:bg-slate-800 focus:border-gray-800" name="email" placeholder="jhone_alex@yahoo.com" disabled readOnly value={email} onChange={ (e) => setEmail( e.target.value ) } required style={{opacity: 0.45}} />
                       </div>
                       <div className="input-group">
                           <label>Phone</label>
