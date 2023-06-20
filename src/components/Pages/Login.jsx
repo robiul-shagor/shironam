@@ -7,12 +7,16 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [message, setMessage] = useState('');
+    const [processing, setProcessing] = useState('');
 
     const navigate = useNavigate();
     const { userLogin, setUserLogin } = useContext(UserContext);
+    const { langMode } = useContext(UserContext);
 
     const hanndleLogin = async(event) => {
         event.preventDefault();
+        setProcessing(true);
 
         try {
             await axios.post('/login', {email, password}, {headers: {
@@ -23,10 +27,9 @@ const Login = () => {
                 //console.log(res.data);
                 sessionStorage.setItem("userDetails", JSON.stringify(res.data));
                 setUserLogin(res.data);
+                setProcessing(false);
                 navigate("/");
             });
-            setEmail(email);
-            setPassword(password);
         } catch (e) {
             console.log(e);
         }
@@ -70,56 +73,62 @@ const Login = () => {
                 <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleLogin}>
                     <div className="form-title text-center">
                         <h1 className="text-4xl font-semibold mb-2 leading-none">
-                            Login                    
+                            { langMode == 'BN' ? 'লগইন' : 'Login'}
                         </h1>
                         <p className="text-2xl text-black">
-                            Login here using your username and password
+                            { langMode == 'BN' ? 'আপনার ইমেইল এবং পাসওয়ার্ড ব্যবহার করে এখানে লগইন করুন' : ' Login here using your email and password'}
                         </p>
                     </div>
                     <br />
                     <div className="form-group mt-6">
                         <label>
-                            Email Address<span className="text-red-600">*</span>
+                            { langMode == 'BN' ? 'ইমেইল' : 'Email Address'}<span className="text-red-600">*</span>
                         </label>
                         <input type="email" className="form-control" required value={email} onChange={(e)=> setEmail(e.target.value)}/>
                     </div>
+
                     <div className="form-group mt-6">
                         <label>
-                            Password<span className="text-red-600">*</span>
+                            { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                         </label>
                         <input type="password" className="form-control form-input" required value={password} onChange={(e)=> setPassword(e.target.value)} />
-
                         <div className="form-check mt-6 mb-7">
                             <input type="checkbox" value="" id="rememberPassword" checked={rememberMe} onChange={handleRememberMeChange} />
                             <label htmlFor="rememberPassword">
-                                Remember Password
+                                { langMode == 'BN' ? 'পাসওয়ার্ড সংরক্ষণ' : 'Remember Password'}
                             </label>
                         </div>
                     </div>
+
                     <div className="form-group mt-6">
                         <button 
                             type="submit" 
                             className="btn-dark-full">
-                            Sign In
-                        </button>                
+                            { processing ? ( 
+                                langMode == 'BN' ? 'লগইন করার জন্য অপেক্ষা করুন...' : 'Wait for login...'
+                                ) : (
+                                langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In'
+                            ) }
+                        </button>       
+                        
                         <p className="text-center mt-4">
-                            <a href="recover-password.html" className="underline">
-                                Forgot Password?
-                            </a>
+                            <Link className='text-center mt-4' to='/forget-password'>
+                                { langMode == 'BN' ? 'পাসওয়ার্ড ভুলে গেছেন' : 'Forgot Password'}
+                            </Link>         
                         </p>
                     </div>
                     <br/><br/><br/>
                     <p className="text-center text-black">
-                        Need an account? <Link to='/register'>Sign Up</Link>
+                    { langMode == 'BN' ? 'অ্যাকাউন্ট প্রয়োজন' : 'Need Account'}? <Link to='/register'>{ langMode == 'BN' ? 'নিবন্ধন করুন' : 'Sign Up'}</Link>
                     </p>
                 </form>
             ) : (
                 <div className="form-title text-center">
                 <h1 className="text-4xl font-semibold mb-2 leading-none">
-                    Login                    
+                    { langMode == 'BN' ? 'সাইন ইন করুন' : 'Login'}                    
                 </h1>
                 <p className="text-2xl text-black">
-                    You are already login.
+                    { langMode == 'BN' ? 'আপনি ইতিমধ্যে লগইন.' : ' You are already login.'}
                 </p>
             </div>
             ) }

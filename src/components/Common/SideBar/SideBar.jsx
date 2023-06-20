@@ -1,10 +1,12 @@
-import {React, useState, useEffect} from 'react'
+import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
+import { UserContext } from '../../../App';
 
 const SideBar = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const [ tags, setTags ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const { langMode } = useContext(UserContext);
 
     useEffect(() => {
         const getData = async() => {
@@ -37,14 +39,14 @@ const SideBar = () => {
 
   return (
     <div className='content-inner sticky top-[12rem]'>
-        <h2 className="dark:text-white">Tags</h2>
+        <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
         <div className='inline-flex flex-wrap gap-4 my-6'>
-            { tags.map((data, index) => ( 
+            { tags.length > 0 && tags.map((data, index) => ( 
                 <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                     { data.tags && data.tags.map( (item, index2) => (
                         <li key={index2}>
-                            <a href='#' className="bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal">#{item.name_en}</a>
+                            <a href='#' className="bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal">#{ langMode == 'BN' ? item.name_bn : item.name_en}</a>
                         </li>
                     ) ) }
                 </ul>

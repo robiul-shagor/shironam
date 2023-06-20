@@ -1,11 +1,14 @@
-import {React, useEffect, useState} from 'react'
+import {React, useEffect, useState, useContext} from 'react'
 import axios from '../../../api/axios'
 import { Link } from 'react-router-dom'
+import { UserContext } from '../../../App';
+
 
 const BreakingNews = ({ navigation }) => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const customNavigation = navigation ? navigation : "true";
+    const { langMode } = useContext(UserContext);
 
     useEffect(() => {
         const getData = async() => {
@@ -14,7 +17,6 @@ const BreakingNews = ({ navigation }) => {
                     axios.get('/breaking-news-without-authentication', {})
                     .then(res => {
                         setNewsItem(res.data.data);
-                        
                     });
     
                 } catch (e) {
@@ -48,7 +50,7 @@ const BreakingNews = ({ navigation }) => {
 
             { newsItem.length > 0 && (
                 <div className="slider-title border-b-2 border-theme flex">
-                    <span className="bg-theme text-white inline-block px-8 py-3">Breaking</span>
+                    <span className="bg-theme text-white inline-block px-8 py-3">{ langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}</span>
                     <marquee 
                         className="flex flex-1 items-center space-x-8" 
                         behavior="scroll" 
@@ -59,7 +61,7 @@ const BreakingNews = ({ navigation }) => {
                         { newsItem.map( (news, index) => (
                             <span className="hover:text-theme dark:text-white font-heading" key={ index }>
                                 <i className="fa fa-square text-theme"></i>
-                                {news.summary_en}
+                                { langMode == 'BN' ? news.summary_bn : news.summary_en}
                             </span>
                         ) ) }
                     </marquee>
@@ -71,19 +73,20 @@ const BreakingNews = ({ navigation }) => {
                     <li>
                         <Link to='/' className='current [&.current]:bg-theme [&.current]:border-theme [&.current]:text-white border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                             <i className="fal fa-th-large"></i> &nbsp;
-                            News Feed
+                            { langMode == 'BN' ? 'ঘটনাচক্র' : 'News Feed'}
+                            
                         </Link>
                     </li>
                     <li>
                         { userData == null ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-newspaper"></i> &nbsp;
-                                Today News
+                                { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
                             </Link>            
                         ) : (
                             <Link to='/today-news' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-newspaper"></i> &nbsp;
-                                Today News
+                                { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
                             </Link>
                         ) }
                     </li>
@@ -91,12 +94,13 @@ const BreakingNews = ({ navigation }) => {
                         { userData == null ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
-                                Breakings
+                                { langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}
+                                
                             </Link>          
                         ) : (
                             <Link to='/breaking-news' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
-                                Breakings
+                                { langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}
                             </Link>
                         ) }
                     </li>

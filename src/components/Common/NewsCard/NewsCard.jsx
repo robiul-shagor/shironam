@@ -1,14 +1,17 @@
-import {React, useEffect} from 'react'
+import {React, useEffect, useContext} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { UserContext } from '../../../App';
 
 
 const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
+
+    const { langMode } = useContext(UserContext);
 
     useEffect(() => {
         const getData = async() => {
@@ -59,7 +62,7 @@ const NewsCard = () => {
 
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">
-        {newsItem.map((newsData, index) => (
+        {newsItem.length > 0 && newsItem.map((newsData, index) => (
             <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={newsData.id}>
                 <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                     { newsData.ads_image ? (
@@ -76,7 +79,7 @@ const NewsCard = () => {
                             ) }
                         </a>           
                     ) : (
-                        <a href="#">
+                        <a href={newsData.source}>
                             <img 
                             src={newsData.thumbnail} 
                             alt="" 
@@ -88,12 +91,12 @@ const NewsCard = () => {
                         <ul className="post-category flex text-xl mt-6 dark:text-white">
                             <li>
                                 <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
-                                    #{newsData.category_en}
+                                    #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
                                 </Link>
                             </li>
                             {newsData.sub_category_en && (
                                 <li>
-                                    {newsData.sub_category_en}
+                                    { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
                                 </li>
                             )}
                         </ul>
@@ -105,18 +108,18 @@ const NewsCard = () => {
                         </h1>
                     ) : (
                         <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                            {newsData.summary_en}
+                            { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                         </h1>         
                     ) }                    
                     
                     { newsData.ads_image ? (
                         <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
                             <li>
-                                Sponsored by: <a href="#" className="font-semibold">{newsData.sponsor}</a>
+                                { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold">{newsData.sponsor}</a>
                             </li>
                             <li>
                                 <a href="#" className="transition-all hover:text-theme">
-                                    Bookmark
+                                    { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
                                     <i className="fal fa-bookmark"></i>
                                 </a>
                             </li>
@@ -130,8 +133,8 @@ const NewsCard = () => {
                                         { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
                                     </li>
                                     <li>
-                                        <a href="#" className="transition-all hover:text-theme">
-                                            Read More
+                                        <a href={newsData.source} className="transition-all hover:text-theme">
+                                            { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
                                             <i className="fal fa-arrow-up rotate-45"></i>
                                         </a>
                                     </li>
@@ -140,7 +143,7 @@ const NewsCard = () => {
 
                             { newsData.ads && (
                                 <li className="ads flex items-center">
-                                    Sponsored: &nbsp;
+                                    { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
                                     <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
                                         <img src={newsData.ads.sponsor_image} alt="" />
                                         {newsData.ads.sponsor}
@@ -152,7 +155,7 @@ const NewsCard = () => {
                                 <ul className="flex gap-6">
                                     <li>
                                         <a href="#" className="transition-all hover:text-theme">
-                                            Share
+                                            { langMode == 'BN' ? 'শেয়ার' : 'Share'}
                                             <i className="fal fa-share"></i>
                                         </a>
                                     </li>
@@ -164,31 +167,6 @@ const NewsCard = () => {
             </div>
         ))}
 
-        <div className="post-item max-[767px]:p-6 bg-white dark:bg-transparent">
-            <nav className="pagination md:mt-20 md:mb-10">
-                <ul className="flex justify-center gap-5">
-                    <li>
-                        <a href="#" className="py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">Prev</a>
-                    </li>
-                    <li>
-                        <a href="#" className="current py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">1</a>
-                    </li>
-                    <li>
-                        <a href="#" className="py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">2</a>
-                    </li>
-                    <li>
-                        <a href="#" className="py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">...</a>
-                    </li>
-                    <li>
-                        <a href="#" className="py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">4</a>
-                    </li>
-
-                    <li>
-                        <a href="#" className="py-2 px-5 sm:py-4 sm:px-8 hover:bg-[#F3F3F3] block rounded-lg border dark:text-white dark:hover:bg-dark [&.current]:bg-theme [&.current]:text-white [&.current]:border-theme [&.current]:dark:hover:bg-theme">Next</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
         <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
         <div style={{opacity: 0}}>
             {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:first-of-type{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}

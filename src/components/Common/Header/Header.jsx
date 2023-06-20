@@ -13,6 +13,8 @@ import HamburgerMenu from './HamburgerMenu';
 const Header = () => {
   
   const { userLogin, setUserLogin } = useContext(UserContext);
+
+  const { langMode } = useContext(UserContext);
   
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
@@ -40,7 +42,7 @@ const Header = () => {
                         <li className="hidden xl:block">
                             <Link to='/login' className='text-2xl dark:text-white'>
                                 <i className="fas fa-user"></i>
-                                <span>Login</span>
+                                <span>{ langMode == 'BN' ? 'লগইন' : 'Login'}</span>
                             </Link>
                         </li>
                     ) }

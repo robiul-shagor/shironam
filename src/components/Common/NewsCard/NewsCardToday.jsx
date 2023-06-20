@@ -1,29 +1,38 @@
-import {React, useEffect,useContext } from 'react'
+import {React, useEffect, useContext} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
 
-const NewsCardAvarage = () => {
+
+const NewsCardToday = () => {
+    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
-    const { langMode } = useContext(UserContext);
 
-    const getUserLang = langMode;
+    const { langMode } = useContext(UserContext);
 
     useEffect(() => {
         const getData = async() => {
+            const bearer_token = `Bearer ${userData.token}`;
             try {
-                axios.get('/news-list-without-authentication', {})
+                const config = {
+                    headers: {
+                      'Authorization': bearer_token
+                    }
+                };
+
+                axios.get('/today-news', config)
                 .then(res => {
-                    setNewsItem(res.data.data);
+                    setNewsItem(res.data);
+                    //console.log(res.data);
                 });
 
             } catch (e) {
                 console.log(e);
             }
         };
-
         getData();
 
         const handleScroll = () => {
@@ -42,17 +51,18 @@ const NewsCardAvarage = () => {
             }
         };
         window.addEventListener('scroll', handleScroll);
+
         
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-
     }, [])
 
+    console.log(newsItem);
 
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">
-        {newsItem.map((newsData, index) => (
+        {newsItem.length > 0 && newsItem.map((newsData, index) => (
             <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={newsData.id}>
                 <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                     { newsData.ads_image ? (
@@ -69,19 +79,37 @@ const NewsCardAvarage = () => {
                             ) }
                         </a>           
                     ) : (
-                        <img 
-                        src={newsData.thumbnail} 
-                        alt="" 
-                        className="thumbnail w-full object-cover" />
+                        <a href="#">
+                            <img 
+                            src={newsData.thumbnail} 
+                            alt="" 
+                            className="thumbnail w-full object-cover" />
+                        </a>
+                    ) }
+
+                    { !newsData.ads_image && (
+                        <ul className="post-category flex text-xl mt-6 dark:text-white">
+                            <li>
+                                <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                    #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                </Link>
+                            </li>
+                            {newsData.sub_category_en && (
+                                <li>
+                                    { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                </li>
+                            )}
+                        </ul>
                     ) }
 
                     { newsData.ads_image ? (
                         <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                            { getUserLang == 'BN' ? newsData.title : newsData.title}
+                            
+                            {newsData.title}
                         </h1>
                     ) : (
                         <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                            { getUserLang == 'BN' ? newsData.summary_bn : newsData.summary_en}
+                            { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                         </h1>         
                     ) }                    
                     
@@ -92,7 +120,7 @@ const NewsCardAvarage = () => {
                             </li>
                             <li>
                                 <a href="#" className="transition-all hover:text-theme">
-                                    { getUserLang == 'BN' ? 'বুকমার্ক' : 'Book Mark'}
+                                    Bookmark
                                     <i className="fal fa-bookmark"></i>
                                 </a>
                             </li>
@@ -103,12 +131,11 @@ const NewsCardAvarage = () => {
                                 <ul className="flex gap-6">
                                     <li>
                                         <i className="fal fa-clock"></i>
-                                        { moment(new Date(newsData.datetime)).startOf('hour').fromNow() }
+                                        { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
                                     </li>
                                     <li>
                                         <a href="#" className="transition-all hover:text-theme">
-                                            { getUserLang == 'BN' ? 'বিস্তারিত' : 'Read More'}
-                                            
+                                            Read More
                                             <i className="fal fa-arrow-up rotate-45"></i>
                                         </a>
                                     </li>
@@ -129,7 +156,7 @@ const NewsCardAvarage = () => {
                                 <ul className="flex gap-6">
                                     <li>
                                         <a href="#" className="transition-all hover:text-theme">
-                                            { getUserLang == 'BN' ? 'শেয়ার' : 'Share'}
+                                            Share
                                             <i className="fal fa-share"></i>
                                         </a>
                                     </li>
@@ -142,12 +169,11 @@ const NewsCardAvarage = () => {
         ))}
 
         <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
-        
-        <div style={{ opacity: 0 }}>
+        <div style={{opacity: 0}}>
             {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:first-of-type{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
         </div>
     </div>
   )
 }
 
-export default NewsCardAvarage
+export default NewsCardToday

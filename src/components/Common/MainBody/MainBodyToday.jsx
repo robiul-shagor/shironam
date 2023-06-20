@@ -1,12 +1,13 @@
-import React from 'react'
-import NewsCard from '../NewsCard/NewsCard'
+import {React, useContext} from 'react'
 import SideBar from '../SideBar/SideBar'
 import { UserContext } from '../../../App';
 import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import TabForTodayPage from '../BreakingNews/TabForTodayPage';
+import NewsCardToday from '../NewsCard/NewsCardToday';
 
 const MainBodyToday = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const { langMode } = useContext(UserContext);
 
   return (
     <div className='main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] max-[767px]:bg-[#EEEEEE] max-[767px]:dark:bg-dark'>
@@ -22,7 +23,7 @@ const MainBodyToday = () => {
                     <ul className="nav inline-flex gap-20 mb-10">
                         <li className="mr-10">
                             <h2 className="font-bold dark:text-white">
-                                Latest Feed
+                                { langMode == 'BN' ? 'সর্বশেষ ফিড' : ' Latest Feed'}
                             </h2>
                         </li>                        
                     </ul>
@@ -32,7 +33,7 @@ const MainBodyToday = () => {
                             { userData == null ? (
                                 <NewsCardAvarage />
                             ) : (
-                                <NewsCard />
+                                <NewsCardToday />
                             ) }
                         </div>
 

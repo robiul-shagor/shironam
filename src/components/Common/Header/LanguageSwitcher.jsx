@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import { UserContext } from '../../../App';
 const LanguageSwitcher = () => {
     const [ langBtn, setLangBtn ] = useState(false);
-    const [ langMode, setLangMode ] = useState('EN');
+    const { langMode, setLangMode } = useContext(UserContext);
 
     const handleLang = (e) => {
         e.preventDefault();
@@ -13,16 +14,8 @@ const LanguageSwitcher = () => {
         const currentLang = e.currentTarget.getAttribute('data-lang');
         setLangMode(currentLang);
         setLangBtn(false);
+        localStorage.setItem('lang', langMode);
     }
-
-    useEffect(() => {
-        if (langMode) {
-            localStorage.setItem('lang', langMode);
-            setLangMode(langMode);
-        } else {
-            localStorage.setItem('lang', 'EN');
-        }
-    }, [langMode]);
 
   return (
     <li className="relative">

@@ -25,21 +25,31 @@ export const UserContext = createContext();
 
 function App() {
   const [userLogin, setUserLogin] = useState(false);
+  const [langMode, setLangMode] = useState('EN');
 
   useEffect(()=> {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const userLang = localStorage.getItem('lang');
+
+    if( userLang ) {
+      setLangMode(userLang);
+    }
 
     if( userData ) {
       setUserLogin(userData);
     }
   }, []);
 
+  console.log(langMode);
+
   return (
     <>
       <UserContext.Provider
         value={{
           userLogin,
-          setUserLogin
+          setUserLogin,
+          langMode,
+          setLangMode
         }}
       >
         <Routes>

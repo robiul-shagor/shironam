@@ -40,7 +40,7 @@ const SidebarCategory = ( { category } ) => {
         <h2 className="dark:text-white">Tags</h2>
 
         <div className='inline-flex flex-wrap gap-4 my-6'>
-            { filteredTag.map((data, index) => ( 
+            { filteredTag.length > 0 && filteredTag.map((data, index) => ( 
                     <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                         { data.tags.map( (item, index2) => (
                             <li key={index2}>

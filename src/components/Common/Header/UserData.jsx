@@ -7,6 +7,9 @@ const UserData = () => {
   const { userLogin, setUserLogin } = useContext(UserContext);
   const [userAllMenu, setUserAllMenu] = useState(false);
 
+  const { langMode } = useContext(UserContext);
+
+
    //Get user details
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
@@ -51,14 +54,14 @@ const UserData = () => {
                 className="border absolute right-0 min-w-max auto z-10 rounded-md p-12 bg-white shadow-lg [&[data-te-dropdown-show]]:block overflow-hidden dark:bg-[#272727]" 
                 >
                 <div role="none">
-                    <h4 className="font-sans mb-4 text-[1.4rem]">My Profile</h4>
+                    <h4 className="font-sans mb-4 text-[1.4rem]">{ langMode == 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
                     <div className="flex items-center gap-x-6">
                         <img src="../assets/media/alex.png" className="rounded-full" alt="" />
                         <div>
                             <h3 className="font-sans text-[1.6rem] font-medium">{userData && (userData.normal_user.name)}</h3>
                             <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>
                             <Link to="/edit-profile" className='btn bg-green-600 text-white px-7 py-3 rounded-lg text-xl'>
-                                Edit Profile
+                                { langMode == 'BN' ? 'জীবন বৃত্তান্ত সম্পাদনা' : 'Edit Profile'}
                             </Link>                                  
                         </div>
                     </div>
@@ -66,17 +69,17 @@ const UserData = () => {
                     <ul className="space-y-4">
                         <li>
                             <Link to='/my-interests' className='text-2xl'>
-                                <i className="fal fa-star w-8"></i> My Interests
+                                <i className="fal fa-star w-8"></i> { langMode == 'BN' ? 'আমার আগ্রহ' : 'My Interests'} 
                             </Link>   
                         </li>
                         <li>
                             <Link to='/bookmarks' className='text-2xl'>
-                                <i className="fal fa-bookmark w-8"></i> Bookmarks
+                                <i className="fal fa-bookmark w-8"></i> { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmarks'}
                             </Link>
                         </li>
                         <li>
                             <a href="#" onClick={hanndleLogout} className="text-2xl">
-                                <i className="fal fa-sign-out w-8"></i> Logout
+                                <i className="fal fa-sign-out w-8"></i> { langMode == 'BN' ? 'লগআউট' : 'Logout'} 
                             </a>
                         </li>
                     </ul>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
@@ -9,6 +9,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [cPassword, setCpassword] = useState('');
+    const { langMode } = useContext(UserContext);
 
     const hanndleRegistration = async(event) => {
         event.preventDefault();
@@ -48,35 +49,35 @@ const Register = () => {
             <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleRegistration}>
                 <div className="form-title text-center">
                     <h1 className="text-4xl font-medium mb-2 leading-none">
-                        Create an account                 
+                        { langMode == 'BN' ? 'একটি অ্যাকাউন্ট তৈরি করুন' : 'Create an account'}
                     </h1>
                     <p className="text-2xl text-black">
-                        Let's go through a few steps
+                        { langMode == 'BN' ? 'চলুন কয়েকটি ধাপের মধ্য দিয়ে যাওয়া যাক' : 'Let\'s go through a few steps'}
                     </p>
                 </div>
                 <br/> <br/>
                 <div className="form-group mt-6">
                     <label>
-                        Full Name<span className="text-red-600">*</span>
+                    { langMode == 'BN' ? 'পুরো নাম' : 'Full Name'}<span className="text-red-600">*</span>
                     </label>
                     <input type="text" className="form-control" required value={name} onChange={(e) => setName(e.target.value)} />
                 </div>
                 <div className="form-group mt-6">
                     <label>
-                        Email<span className="text-red-600">*</span>
+                    { langMode == 'BN' ? 'ইমেইল' : 'Email'}<span className="text-red-600">*</span>
                     </label>
                     <input type="email" className="form-control" required value={email} onChange={(e)=> setEmail(e.target.value)} />
                 </div>
                 <div className="form-group mt-6">
                     <label>
-                        Password<span className="text-red-600">*</span>
+                        { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                     </label>
                     <input type="password" className="form-control" required value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>                
                 
                 <div className="form-group mt-6">
                     <label>
-                        Confirm Password<span className="text-red-600">*</span>
+                        { langMode == 'BN' ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password'}<span className="text-red-600">*</span>
                     </label>
                     <input type="c_password" className="form-control" required value={cPassword} onChange={(e) => setCpassword(e.target.value)} />
                 </div>
@@ -85,13 +86,13 @@ const Register = () => {
                     <button 
                         type="submit" 
                         className="btn-dark-full">
-                        Sign Up
+                        { langMode == 'BN' ? 'নিবন্ধন করুন' : 'Sign Up'}
                     </button>
                 </div>
 
                 <br/><br/><br/>
                 <p className="text-center text-black">
-                    Already a member? <Link to='/login'>Sign In</Link>
+                    { langMode == 'BN' ? 'ইতোমধ্যে একজন সদস্য?' : 'Already a member?'} <Link to='/login'>{ langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In'}</Link>
                 </p>
             </form>
         </div>
