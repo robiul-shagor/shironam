@@ -30,9 +30,9 @@ const Header = () => {
 
             <div className="right_nav_controls self-center max-[767px]:-mt-8">
                 <ul className="flex gap-6 flex-row-reverse max-lg:justify-between md:flex-row md:gap-14 max-[575px]:pr-4 dark:text-white">
-                    <SearchBtn />
+                    { userData && <SearchBtn /> }
 
-                    <Notification />
+                    { userData && <Notification /> }
                     
                     <ThemeSwitcher />
 
@@ -49,7 +49,7 @@ const Header = () => {
 
                     <LanguageSwitcher />
 
-                    <HamburgerMenu />
+                    { userData && <HamburgerMenu /> }
                 </ul>
             </div>
         </div>

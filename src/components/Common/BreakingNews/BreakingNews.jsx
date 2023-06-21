@@ -50,7 +50,7 @@ const BreakingNews = ({ navigation }) => {
 
             { newsItem.length > 0 && (
                 <div className="slider-title border-b-2 border-theme flex">
-                    <span className="bg-theme text-white inline-block px-8 py-3">{ langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}</span>
+                    <span className="bg-theme text-white inline-block px-8 py-3">{ langMode == 'BN' ? 'ব্রেকিং' : 'Breakings'}</span>
                     <marquee 
                         className="flex flex-1 items-center space-x-8" 
                         behavior="scroll" 

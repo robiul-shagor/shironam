@@ -1,6 +1,7 @@
 import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
+import { Link } from 'react-router-dom';
 
 const SideBar = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
@@ -8,72 +9,75 @@ const SideBar = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
 
+    const bearer_token = `Bearer ${userData.token}`;
+
+    const config = {
+        headers: {
+          'Authorization': bearer_token
+        }
+    };
+
+    const getData = async() => {
+        try {
+            axios.get('/news-list', config)
+            .then(res => {
+                setTags(res.data);
+            });          
+            
+            axios.get('/ads-right-side', config)
+            .then(res => {
+                setSideBarAds(res.data);
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     useEffect(() => {
-        const getData = async() => {
-            const bearer_token = `Bearer ${userData.token}`;
-            try {
-                const config = {
-                    headers: {
-                      'Authorization': bearer_token
-                    }
-                };
-
-                axios.get('/news-list', config)
-                .then(res => {
-                    setTags(res.data);
-                    //console.log(res.data);
-                });          
-                
-                axios.get('/ads-right-side', config)
-                .then(res => {
-                    setSideBarAds(res.data);
-                    //console.log(res.data);
-                });
-
-            } catch (e) {
-                console.log(e);
-            }
-        };
         getData();
     }, [])
 
-  return (
-    <div className='content-inner sticky top-[12rem]'>
-        <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
+    const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );
 
-        <div className='inline-flex flex-wrap gap-4 my-6'>
-            { tags.length > 0 && tags.map((data, index) => ( 
-                <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-                    { data.tags && data.tags.map( (item, index2) => (
-                        <li key={index2}>
-                            <a href='#' className="bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal">#{ langMode == 'BN' ? item.name_bn : item.name_en}</a>
-                        </li>
-                    ) ) }
-                </ul>
-            )) }
-        </div>
+    return (
+        <div className='content-inner sticky top-[12rem]'>
+            <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
-        <hr className="my-4 md:my-12" />
-        { sideBarAds && (
-            <div className="ads">
-                <h5 className="font-sans mb-4 dark:text-white">Sponsored</h5>
-                <ul>
-                    <li>
-                        <a href={sideBarAds.action_url} className="flex items-start gap-6" data-id={sideBarAds.id}>
-                            <img src={sideBarAds.sponsor_image} className="md:w-2/5" alt="" />
-                            <div className="flex-1 dark:text-white">
-                                <h3 className="font-sans md:text-xl">
-                                    {sideBarAds.title}
-                                </h3>
-                                <p className="text-sm mt-3">{sideBarAds.sponsor}</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+            <div className='inline-flex flex-wrap gap-4 my-6'>
+                { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
+                    <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
+                        { data.tags && data.tags.map( (item, index2) => (
+                            <li key={index2}>
+                                <Link to={`tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
+                                    #{ langMode == 'BN' ? item.name_bn : item.name_en}
+                                </Link>
+                            </li>
+                        ) ) }
+                    </ul>
+                )) }
             </div>
-        ) }
-    </div>
-  )
+
+            <hr className="my-4 md:my-12" />
+            { sideBarAds && (
+                <div className="ads">
+                    <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
+                    <ul>
+                        <li>
+                            <a href={sideBarAds.action_url} className="flex items-start gap-6" data-id={sideBarAds.id}>
+                                <img src={sideBarAds.sponsor_image} className="md:w-2/5" alt="" />
+                                <div className="flex-1 dark:text-white">
+                                    <h3 className="font-sans md:text-xl">
+                                        {sideBarAds.title}
+                                    </h3>
+                                    <p className="text-sm mt-3">{sideBarAds.sponsor}</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            ) }
+        </div>
+    )
 }
 
 export default SideBar

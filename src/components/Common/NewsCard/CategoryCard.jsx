@@ -1,68 +1,140 @@
-import {React, useEffect} from 'react'
+import {React, useEffect, useContext} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import { UserContext } from '../../../App';
 
-const CategoryCard = ({ category }) => {
+const CategoryCard = ({ category, types }) => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
 
+    const { langMode } = useContext(UserContext);
+
+    // Handle Bookmark
+    const bookmarkHandle = async(event) => {
+        event.preventDefault();
+        const currentItem = event.currentTarget;
+        const bookmarkId = currentItem.getAttribute('data-bookmark');
+        const bookmarks = parseInt(bookmarkId);
+                
+        try {           
+            await axios.post('/bookmark-news', {news_id: bookmarks}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {    
+                if( res.data.status == 'Success' ) {
+                    currentItem.className = 'success';
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    
+    // Handle Source Click
+    const clickSource = async(event) => {
+        event.preventDefault();
+
+        const currentItem = event.currentTarget.getAttribute('data-source');
+        const currentURL = event.currentTarget.getAttribute('href');
+        try {           
+            await axios.post('/source-click', {news_id: currentItem}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {
+                if( res.data.status == "Success" ) {
+                    window.open(currentURL, '_blank');
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    // Handle click ads
+    const clickAds = async(event) => {
+        event.preventDefault();
+        const currentItem = event.currentTarget.getAttribute('data-ads');
+        const currentURL = event.currentTarget.getAttribute('href')
+        try {           
+            await axios.post('/ads-click', {ads_id: currentItem}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {
+                if( res.data.status == "Success") {
+                    window.open(currentURL, '_blank');
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const getData = async() => {
+        const bearer_token = `Bearer ${userData.token}`;
+        try {
+            const config = {
+                headers: {
+                  'Authorization': bearer_token
+                }
+            };
+
+            axios.get('/news-list', config)
+            .then(res => {
+                setNewsItem(res.data);
+                //console.log(res.data);
+            });
+
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const handleScroll = () => {
+        const postElements = document.getElementsByClassName('post-item');
+        const windowHeight = window.innerHeight;
+  
+        for (let i = 0; i < postElements.length; i++) {
+          const postElement = postElements[i];
+          const rect = postElement.getBoundingClientRect();
+          const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
+  
+          if (isVisible) {
+            setVisiblePostId(Number(postElement.getAttribute('data-id')));
+            break;
+          }
+        }
+    };
+
     useEffect(() => {
-        const getData = async() => {
-            const bearer_token = `Bearer ${userData.token}`;
-            try {
-                const config = {
-                    headers: {
-                      'Authorization': bearer_token
-                    }
-                };
-
-                axios.get('/news-list', config)
-                .then(res => {
-                    setNewsItem(res.data);
-                    //console.log(res.data);
-                });
-
-            } catch (e) {
-                console.log(e);
-            }
-        };
         getData();
 
-        const handleScroll = () => {
-            const postElements = document.getElementsByClassName('post-item');
-            const windowHeight = window.innerHeight;
-      
-            for (let i = 0; i < postElements.length; i++) {
-              const postElement = postElements[i];
-              const rect = postElement.getBoundingClientRect();
-              const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
-      
-              if (isVisible) {
-                setVisiblePostId(Number(postElement.getAttribute('data-id')));
-                break;
-              }
-            }
-        };
         window.addEventListener('scroll', handleScroll);
-
         
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [])
 
-    const filteredPosts = newsItem.filter((post) => post.category_en === category);
+    // Filter Data
+    let filteredPosts;
+    if( types == 'tags' ) {
+        filteredPosts = newsItem.filter((post) =>
+            post.tags.some((tag) => post.tags.includes(tag))
+        )
+    } else {
+        filteredPosts = newsItem.filter((post) => post.category_en === category);
+    }
 
-  return (
-    <div className="space-y-8 lg:space-y-12 col-span-2">
-        {filteredPosts.map((newsData, index) => (
-            <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={newsData.id}>
+    return (
+        <div className="space-y-8 lg:space-y-12 col-span-2">
+            {filteredPosts.map((newsData, index) => (
+                <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
                 <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                     { newsData.ads_image ? (
-                        <a href={newsData.action_url ? newsData.action_url : '#'}>
+                        <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
                             <img 
                             src={newsData.ads_image} 
                             alt="" 
@@ -75,22 +147,24 @@ const CategoryCard = ({ category }) => {
                             ) }
                         </a>           
                     ) : (
-                        <img 
-                        src={newsData.thumbnail} 
-                        alt="" 
-                        className="thumbnail w-full object-cover" />
+                        <a href={newsData.source}>
+                            <img 
+                            src={newsData.thumbnail} 
+                            alt="" 
+                            className="thumbnail w-full object-cover" />
+                        </a>
                     ) }
 
                     { !newsData.ads_image && (
                         <ul className="post-category flex text-xl mt-6 dark:text-white">
                             <li>
                                 <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
-                                    #{newsData.category_en}
+                                    #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
                                 </Link>
                             </li>
                             {newsData.sub_category_en && (
                                 <li>
-                                    {newsData.sub_category_en}
+                                    { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
                                 </li>
                             )}
                         </ul>
@@ -102,20 +176,14 @@ const CategoryCard = ({ category }) => {
                         </h1>
                     ) : (
                         <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                            {newsData.summary_en}
+                            { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                         </h1>         
                     ) }                    
                     
                     { newsData.ads_image ? (
                         <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
                             <li>
-                                Sponsored by: <a href="#" className="font-semibold">{newsData.sponsor}</a>
-                            </li>
-                            <li>
-                                <a href="#" className="transition-all hover:text-theme">
-                                    Bookmark
-                                    <i className="fal fa-bookmark"></i>
-                                </a>
+                                { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
                             </li>
                         </ul>
                     ) : (
@@ -124,11 +192,11 @@ const CategoryCard = ({ category }) => {
                                 <ul className="flex gap-6">
                                     <li>
                                         <i className="fal fa-clock"></i>
-                                        { moment(new Date(newsData.datetime)).startOf('hour').fromNow() }
+                                        { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
                                     </li>
                                     <li>
-                                        <a href="#" className="transition-all hover:text-theme">
-                                            Read More
+                                        <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
+                                            { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
                                             <i className="fal fa-arrow-up rotate-45"></i>
                                         </a>
                                     </li>
@@ -137,7 +205,7 @@ const CategoryCard = ({ category }) => {
 
                             { newsData.ads && (
                                 <li className="ads flex items-center">
-                                    Sponsored: &nbsp;
+                                    { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
                                     <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
                                         <img src={newsData.ads.sponsor_image} alt="" />
                                         {newsData.ads.sponsor}
@@ -148,16 +216,18 @@ const CategoryCard = ({ category }) => {
                             <li>
                                 <ul className="flex gap-6">
                                     <li>
-                                        <a href="#" className="transition-all hover:text-theme">
-                                            Share
-                                            <i className="fal fa-share"></i>
-                                        </a>
-                                    </li>
-                                    <li className="max-[991px]:hidden">
-                                        <a href="#" className="transition-all hover:text-[#015BC2]">
-                                            Mark as read
+                                        <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
+                                            { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
                                             <i className="fal fa-bookmark"></i>
                                         </a>
+                                    </li>
+                                    <li className='relative'>
+                                        <a href="#" className="transition-all hover:text-theme">
+                                            { langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                            <i className="fal fa-share"></i>
+                                        </a>
+                                        <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
+                                        </ul>
                                     </li>
                                 </ul>
                             </li>
@@ -165,16 +235,16 @@ const CategoryCard = ({ category }) => {
                     ) }
                 </div>
             </div>
-        ))}
+            ))}
 
 
-    
+        
 
-        <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
+            <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
 
-        {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:first-of-type{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
-    </div>
-  )
+            {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:first-of-type{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
+        </div>
+    )
 }
 
 export default CategoryCard

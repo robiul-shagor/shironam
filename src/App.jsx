@@ -18,6 +18,7 @@ import AboutUs from "./components/Pages/AboutUs"
 import Contact from "./components/Pages/Contact"
 import Advertisement from "./components/Pages/Advertisement"
 import PrivacyPolicy from "./components/Pages/PrivacyPolicy"
+import SingleTags from "./category/SingleTags"
 
 
 
@@ -64,6 +65,7 @@ function App() {
           <Route path='/breaking-news' element={<BreakingNewsPage />} />
           <Route path='/category' element={<CategoryArchive />} />
           <Route path="/category/:category" element={<SingleCategory />}  />
+          <Route path="/tags/:tags" element={<SingleTags />}  />
           <Route path="/category/:category/:category" element={<SingleCategory />}  />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />

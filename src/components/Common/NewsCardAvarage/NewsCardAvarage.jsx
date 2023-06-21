@@ -11,36 +11,37 @@ const NewsCardAvarage = () => {
 
     const getUserLang = langMode;
 
+    const handleScroll = () => {
+        const postElements = document.getElementsByClassName('post-item');
+        const windowHeight = window.innerHeight;
+  
+        for (let i = 0; i < postElements.length; i++) {
+          const postElement = postElements[i];
+          const rect = postElement.getBoundingClientRect();
+          const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
+  
+          if (isVisible) {
+            setVisiblePostId(Number(postElement.getAttribute('data-id')));
+            break;
+          }
+        }
+    };
+
+    const getData = async() => {
+        try {
+            axios.get('/news-list-without-authentication', {})
+            .then(res => {
+                setNewsItem(res.data.data);
+            });
+
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     useEffect(() => {
-        const getData = async() => {
-            try {
-                axios.get('/news-list-without-authentication', {})
-                .then(res => {
-                    setNewsItem(res.data.data);
-                });
-
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         getData();
-
-        const handleScroll = () => {
-            const postElements = document.getElementsByClassName('post-item');
-            const windowHeight = window.innerHeight;
-      
-            for (let i = 0; i < postElements.length; i++) {
-              const postElement = postElements[i];
-              const rect = postElement.getBoundingClientRect();
-              const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
-      
-              if (isVisible) {
-                setVisiblePostId(Number(postElement.getAttribute('data-id')));
-                break;
-              }
-            }
-        };
+        
         window.addEventListener('scroll', handleScroll);
         
         return () => {
@@ -52,7 +53,7 @@ const NewsCardAvarage = () => {
 
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">
-        {newsItem.map((newsData, index) => (
+        {newsItem.length > 0 && newsItem.map((newsData, index) => (
             <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={newsData.id}>
                 <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                     { newsData.ads_image ? (

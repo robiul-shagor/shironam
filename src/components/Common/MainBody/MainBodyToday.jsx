@@ -4,6 +4,7 @@ import { UserContext } from '../../../App';
 import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import TabForTodayPage from '../BreakingNews/TabForTodayPage';
 import NewsCardToday from '../NewsCard/NewsCardToday';
+import SidebarBreaking from '../SideBar/SidebarBreaking';
 
 const MainBodyToday = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -13,7 +14,6 @@ const MainBodyToday = () => {
     <div className='main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] max-[767px]:bg-[#EEEEEE] max-[767px]:dark:bg-dark'>
 
         <TabForTodayPage />
-
 
         <div className='relative pt-10 pb-20 md:pt-20 md:pb-0'>
             <div className="red-sticky-bg transition [&amp;.is-sticky]:fixed max-[767px]:hidden -z-[1] absolute top-0 left-0 right-0 bg-theme h-[40rem] lg:h-[55rem] 2xl:h-[65rem]"></div>
@@ -38,7 +38,7 @@ const MainBodyToday = () => {
                         </div>
 
                         <div className='post-sidebar hidden md:block md:col-span-1 md:col-start-3 md:row-start-1'>
-                            <SideBar />
+                            <SidebarBreaking />
                         </div>
                     </div>
                 </div>

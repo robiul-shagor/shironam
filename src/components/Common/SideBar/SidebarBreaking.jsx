@@ -3,26 +3,33 @@ import axios from '../../../api/axios';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../../App';
 
-const SidebarCategory = ( { category, types } ) => {
+const SidebarBreaking = ( { types } ) => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const [ tags, setTags ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
 
+    const bearer_token = `Bearer ${userData.token}`;
+    const config = {
+        headers: {
+          'Authorization': bearer_token
+        }
+    };
+
     const getData = async() => {
-        const bearer_token = `Bearer ${userData.token}`;
         try {
-            const config = {
-                headers: {
-                  'Authorization': bearer_token
-                }
-            };
-
-            axios.get('/news-list', config)
-            .then(res => {
-                setTags(res.data);
-            });
-
+            if( types == 'breaking' ) {
+                axios.get('/news-list?breaking=1', config)
+                .then(res => {
+                    setTags(res.data);
+                });
+            } else {
+                axios.get('/news-list?todays_news=1', config)
+                .then(res => {
+                    setTags(res.data);
+                });
+            }
+            
             axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
@@ -35,23 +42,16 @@ const SidebarCategory = ( { category, types } ) => {
 
     useEffect(() => {
         getData();
-    }, [getData])
+    }, [])
 
-    let filteredTag;
-    if( types == 'tags' ) {
-        filteredTag = tags.filter((post) =>
-            post.tags.some((tag) => post.tags.includes(tag))
-        )
-    } else {
-        filteredTag = tags.filter((post) => post.category_en === category);
-    }
+    const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );
 
     return (
         <div className='content-inner sticky top-[12rem]'>
             <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
-                { filteredTag.length > 0 && filteredTag.map((data, index) => ( 
+                { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
                         <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                             { data.tags.map( (item, index2) => (
                                 <li key={index2}>
@@ -89,4 +89,4 @@ const SidebarCategory = ( { category, types } ) => {
     )
 }
 
-export default SidebarCategory
+export default SidebarBreaking

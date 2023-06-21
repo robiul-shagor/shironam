@@ -212,3 +212,7 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
 .warning {
   color: #c05621;
 }
+.bookmark.warning {
+  opacity: 0.75;
+  cursor: not-allowed;
+}

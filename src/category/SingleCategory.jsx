@@ -40,11 +40,11 @@ const SingleCategory = () => {
     }
 
     const categoryData = Capitalize(category);
-    
+
   return (
     <div className='home'>
         <Header />
-        <MainCategory category={categoryData} />
+            <MainCategory category={categoryData} type={'categories'} />
         <Footer />
     </div>
   )
