@@ -203,3 +203,12 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   --tw-bg-opacity: 1;
   background-color: rgb(80 80 80 / var(--tw-bg-opacity));
 }
+.error {
+  color: red;
+}
+.success {
+  color: green;
+}
+.warning {
+  color: #c05621;
+}

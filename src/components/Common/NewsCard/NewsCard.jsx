@@ -1,7 +1,7 @@
 import {React, useEffect, useContext} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
 
@@ -10,19 +10,70 @@ const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
+    const [ bookmak, setBookmark ] = useState('');
+    const [ bookmarkError, setBookmarkError ] = useState('');
+    const [ bookmakErrorMessage, setBookmarkErrorMessage ] = useState('');
+    const [ sourceClick, setSourceClick ] = useState('');
+
+    const navigate = useNavigate();
 
     const { langMode } = useContext(UserContext);
+    const bearer_token = `Bearer ${userData.token}`;
+    const config = {
+        headers: {
+          'Authorization': bearer_token
+        }
+    };
+    
+    const bookmarkHandle = async(event) => {
+        event.preventDefault();
+        const currentItem = event.currentTarget;
+        const bookmarkId = currentItem.getAttribute('data-bookmark');
+        const bookmarks = parseInt(bookmarkId);
+                
+        try {           
+            await axios.post('/bookmark-news', {news_id: bookmarks}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {
+                if( res.data.status == 'Error' ) {
+                    currentItem.className = 'error';
+                }      
+                if( res.data.status == 'Success' ) {
+                    currentItem.className = 'success';
+                }          
+                if( res.data.status == 'warning' ) {
+                    currentItem.className = 'warning';
+                }
+                setBookmarkErrorMessage(res.data.message);
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const clickSource = async(event) => {
+        event.preventDefault();
+
+        const currentItem = event.currentTarget.getAttribute('data-source');
+        const currentURL = event.currentTarget.getAttribute('href');
+        try {           
+            await axios.post('/source-click', {news_id: currentItem}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {
+                if( res.data.status == "Success" ) {
+                    window.open(currentURL, '_blank');
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     useEffect(() => {
         const getData = async() => {
-            const bearer_token = `Bearer ${userData.token}`;
             try {
-                const config = {
-                    headers: {
-                      'Authorization': bearer_token
-                    }
-                };
-
                 axios.get('/news-list', config)
                 .then(res => {
                     setNewsItem(res.data);
@@ -63,7 +114,7 @@ const NewsCard = () => {
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">
         {newsItem.length > 0 && newsItem.map((newsData, index) => (
-            <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={newsData.id}>
+            <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image && newsData.id}>
                 <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                     { newsData.ads_image ? (
                         <a href={newsData.action_url ? newsData.action_url : '#'}>
@@ -117,12 +168,6 @@ const NewsCard = () => {
                             <li>
                                 { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold">{newsData.sponsor}</a>
                             </li>
-                            <li>
-                                <a href="#" className="transition-all hover:text-theme">
-                                    { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                    <i className="fal fa-bookmark"></i>
-                                </a>
-                            </li>
                         </ul>
                     ) : (
                         <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
@@ -133,7 +178,7 @@ const NewsCard = () => {
                                         { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
                                     </li>
                                     <li>
-                                        <a href={newsData.source} className="transition-all hover:text-theme">
+                                        <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
                                             { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
                                             <i className="fal fa-arrow-up rotate-45"></i>
                                         </a>
@@ -153,6 +198,12 @@ const NewsCard = () => {
 
                             <li>
                                 <ul className="flex gap-6">
+                                    <li>
+                                        <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme ${bookmarkError && bookmarkError }`} data-bookmark={newsData.id}>
+                                            { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                            <i className="fal fa-bookmark"></i>
+                                        </a>
+                                    </li>
                                     <li>
                                         <a href="#" className="transition-all hover:text-theme">
                                             { langMode == 'BN' ? 'শেয়ার' : 'Share'}

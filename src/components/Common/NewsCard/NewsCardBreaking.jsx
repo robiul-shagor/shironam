@@ -23,12 +23,10 @@ const NewsCardBreaking = () => {
                     }
                 };
 
-                axios.get('/breaking-news', config)
+                axios.get('/news-list?breaking=1', config)
                 .then(res => {
                     setNewsItem(res.data);
-                    //console.log(res.data);
                 });
-
             } catch (e) {
                 console.log(e);
             }
@@ -57,8 +55,6 @@ const NewsCardBreaking = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, [])
-
-    console.log(newsItem);
 
   return (
     <div className="space-y-8 lg:space-y-12 col-span-2">

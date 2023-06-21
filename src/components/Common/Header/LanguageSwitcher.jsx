@@ -14,7 +14,7 @@ const LanguageSwitcher = () => {
         const currentLang = e.currentTarget.getAttribute('data-lang');
         setLangMode(currentLang);
         setLangBtn(false);
-        localStorage.setItem('lang', langMode);
+        localStorage.setItem('lang', currentLang);
     }
 
   return (

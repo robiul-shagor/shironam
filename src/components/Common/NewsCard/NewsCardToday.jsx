@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
 
-
 const NewsCardToday = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
@@ -23,10 +22,9 @@ const NewsCardToday = () => {
                     }
                 };
 
-                axios.get('/today-news', config)
+                axios.get('/news-list?todays_news=1', config)
                 .then(res => {
                     setNewsItem(res.data);
-                    //console.log(res.data);
                 });
 
             } catch (e) {
