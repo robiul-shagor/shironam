@@ -16,7 +16,7 @@ const MyInterests = () => {
   useEffect(() => {
     const getData = async() => {
       try {                      
-          axios.get('/interest-list', config)
+          await axios.get('/interest-list', config)
           .then(res => {
             setInterest(res.data.data);
             console.log(res.data);

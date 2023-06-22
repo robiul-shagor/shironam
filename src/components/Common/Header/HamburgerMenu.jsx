@@ -1,14 +1,41 @@
 import {React, useState, useEffect} from 'react'
 import HamburgerAccordian from './HamburgerAccordian';
+import axios from '../../../api/axios';
 
 const HamburgerMenu = () => {
   const [hamburger, setHamburger] = useState(false);
+  const [data, setData] = useState([]);
   const [hamburgerToggle, setHamburgerToggle] = useState(false);
+  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
   const handleHamburger = (e) => {
     e.preventDefault();
     setHamburger(!hamburger);
   };
+
+  const getCategory = async() => {
+    const bearer_token = `Bearer ${userData.token}`;
+    try {
+        const config = {
+            headers: {
+              'Authorization': bearer_token
+            }
+        };
+
+        await axios.get('/category-list', config)
+        .then(res => {
+            setData(res.data);
+        });
+    } catch (e) {
+        console.log(e);
+    }
+  };
+
+  useEffect(()=> {
+    getCategory();
+  }, [])
+
+  //console.log(data);
 
   const accordionItems = [
     {

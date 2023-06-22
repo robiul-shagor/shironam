@@ -19,18 +19,18 @@ const SidebarBreaking = ( { types } ) => {
     const getData = async() => {
         try {
             if( types == 'breaking' ) {
-                axios.get('/news-list?breaking=1', config)
+                await axios.get('/news-list?breaking=1', config)
                 .then(res => {
                     setTags(res.data);
                 });
             } else {
-                axios.get('/news-list?todays_news=1', config)
+                await axios.get('/news-list?todays_news=1', config)
                 .then(res => {
                     setTags(res.data);
                 });
             }
-            
-            axios.get('/ads-right-side', config)
+
+            await axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
             });

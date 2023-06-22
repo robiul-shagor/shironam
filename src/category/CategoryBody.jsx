@@ -25,13 +25,13 @@ const CategoryBody = () => {
                     }
                 };
 
-                axios.get('/category-list', config)
+                await axios.get('/category-list', config)
                 .then(res => {
                     setNewsItem(res.data);
                     //console.log(res.data);
                 });
 
-                axios.get('/news-list', config)
+                await axios.get('/news-list', config)
                 .then(res => {
                     setNewsSample(res.data);
                     //console.log(res.data);

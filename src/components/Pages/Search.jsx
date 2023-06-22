@@ -41,7 +41,7 @@ const Search = () => {
   const fetchData = async (keyword) => {
     try {
      
-      axios.get(`/news-list?search=${keyword}`, config)
+      await axios.get(`/news-list?search=${keyword}`, config)
       .then(res => {
           setNewsItem(res.data);
           setCount( res.data.length );

@@ -22,7 +22,7 @@ const NewsCardBreaking = () => {
                 }
             };
 
-            axios.get('/news-list?breaking=1', config)
+            await axios.get('/news-list?breaking=1', config)
             .then(res => {
                 setNewsItem(res.data);
             });

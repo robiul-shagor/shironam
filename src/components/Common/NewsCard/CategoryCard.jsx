@@ -81,7 +81,7 @@ const CategoryCard = ({ category, types }) => {
                 }
             };
 
-            axios.get('/news-list', config)
+            await axios.get('/news-list', config)
             .then(res => {
                 setNewsItem(res.data);
                 //console.log(res.data);
@@ -121,9 +121,9 @@ const CategoryCard = ({ category, types }) => {
     // Filter Data
     let filteredPosts;
     if( types == 'tags' ) {
-        filteredPosts = newsItem.filter((post) =>
-            post.tags.some((tag) => post.tags.includes(tag))
-        )
+        filteredPosts = newsItem ? newsItem.filter((post) =>
+            post.tags && post.tags.some((tag) => post.tags.includes(tag))
+        ) : []
     } else {
         filteredPosts = newsItem.filter((post) => post.category_en === category);
     }

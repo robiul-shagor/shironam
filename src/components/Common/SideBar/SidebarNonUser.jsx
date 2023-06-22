@@ -10,7 +10,7 @@ const SidebarNonUser = () => {
 
     const getData = async() => {
         try {
-            axios.get('/news-list-without-authentication', {})
+            await axios.get('/news-list-without-authentication', {})
             .then(res => {
                 setTags(res.data.data);
             });

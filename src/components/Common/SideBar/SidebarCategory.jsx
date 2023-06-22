@@ -18,12 +18,12 @@ const SidebarCategory = ( { category, types } ) => {
                 }
             };
 
-            axios.get('/news-list', config)
+            await axios.get('/news-list', config)
             .then(res => {
                 setTags(res.data);
             });
 
-            axios.get('/ads-right-side', config)
+            await axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
             });
@@ -39,9 +39,9 @@ const SidebarCategory = ( { category, types } ) => {
 
     let filteredTag;
     if( types == 'tags' ) {
-        filteredTag = tags.filter((post) =>
-            post.tags.some((tag) => post.tags.includes(tag))
-        )
+        filteredTag = tags ? tags.filter((post) =>
+            post.tags && post.tags.some((tag) => post.tags.includes(tag))
+        ) : []
     } else {
         filteredTag = tags.filter((post) => post.category_en === category);
     }

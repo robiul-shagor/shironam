@@ -19,6 +19,7 @@ import Contact from "./components/Pages/Contact"
 import Advertisement from "./components/Pages/Advertisement"
 import PrivacyPolicy from "./components/Pages/PrivacyPolicy"
 import SingleTags from "./category/SingleTags"
+import SingleNews from "./components/Pages/SingleNews"
 
 
 
@@ -73,6 +74,7 @@ function App() {
           <Route path="/contact-us" element={<Contact />} />
           <Route path="/advertisement" element={<Advertisement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/:single-permalink" element={<SingleNews />} />
         </Routes>
       </UserContext.Provider>
     </>

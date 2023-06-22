@@ -1,4 +1,4 @@
-import {React, useEffect, useContext} from 'react'
+import {React, useEffect, useContext, useRef} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -10,8 +10,12 @@ const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
-    //const [ bookmarkError, setBookmarkError ] = useState('');
-    //const [ bookmakErrorMessage, setBookmarkErrorMessage ] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [prevScrollPos, setPrevScrollPos] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+
+    const parentRef = useRef();
 
     const { langMode } = useContext(UserContext);
     const bearer_token = `Bearer ${userData.token}`;
@@ -81,20 +85,56 @@ const NewsCard = () => {
         }
     }
 
+    useEffect(()=> {
+        getData();
+    }, [currentPage])
+
     // Handle data
     const getData = async() => {
-        try {
-            axios.get('/news-list', config)
-            .then(res => {
-                setNewsItem(res.data);
-            });
+        if (!hasMore || isLoading) return;
+        setIsLoading(true);
 
+        try {
+            const respose = await axios.get(`/news-list?paginate=${currentPage}`, config);
+            const itemData = respose.data;
+
+            if (itemData.length === 0) {
+                setHasMore(false);
+                setIsLoading(false);
+                return;
+            }
+
+            // Check for duplicate items before appending
+            setNewsItem((prevItems) => {
+                // Create a Set of existing item IDs
+                const existingIds = new Set(prevItems.map((item) => item.id));
+          
+                // Filter out duplicate items based on their IDs
+                const uniqueItems = itemData.filter((item) => !existingIds.has(item.id));
+          
+                // Combine the unique items with the existing items
+                return [...prevItems, ...uniqueItems];
+            });
+            setIsLoading(false);
+        } catch (e) {
+            console.log(e);
+            setIsLoading(false);
+        }
+    }
+
+    // Handle View data
+    const viewData = async(view) => {
+        try {           
+            await axios.post('/view-news', {news_id: view}, {headers: {
+                'Authorization': bearer_token
+            }})
         } catch (e) {
             console.log(e);
         }
-    };
-
+    }
+    
     // Handle scroll
+    let scrolled = false;
     const handleScroll = () => {
         const postElements = document.getElementsByClassName('post-item');
         const windowHeight = window.innerHeight;
@@ -106,10 +146,34 @@ const NewsCard = () => {
   
           if (isVisible) {
             setVisiblePostId(Number(postElement.getAttribute('data-id')));
+            if (!scrolled && window.scrollY > 0) {
+                scrolled = true;
+                viewData(Number(postElement.getAttribute('data-id')));
+            }
             break;
           }
         }
     };
+
+    const handleInfinityScroll = () => {
+
+        const currentScrollPos = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollingDown = currentScrollPos > prevScrollPos;
+    
+        if (scrollingDown && currentScrollPos > 0) {
+          const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+          const documentHeight = document.documentElement.scrollHeight;
+    
+          if (currentScrollPos + windowHeight >= documentHeight - 400 && !isLoading && hasMore) {
+            setCurrentPage((prevPage) => prevPage + 1);
+          }
+        }
+    
+        setPrevScrollPos(currentScrollPos);
+    };
+
+    //console.log(currentPage);
+
 
     useEffect(() => {
         getData();
@@ -119,10 +183,18 @@ const NewsCard = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
+    }, [])    
+    
+    useEffect(() => {
+        window.addEventListener('scroll', handleInfinityScroll);
+        
+        return () => {
+            window.removeEventListener('scroll', handleInfinityScroll);
+        };
     }, [])
 
     return (
-        <div className="space-y-8 lg:space-y-12 col-span-2">
+        <div className="space-y-8 lg:space-y-12 col-span-2" ref={parentRef}>
             {newsItem.length > 0 && newsItem.map((newsData, index) => (
                 <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
                     <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>

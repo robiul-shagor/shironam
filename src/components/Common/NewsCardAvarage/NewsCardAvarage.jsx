@@ -29,7 +29,7 @@ const NewsCardAvarage = () => {
 
     const getData = async() => {
         try {
-            axios.get('/news-list-without-authentication', {})
+            await axios.get('/news-list-without-authentication', {})
             .then(res => {
                 setNewsItem(res.data.data);
             });
@@ -41,7 +41,7 @@ const NewsCardAvarage = () => {
 
     useEffect(() => {
         getData();
-        
+
         window.addEventListener('scroll', handleScroll);
         
         return () => {

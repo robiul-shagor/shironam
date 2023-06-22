@@ -19,12 +19,12 @@ const SideBar = () => {
 
     const getData = async() => {
         try {
-            axios.get('/news-list', config)
+            await axios.get('/news-list', config)
             .then(res => {
                 setTags(res.data);
             });          
             
-            axios.get('/ads-right-side', config)
+            await axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
             });

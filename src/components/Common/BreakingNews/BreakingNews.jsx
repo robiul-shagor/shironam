@@ -14,7 +14,7 @@ const BreakingNews = ({ navigation }) => {
         const getData = async() => {
             if( userData == null ) {
                 try {    
-                    axios.get('/breaking-news-without-authentication', {})
+                    await axios.get('/breaking-news-without-authentication', {})
                     .then(res => {
                         setNewsItem(res.data.data);
                     });
@@ -31,7 +31,7 @@ const BreakingNews = ({ navigation }) => {
                         }
                     };
     
-                    axios.get('/breaking-news', config)
+                    await axios.get('/breaking-news', config)
                     .then(res => {
                         setNewsItem(res.data.data);
                         

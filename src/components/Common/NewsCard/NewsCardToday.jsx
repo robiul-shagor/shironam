@@ -21,7 +21,7 @@ const NewsCardToday = () => {
                 }
             };
 
-            axios.get('/news-list?todays_news=1', config)
+            await axios.get('/news-list?todays_news=1', config)
             .then(res => {
                 setNewsItem(res.data);
             });

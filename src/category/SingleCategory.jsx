@@ -22,7 +22,7 @@ const SingleCategory = () => {
                     }
                 };
 
-                axios.get('/news-list', config)
+                await axios.get('/news-list', config)
                 .then(res => {
                     setNewsItem(res.data);
                     //console.log(res.data);

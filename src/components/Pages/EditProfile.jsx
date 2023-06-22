@@ -118,14 +118,14 @@ const EditProfile = () => {
   useEffect(() => {
     const getData = async() => {
         try {
-            axios.get('/country-list', config)
+            await axios.get('/country-list', config)
             .then(res => {
               setCountryList(res.data.data);
                 //console.log(res.data);
             });        
                                    
             
-            axios.get('/me', config)
+            await axios.get('/me', config)
             .then(res => {
               //setCountryList(res.data.data);
                 //console.log(res.data.normal_user);
@@ -141,13 +141,13 @@ const EditProfile = () => {
                 res.data.normal_user.gender && setGender(res.data.normal_user.gender);
             });             
             
-            axios.get('/profile-picture', config)
+            await axios.get('/profile-picture', config)
             .then(res => {
               setProfileImage(res.data.image);
               //console.log(res.data.image);
             });         
             
-            axios.get('/personal-static-data', config)
+            await axios.get('/personal-static-data', config)
             .then(res => {
               setStaticData(res.data);
             });   
