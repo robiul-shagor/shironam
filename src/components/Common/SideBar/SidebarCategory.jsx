@@ -35,13 +35,14 @@ const SidebarCategory = ( { category, types } ) => {
 
     useEffect(() => {
         getData();
-    }, [getData])
+    }, [])
 
     let filteredTag;
     if( types == 'tags' ) {
-        filteredTag = tags ? tags.filter((post) =>
-            post.tags && post.tags.some((tag) => post.tags.includes(tag))
-        ) : []
+        filteredTag = tags.filter((post) => {
+            const tagValues = post.tags ? Object.values(post.tags) : [];
+            return tagValues.some((tag) => tag.name_en === category);
+        });
     } else {
         filteredTag = tags.filter((post) => post.category_en === category);
     }

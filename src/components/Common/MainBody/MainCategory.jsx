@@ -1,6 +1,7 @@
 import {React, useState, useEffect} from 'react'
 import CategoryCard from '../NewsCard/CategoryCard';
 import SidebarCategory from '../SideBar/SidebarCategory';
+import NewsCard from '../NewsCard/NewsCard';
 
 
 const MainCategory = ( { category, type } ) => {
@@ -22,7 +23,7 @@ const MainCategory = ( { category, type } ) => {
 
                         <div className='post-wrapper md:grid md:grid-cols-3 md:gap-x-12'>
                             <div className='space-y-8 lg:space-y-12 col-span-2'>
-                                { <CategoryCard  category={category} types={type} /> }
+                                {<NewsCard /> }
                             </div>
 
                             <div className='post-sidebar hidden md:block md:col-span-1 md:col-start-3 md:row-start-1'>

@@ -12,6 +12,10 @@ const HamburgerMenu = () => {
     e.preventDefault();
     setHamburger(!hamburger);
   };
+  
+    useEffect(() => {
+        setData([])
+    }, [])
 
   const getCategory = async() => {
     const bearer_token = `Bearer ${userData.token}`;

@@ -42,7 +42,7 @@ function App() {
     }
   }, []);
 
-  console.log(langMode);
+  //console.log(langMode);
 
   return (
     <>

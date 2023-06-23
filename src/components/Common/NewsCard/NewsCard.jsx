@@ -1,29 +1,40 @@
-import {React, useEffect, useContext, useRef} from 'react'
+import {React, useEffect, useContext, useRef, useCallback} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
+import NewsListQuery from '../../../query/NewsListQuery';
 
 
 const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-    const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const [query, setQuery] = useState('')
+    const [pageNumber, setPageNumber] = useState(1)
 
-    const parentRef = useRef();
+    const {
+        loading, error, news, hasMores
+    } = NewsListQuery(query, pageNumber)
 
+    const newsObserver = useRef(null);
+    const observer = useRef()
+
+    const lastNewsElementRef = useCallback(node => {
+        if (loading) return
+        if (observer.current) observer.current.disconnect()
+        observer.current = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting && hasMore) {     
+            setPageNumber(prevPageNumber => prevPageNumber + 1)
+          }
+        })
+        if (node) observer.current.observe(node)
+    }, [loading, hasMore])    
+    
     const { langMode } = useContext(UserContext);
+
     const bearer_token = `Bearer ${userData.token}`;
-    const config = {
-        headers: {
-          'Authorization': bearer_token
-        }
-    };
     
     // Handle Bookmark
     const bookmarkHandle = async(event) => {
@@ -85,47 +96,10 @@ const NewsCard = () => {
         }
     }
 
-    useEffect(()=> {
-        getData();
-    }, [currentPage])
-
-    // Handle data
-    const getData = async() => {
-        if (!hasMore || isLoading) return;
-        setIsLoading(true);
-
-        try {
-            const respose = await axios.get(`/news-list?paginate=${currentPage}`, config);
-            const itemData = respose.data;
-
-            if (itemData.length === 0) {
-                setHasMore(false);
-                setIsLoading(false);
-                return;
-            }
-
-            // Check for duplicate items before appending
-            setNewsItem((prevItems) => {
-                // Create a Set of existing item IDs
-                const existingIds = new Set(prevItems.map((item) => item.id));
-          
-                // Filter out duplicate items based on their IDs
-                const uniqueItems = itemData.filter((item) => !existingIds.has(item.id));
-          
-                // Combine the unique items with the existing items
-                return [...prevItems, ...uniqueItems];
-            });
-            setIsLoading(false);
-        } catch (e) {
-            console.log(e);
-            setIsLoading(false);
-        }
-    }
-
     // Handle View data
-    const viewData = async(view) => {
+    const viewData = (view) => {
         try {           
-            await axios.post('/view-news', {news_id: view}, {headers: {
+            axios.post('/view-news', {news_id: view}, {headers: {
                 'Authorization': bearer_token
             }})
         } catch (e) {
@@ -155,29 +129,7 @@ const NewsCard = () => {
         }
     };
 
-    const handleInfinityScroll = () => {
-
-        const currentScrollPos = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollingDown = currentScrollPos > prevScrollPos;
-    
-        if (scrollingDown && currentScrollPos > 0) {
-          const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-          const documentHeight = document.documentElement.scrollHeight;
-    
-          if (currentScrollPos + windowHeight >= documentHeight - 400 && !isLoading && hasMore) {
-            setCurrentPage((prevPage) => prevPage + 1);
-          }
-        }
-    
-        setPrevScrollPos(currentScrollPos);
-    };
-
-    //console.log(currentPage);
-
-
     useEffect(() => {
-        getData();
-
         window.addEventListener('scroll', handleScroll);
         
         return () => {
@@ -185,122 +137,221 @@ const NewsCard = () => {
         };
     }, [])    
     
-    useEffect(() => {
-        window.addEventListener('scroll', handleInfinityScroll);
-        
-        return () => {
-            window.removeEventListener('scroll', handleInfinityScroll);
-        };
-    }, [])
-
     return (
-        <div className="space-y-8 lg:space-y-12 col-span-2" ref={parentRef}>
-            {newsItem.length > 0 && newsItem.map((newsData, index) => (
-                <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
-                    <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
-                        { newsData.ads_image ? (
-                            <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
-                                <img 
-                                src={newsData.ads_image} 
-                                alt="" 
-                                className="thumbnail w-full object-cover" />
-                                { newsData.action_url && (
-                                    <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
-                                        <span className="">{newsData.button_title}</span>
-                                        <i className="fal fa-arrow-right -rotate-45"></i>
-                                    </div>
-                                ) }
-                            </a>           
-                        ) : (
-                            <a href={newsData.source}>
-                                <img 
-                                src={newsData.thumbnail} 
-                                alt="" 
-                                className="thumbnail w-full object-cover" />
-                            </a>
-                        ) }
+        <div className="space-y-8 lg:space-y-12 col-span-2">
+            {news.length > 0 && news.map((newsData, index) => {
+                if (news.length === index + 1) {
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
+                            { newsData.ads_image ? (
+                                <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
+                                    <img 
+                                    src={newsData.ads_image} 
+                                    alt="" 
+                                    className="thumbnail w-full object-cover" />
+                                    { newsData.action_url && (
+                                        <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
+                                            <span className="">{newsData.button_title}</span>
+                                            <i className="fal fa-arrow-right -rotate-45"></i>
+                                        </div>
+                                    ) }
+                                </a>           
+                            ) : (
+                                <a href={newsData.source}>
+                                    <img 
+                                    src={newsData.thumbnail} 
+                                    alt="" 
+                                    className="thumbnail w-full object-cover" />
+                                </a>
+                            ) }
 
-                        { !newsData.ads_image && (
-                            <ul className="post-category flex text-xl mt-6 dark:text-white">
-                                <li>
-                                    <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
-                                        #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
-                                    </Link>
-                                </li>
-                                {newsData.sub_category_en && (
+                            { !newsData.ads_image && (
+                                <ul className="post-category flex text-xl mt-6 dark:text-white">
                                     <li>
-                                        { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                        <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                            #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                        </Link>
                                     </li>
-                                )}
-                            </ul>
-                        ) }
-
-                        { newsData.ads_image ? (
-                            <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                {newsData.title}
-                            </h1>
-                        ) : (
-                            <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
-                            </h1>         
-                        ) }                    
-                        
-                        { newsData.ads_image ? (
-                            <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
-                                <li>
-                                    { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
-                                </li>
-                            </ul>
-                        ) : (
-                            <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
-                                <li>
-                                    <ul className="flex gap-6">
+                                    {newsData.sub_category_en && (
                                         <li>
-                                            <i className="fal fa-clock"></i>
-                                            { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                            { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
                                         </li>
-                                        <li>
-                                            <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
-                                                { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
-                                                <i className="fal fa-arrow-up rotate-45"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                    )}
+                                </ul>
+                            ) }
 
-                                { newsData.ads && (
-                                    <li className="ads flex items-center">
-                                        { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
-                                        <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
-                                            <img src={newsData.ads.sponsor_image} alt="" />
-                                            {newsData.ads.sponsor}
-                                        </a>
+                            { newsData.ads_image ? (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    {newsData.title}
+                                </h1>
+                            ) : (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
+                                </h1>         
+                            ) }                    
+                            
+                            { newsData.ads_image ? (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
                                     </li>
-                                ) }
+                                </ul>
+                            ) : (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <i className="fal fa-clock"></i>
+                                                { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                            </li>
+                                            <li>
+                                                <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
+                                                    { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
+                                                    <i className="fal fa-arrow-up rotate-45"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
 
-                                <li>
-                                    <ul className="flex gap-6">
-                                        <li>
-                                            <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                <i className="fal fa-bookmark"></i>
+                                    { newsData.ads && (
+                                        <li className="ads flex items-center">
+                                            { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
+                                            <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
+                                                <img src={newsData.ads.sponsor_image} alt="" />
+                                                {newsData.ads.sponsor}
                                             </a>
                                         </li>
-                                        <li className='relative'>
-                                            <a href="#" className="transition-all hover:text-theme">
-                                                { langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                <i className="fal fa-share"></i>
-                                            </a>
-                                            <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        ) }
+                                    ) }
+
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
+                                                    { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                    <i className="fal fa-bookmark"></i>
+                                                </a>
+                                            </li>
+                                            <li className='relative'>
+                                                <a href="#" className="transition-all hover:text-theme">
+                                                    { langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                    <i className="fal fa-share"></i>
+                                                </a>
+                                                <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            ) }
+                        </div>
                     </div>
-                </div>
-            ))}
+                } else {
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
+                            { newsData.ads_image ? (
+                                <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
+                                    <img 
+                                    src={newsData.ads_image} 
+                                    alt="" 
+                                    className="thumbnail w-full object-cover" />
+                                    { newsData.action_url && (
+                                        <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
+                                            <span className="">{newsData.button_title}</span>
+                                            <i className="fal fa-arrow-right -rotate-45"></i>
+                                        </div>
+                                    ) }
+                                </a>           
+                            ) : (
+                                <a href={newsData.source}>
+                                    <img 
+                                    src={newsData.thumbnail} 
+                                    alt="" 
+                                    className="thumbnail w-full object-cover" />
+                                </a>
+                            ) }
+
+                            { !newsData.ads_image && (
+                                <ul className="post-category flex text-xl mt-6 dark:text-white">
+                                    <li>
+                                        <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                            #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                        </Link>
+                                    </li>
+                                    {newsData.sub_category_en && (
+                                        <li>
+                                            { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                        </li>
+                                    )}
+                                </ul>
+                            ) }
+
+                            { newsData.ads_image ? (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    {newsData.title}
+                                </h1>
+                            ) : (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
+                                </h1>         
+                            ) }                    
+                            
+                            { newsData.ads_image ? (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
+                                    </li>
+                                </ul>
+                            ) : (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <i className="fal fa-clock"></i>
+                                                { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                            </li>
+                                            <li>
+                                                <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
+                                                    { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
+                                                    <i className="fal fa-arrow-up rotate-45"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                    { newsData.ads && (
+                                        <li className="ads flex items-center">
+                                            { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
+                                            <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
+                                                <img src={newsData.ads.sponsor_image} alt="" />
+                                                {newsData.ads.sponsor}
+                                            </a>
+                                        </li>
+                                    ) }
+
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
+                                                    { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                    <i className="fal fa-bookmark"></i>
+                                                </a>
+                                            </li>
+                                            <li className='relative'>
+                                                <a href="#" className="transition-all hover:text-theme">
+                                                    { langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                    <i className="fal fa-share"></i>
+                                                </a>
+                                                <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            ) }
+                        </div>
+                    </div> 
+                }
+            })}
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
             <div style={{opacity: 0}}>
