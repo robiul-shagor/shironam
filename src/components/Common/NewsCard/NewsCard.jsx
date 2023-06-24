@@ -10,6 +10,7 @@ import NewsListQuery from '../../../query/NewsListQuery';
 const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [visiblePostId, setVisiblePostId] = useState(null);
+    const [visibleAdsId, setVisibleAdstId] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const [query, setQuery] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
@@ -25,12 +26,12 @@ const NewsCard = () => {
         if (loading) return
         if (observer.current) observer.current.disconnect()
         observer.current = new IntersectionObserver(entries => {
-          if (entries[0].isIntersecting && hasMore) {     
+          if (entries[0].isIntersecting && hasMores) {     
             setPageNumber(prevPageNumber => prevPageNumber + 1)
           }
         })
         if (node) observer.current.observe(node)
-    }, [loading, hasMore])    
+    }, [loading, hasMores])    
     
     const { langMode } = useContext(UserContext);
 
@@ -117,12 +118,19 @@ const NewsCard = () => {
           const postElement = postElements[i];
           const rect = postElement.getBoundingClientRect();
           const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
+          const getAds = postElement.getAttribute('data-ads');
+          const getPosts = postElement.getAttribute('data-id');
   
           if (isVisible) {
-            setVisiblePostId(Number(postElement.getAttribute('data-id')));
-            if (!scrolled && window.scrollY > 0) {
-                scrolled = true;
-                viewData(Number(postElement.getAttribute('data-id')));
+            if( typeof getPosts !== 'undefined' ) {
+                setVisiblePostId(Number(getPosts));
+                if (!scrolled && window.scrollY > 0) {
+                    scrolled = true;
+                    viewData(Number(getPosts));
+                }
+            }         
+            if( typeof getAds !== 'undefined' ) {
+                setVisibleAdstId(Number(getAds));
             }
             break;
           }
@@ -141,7 +149,7 @@ const NewsCard = () => {
         <div className="space-y-8 lg:space-y-12 col-span-2">
             {news.length > 0 && news.map((newsData, index) => {
                 if (news.length === index + 1) {
-                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''}>
                         <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
                             { newsData.ads_image ? (
                                 <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
@@ -246,7 +254,7 @@ const NewsCard = () => {
                         </div>
                     </div>
                 } else {
-                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : '0'}>
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''} >
                         <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
                             { newsData.ads_image ? (
                                 <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
@@ -352,6 +360,9 @@ const NewsCard = () => {
                     </div> 
                 }
             })}
+
+            <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+            <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
             <div style={{opacity: 0}}>
