@@ -26,7 +26,7 @@ function SingleNews() {
             <Header />
             
             <div className='main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] max-[767px]:bg-[#EEEEEE] max-[767px]:dark:bg-dark'>
-
+                
             </div>
 
             <Footer />

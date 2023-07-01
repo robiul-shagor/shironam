@@ -20,6 +20,7 @@ import Advertisement from "./components/Pages/Advertisement"
 import PrivacyPolicy from "./components/Pages/PrivacyPolicy"
 import SingleTags from "./category/SingleTags"
 import SingleNews from "./components/Pages/SingleNews"
+import AfterRegistrationInterests from "./components/Pages/AfterRegistrationInterests"
 
 
 
@@ -75,6 +76,7 @@ function App() {
           <Route path="/advertisement" element={<Advertisement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/:single-permalink" element={<SingleNews />} />
+          <Route path="/interests" element={<AfterRegistrationInterests />} />
         </Routes>
       </UserContext.Provider>
     </>

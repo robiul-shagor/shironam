@@ -40,7 +40,7 @@ const Register = () => {
                     className="inline-block max-[575px]:-ml-8"
                 >
                     <img src="/assets/media/logo.svg" className="max-[1199px]:w-[12rem] dark:show" alt="shironam.com" />
-                    <img src="../assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:hidden" alt="shironam.com" />
+                    <img src="/assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:hidden" alt="shironam.com" />
                 </Link>
             </div>
         </header>

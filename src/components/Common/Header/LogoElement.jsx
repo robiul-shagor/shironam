@@ -9,7 +9,7 @@ const LogoElement = () => {
             className="inline-block max-[575px]:-ml-8"
         >
             <img src="/assets/media/logo.svg" className="max-[1199px]:w-[12rem] dark:hidden" alt="shironam.com" />
-            <img src="../assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:inline-block" alt="shironam.com" />
+            <img src="/assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:inline-block" alt="shironam.com" />
         </Link>
     </div>
   )

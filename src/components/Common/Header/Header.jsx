@@ -39,9 +39,9 @@ const Header = () => {
                     { userData && <UserData /> }
 
                     { !userData && (
-                        <li className="hidden xl:block">
+                        <li className="xl:block">
                             <Link to='/login' className='text-2xl dark:text-white'>
-                                <i className="fas fa-user"></i>
+                                <i className="fas fa-user"></i>&nbsp; 
                                 <span>{ langMode == 'BN' ? 'লগইন' : 'Login'}</span>
                             </Link>
                         </li>

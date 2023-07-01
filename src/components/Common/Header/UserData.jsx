@@ -43,7 +43,7 @@ const UserData = () => {
   return (
     <li className="relative ml-auto">
         <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
-            <img src="../assets/media/alex.png" className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
+            <img src="/assets/media/alex.png" className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
             <span>{userData && (userData.normal_user.name)}</span>
         </a>
 
@@ -56,7 +56,7 @@ const UserData = () => {
                 <div role="none">
                     <h4 className="font-sans mb-4 text-[1.4rem]">{ langMode == 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
                     <div className="flex items-center gap-x-6">
-                        <img src="../assets/media/alex.png" className="rounded-full" alt="" />
+                        <img src="/assets/media/alex.png" className="rounded-full" alt="" />
                         <div>
                             <h3 className="font-sans text-[1.6rem] font-medium">{userData && (userData.normal_user.name)}</h3>
                             <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>

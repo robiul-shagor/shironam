@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../Common/Header/Header';
 import Footer from '../Common/Footer/Footer';
 import axios from '../../api/axios';
-import { UserContext } from '../../App';
 
-const MyInterests = () => {
+const AfterRegistrationInterests = () => {
   const [interestsData, setInterestsData] = useState([]);
   const [isCheckedList, setIsCheckedList] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
@@ -15,8 +14,6 @@ const MyInterests = () => {
       'Authorization': bearer_token
     }
   };
-
-  const { langMode } = useContext(UserContext);
 
   const handleCheckboxChangeValue = (event, parentCategoryId) => {
     const { value, checked } = event.target;
@@ -84,8 +81,8 @@ const MyInterests = () => {
       <Header />
       <div className="main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] py-24">
         <div className="container">
-          <h1 className="text-4xl font-semibold dark:text-white">{langMode == 'BN' ? 'আপনার আগ্রহ সেট করুন' : 'Set your interest'}</h1>
-          <p className="text-xl mt-3">{langMode == 'BN' ? 'আপনার শীর্ষ আগ্রহের খবর নির্বাচন করুন' : 'Select your top interest news'}</p>
+          <h1 className="text-4xl font-semibold dark:text-white">Set your interest</h1>
+          <p className="text-xl mt-3">Select your top interest news</p>
           <form className="interest_form mt-8 lg:mt-16 dark:text-white" onSubmit={handleSubmit}>
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-7">
               {interestsData.length > 0 &&
@@ -101,13 +98,13 @@ const MyInterests = () => {
                         name={`${item.name_en}-${index}`}
                       />
                       <label className="font-semibold" htmlFor={item.name_en}>
-                        { langMode == 'BN' ? item.name_bn : item.name_en }
+                        {item.name_en}
                       </label>
                     </div>
                     {isCheckedList[index] && (
                       <div className="!visible">
                         <h3 className="subcategory font-sans mb-8 font-medium underline underline-offset-[6px]">
-                          {langMode == 'BN' ? 'সাব ক্যাটাগরি নির্বাচন করুন' : 'Select Sub Categories'}
+                          Select Sub Categories
                         </h3>
                         <ul className="space-y-8">
                           {item.interest.length > 0 &&
@@ -125,7 +122,7 @@ const MyInterests = () => {
                                     name={`${data.name_en}-${item.id}`}
                                   />
                                   <label htmlFor={`${data.name_en}-${idex}`} className="text-[1.5rem]">
-                                    { langMode == 'BN' ? data.name_bn : data.name_en }
+                                    {data.name_en}
                                   </label>
                                 </div>
                               </li>
@@ -136,9 +133,12 @@ const MyInterests = () => {
                   </li>
                 ))}
             </ul>
-            <div className="form_footer flex gap-8 py-16 justify-center">
+            <div className="form_footer flex gap-8 py-16">
+              <button className="basis-1/2 border border-gray-400 rounded-lg py-4 text-center text-2xl transition-all hover:bg-gray-400 hover:border-gray-400 hover:text-white">
+                Skip
+              </button>
               <button type="submit" className="basis-1/2 border border-[#F9020B] rounded-lg py-4 text-center text-2xl bg-[#F9020B] text-white">
-                { langMode == 'BN' ? 'সম্পন্ন' : 'Done' }
+                Done
               </button>
             </div>
           </form>
@@ -149,4 +149,4 @@ const MyInterests = () => {
   );
 };
 
-export default MyInterests;
+export default AfterRegistrationInterests;
