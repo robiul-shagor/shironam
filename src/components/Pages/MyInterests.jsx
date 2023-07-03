@@ -11,7 +11,6 @@ const MyInterests = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [defaultInt, setDefaultInt] = useState([]);
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
   const bearer_token = `Bearer ${userData.token}`;
   const config = {
@@ -52,12 +51,15 @@ const MyInterests = () => {
       }
     };
   
+    getData();
+  }, []);
+
+  useEffect(() => {
     const getDefault = async () => {
       try {
         setIsLoading(true);
         const res = await axios.get('/me', config);
         const obj = JSON.parse(res.data.normal_user.interest);
-        setDefaultInt(obj);
         setCheckboxState(obj); // Set checkbox state based on defaultInt values
       } catch (error) {
         console.log(error);
@@ -65,24 +67,37 @@ const MyInterests = () => {
         setIsLoading(false);
       }
     };
-  
+
     const setCheckboxState = (obj) => {
       const updatedCheckedList = interestsData.map((item) =>
         Object.values(obj).includes(item.id.toString())
-      );
+      );    
+      
+      const subcategories = interestsData.flatMap((item) => {
+        const subcategory = item.interest.map((subcategory) => `${subcategory.name_en}-${item.id}`);
+      
+        const matchingSubcategories = subcategory
+          .filter((subdata) => {
+            const [name, parentCategoryId] = subdata.split('-');
+            const subcategoryValue = item.interest.find((data) => data.name_en === name);
+            
+            return Object.values(obj).includes(subcategoryValue.id.toString());
+          })
+          .map((matchingSubcategory) => {
+            const [name, parentCategoryId] = matchingSubcategory.split('-');
+            return { parentCategoryId: parseInt(parentCategoryId), value: matchingSubcategory };
+          });
+      
+        return matchingSubcategories;
+      });      
+      
       setIsCheckedList(updatedCheckedList);
+      setSelectedValues(subcategories);
     };
-  
-    const fetchData = async () => {
-      setIsLoading(true);
-      await Promise.all([getData(), getDefault()]);
-      setIsLoading(false);
-    };
-  
-    fetchData();
-  }, []);
 
-  
+    getDefault()
+    
+  }, [interestsData]); 
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -148,7 +163,7 @@ const MyInterests = () => {
                         { langMode == 'BN' ? item.name_bn : item.name_en }
                       </label>
                     </div>
-                    {(isCheckedList[index] || Object.values(defaultInt).includes(item.id.toString())) && (
+                    {isCheckedList[index]  && (
                       <div className="!visible">
                         <h3 className="subcategory font-sans mb-8 font-medium underline underline-offset-[6px]">
                           {langMode == 'BN' ? 'সাব ক্যাটাগরি নির্বাচন করুন' : 'Select Sub Categories'}
@@ -178,7 +193,7 @@ const MyInterests = () => {
                       </div>
                     )}
                   </li>
-                ))}
+              ))}
             </ul>
             <div className="form_footer flex gap-8 py-16 justify-center">
               <button type="submit" className="basis-1/2 border border-[#F9020B] rounded-lg py-4 text-center text-2xl bg-[#F9020B] text-white">
@@ -186,6 +201,14 @@ const MyInterests = () => {
               </button>
             </div>
           </form>
+          <div>{isLoading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+          <div>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
+          { success && (
+              <div className="flex items-center bg-theme_blue text-white text-sm font-bold mt-8 px-4 py-3" role="alert">
+                  <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M12.432 0c1.34 0 2.01.912 2.01 1.957 0 1.305-1.164 2.512-2.679 2.512-1.269 0-2.009-.75-1.974-1.99C9.789 1.436 10.67 0 12.432 0zM8.309 20c-1.058 0-1.833-.652-1.093-3.524l1.214-5.092c.211-.814.246-1.141 0-1.141-.317 0-1.689.562-2.502 1.117l-.528-.88c2.572-2.186 5.531-3.467 6.801-3.467 1.057 0 1.233 1.273.705 3.23l-1.391 5.352c-.246.945-.141 1.271.106 1.271.317 0 1.357-.392 2.379-1.207l.6.814C12.098 19.02 9.365 20 8.309 20z"/></svg>
+                  <p className='text-white'>{langMode == 'BN' ? 'Your interests updated' : 'আপনার আগ্রহ আপডেট করা হয়েছে'}</p>
+              </div>
+            ) }
         </div>
       </div>
       <Footer />

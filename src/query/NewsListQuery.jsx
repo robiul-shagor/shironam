@@ -12,8 +12,6 @@ export default function NewsListQuery(query, pageNumber, type) {
     const url_slug  = useParams();
     const history = useNavigate();
 
-    const { mainCategory, subCategory } = useParams();
-
     const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
@@ -33,61 +31,61 @@ export default function NewsListQuery(query, pageNumber, type) {
         setLoading(true)
         setError(false)
 
-        if( typeof url_slug.category !== 'undefined' ) {
+        if( type == 'category' ) {
             try { 
-                axios.get(`/news-list`, config)
+                axios.get(`/news-list?paginate=${pageNumber}&category=${query}`, config)
                 .then(res => {
-                    const category = url_slug.category;
-                    const subCategory = url_slug.category;
+                    // const category = url_slug.category;
+                    // const subCategory = url_slug.category;
                     setNews( (prevItems) => {
                         const existingIds = new Set(prevItems.map((item) => item.id));
                          // Filter out duplicate items based on their IDs
                         const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
 
-                        const filteredPosts = uniqueItems.filter((post) => post.category_en === capitalize(category));
+                        // const filteredPosts = uniqueItems.filter((post) => post.category_en === capitalize(category));
 
-                        const filteredSubPosts = uniqueItems.filter((post) => post.sub_category_en === capitalize(subCategory));
+                        // const filteredSubPosts = uniqueItems.filter((post) => post.sub_category_en === capitalize(subCategory));
 
                         // Combine the unique items with the existing items
-                        return [...prevItems, ...filteredPosts];
+                        return [...prevItems, ...uniqueItems];
                     } )
 
-                    //setHasMores(res.data.length > 0)
-                    setHasMores(false)
+                    setHasMores(res.data.length > 0)
+                    //setHasMores(false)
                     setLoading(false)
                 })
             } catch(e) {
                 //if (axios.isCancel(e)) return
                 setError(true)
             }
-        } else if( type == 'subcategory' ) {
-            
+        } 
+
+        if( type == 'subcategory' ) {            
             try { 
-                axios.get(`/news-list?sub_category=${subCategory}`, config)
+                axios.get(`/news-list?paginate=${pageNumber}&sub_category=${query}`, config)
                 .then(res => {
+                    console.log(res.data)
                     setNews( (prevItems) => {
                         const existingIds = new Set(prevItems.map((item) => item.id));
                          // Filter out duplicate items based on their IDs
                         const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
-
-                        
-
-                        // const filteredSubPosts = uniqueItems.filter((post) => post.sub_category_en === capitalize(subCategory));
 
                         return [...prevItems, ...uniqueItems];
                     } )
 
-                    //setHasMores(res.data.length > 0)
-                    setHasMores(false)
+                    setHasMores(res.data.length > 0)
+                    //setHasMores(false)
                     setLoading(false)
                 })
             } catch(e) {
                 //if (axios.isCancel(e)) return
                 setError(true)
             }
-        } else if( typeof url_slug.tags !=='undefined' ) {
+        } 
+
+        if( type == 'tags' ) {
             try { 
-                axios.get(`/news-list`, config)
+                axios.get(`/news-list?paginate=${pageNumber}&tag=${query}`, config)
                 .then(res => {
                     setNews( (prevItems) => {
                         const existingIds = new Set(prevItems.map((item) => item.id));
@@ -95,24 +93,26 @@ export default function NewsListQuery(query, pageNumber, type) {
                         // Filter out duplicate items based on their IDs
                         const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
 
-                        const filteredPosts = uniqueItems.filter((post) => {
-                            const tagValues = post.tags ? Object.values(post.tags) : [];
-                            return tagValues.some((tag) => tag.slug === url_slug.tags);
-                        });
+                        // const filteredPosts = uniqueItems.filter((post) => {
+                        //     const tagValues = post.tags ? Object.values(post.tags) : [];
+                        //     return tagValues.some((tag) => tag.slug === url_slug.tags);
+                        // });
 
                         // Combine the unique items with the existing items
-                        return [...prevItems, ...filteredPosts];
+                        return [...prevItems, ...uniqueItems];
                     } )
 
-                    //setHasMores(res.data.length > 0)
-                    setHasMores(false)
+                    setHasMores(res.data.length > 0)
+                    //setHasMores(false)
                     setLoading(false)
                 })
             } catch(e) {
                 //if (axios.isCancel(e)) return
                 setError(true)
             }
-        } else {
+        } 
+
+        if( type == 'all' ) {
             try { 
                 axios.get(`/news-list?paginate=${pageNumber}`, config)
                 .then(res => {
@@ -136,7 +136,7 @@ export default function NewsListQuery(query, pageNumber, type) {
             }
         }
         
-    }, [query, pageNumber])
+    }, [query, pageNumber, type])
 
     return { loading, error, news, hasMores }
 }

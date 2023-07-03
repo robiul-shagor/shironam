@@ -69,7 +69,7 @@ function App() {
           <Route path='/category' element={<CategoryArchive />} />
           <Route path="/category/:category" element={<SingleCategory />}  />
           <Route path="/tags/:tags" element={<SingleTags />}  />
-          <Route path="/category/:mainCategory/:subCategory" element={<SingleCategorySub />}  />
+          <Route path="/category/:category/:subCategory" element={<SingleCategorySub />}  />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/about-us" element={<AboutUs />} />

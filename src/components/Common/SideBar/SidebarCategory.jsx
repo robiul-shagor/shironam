@@ -1,20 +1,38 @@
 import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
 
-const SidebarCategory = ( { category, types } ) => {
+const SidebarCategory = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
 
     const [query, setQuery] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
+    const { category, subCategory, tags } = useParams()
+    const [type, setType] = useState('')
+    const location = useLocation();
+
+    useEffect(() => {
+        if (typeof subCategory !== 'undefined') {
+            setQuery(subCategory);
+            setType('subcategory');
+        } else if (typeof category !== 'undefined') {
+            setQuery(category);
+            setType('category');
+        } else if (typeof tags !== 'undefined') {
+            setQuery(tags);
+            setType('tags');
+        } else {
+            setType('all');
+        }
+    }, [location, category, subCategory, tags]); 
 
     const {
         loading, error, news, hasMores
-    } = NewsListQuery(query, pageNumber)
+    } = NewsListQuery(query, pageNumber, type)
 
     const getData = async() => {
         const bearer_token = `Bearer ${userData.token}`;
