@@ -128,7 +128,6 @@ const EditProfile = () => {
             await axios.get('/me', config)
             .then(res => {
               //setCountryList(res.data.data);
-                //console.log(res.data.normal_user);
                 res.data.normal_user.name && setFristName(res.data.normal_user.name);
                 res.data.normal_user.last_name && setLastName(res.data.normal_user.last_name);
                 res.data.normal_user.email && setEmail(res.data.normal_user.email);

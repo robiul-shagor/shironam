@@ -1,7 +1,7 @@
 import {React, useEffect, useContext, useRef, useCallback} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
@@ -11,13 +11,29 @@ const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [visiblePostId, setVisiblePostId] = useState(null);
     const [visibleAdsId, setVisibleAdstId] = useState(null);
-    const [hasMore, setHasMore] = useState(true);
     const [query, setQuery] = useState('')
+    const [type, setType] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
+    const { mainCategory, subCategory, tags } = useParams()
+
+    const makeLowercase = ( item ) => {
+        return item.split(" ").join("-").toLowerCase()
+    }
+
+    useEffect(() => {
+        if (typeof subCategory !== 'undefined') {
+            setQuery(subCategory)
+            setType('subcategory')
+        } 
+        if ( typeof tags !== 'undefined') {
+            setQuery(tags)
+            setType('tags')
+        } 
+    }, [query]); 
 
     const {
         loading, error, news, hasMores
-    } = NewsListQuery(query, pageNumber)
+    } = NewsListQuery(query, pageNumber, type)
 
     const newsObserver = useRef(null);
     const observer = useRef()
@@ -32,6 +48,7 @@ const NewsCard = () => {
         })
         if (node) observer.current.observe(node)
     }, [loading, hasMores])    
+     
     
     const { langMode } = useContext(UserContext);
 
@@ -182,7 +199,9 @@ const NewsCard = () => {
                                     </li>
                                     {newsData.sub_category_en && (
                                         <li>
-                                            { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                            <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
+                                                { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                            </Link>
                                         </li>
                                     )}
                                 </ul>
@@ -287,7 +306,9 @@ const NewsCard = () => {
                                     </li>
                                     {newsData.sub_category_en && (
                                         <li>
-                                            { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                            <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
+                                                { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
+                                            </Link>
                                         </li>
                                     )}
                                 </ul>

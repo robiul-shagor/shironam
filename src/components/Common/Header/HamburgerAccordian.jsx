@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { UserContext } from '../../../App';
 
 const HamburgerAccordian = ({ data }) => {
@@ -23,7 +23,7 @@ const HamburgerAccordian = ({ data }) => {
             
             {isOpen && ( <div className="!visible">
                 <ul className="text-[1.4rem] space-y-3 p-4 ml-4 list-disc">
-                    {data.interest.length > 0 && data.interest.map((item, index) => (            
+                    {data.interest && data.interest.map((item, index) => (            
                         <li className="before:content-['&#8212;'] before:mr-1 before:text-[#D6D6D6]" key={index}>
                             <Link to={`/category/${makeLowercase(data.name_en)}/${makeLowercase(item.name_en)}`}>
                                 { langMode == 'BN' ? item.name_bn : item.name_en }

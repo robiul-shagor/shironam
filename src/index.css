@@ -33,6 +33,9 @@
   body {
       @apply box-border text-[1.6rem] leading-[1.7]
   }
+  body {
+    overflow-x: hidden;
+  }
   svg, img {
       @apply inline
   }

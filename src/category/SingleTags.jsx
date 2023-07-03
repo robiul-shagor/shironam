@@ -7,18 +7,16 @@ import Footer from '../components/Common/Footer/Footer'
 import MainCategory from '../components/Common/MainBody/MainCategory'
 
 const SingleTags = () => {
-    const { tags } = useParams();
+  const url_slug  = useParams();
 
-    const Capitalize = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+  const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-    const categoryData = Capitalize(tags);
-    
   return (
     <div className='home'>
         <Header />
-            <MainCategory category={categoryData} type={'tags'} />
+        <MainCategory category={capitalize(url_slug.tags)} type={'tags'} />
         <Footer />
     </div>
   )

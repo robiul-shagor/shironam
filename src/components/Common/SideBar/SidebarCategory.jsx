@@ -2,12 +2,19 @@ import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../../App';
+import NewsListQuery from '../../../query/NewsListQuery';
 
 const SidebarCategory = ( { category, types } ) => {
     const [sideBarAds, setSideBarAds] = useState([]);
-    const [ tags, setTags ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
+
+    const [query, setQuery] = useState('')
+    const [pageNumber, setPageNumber] = useState(1)
+
+    const {
+        loading, error, news, hasMores
+    } = NewsListQuery(query, pageNumber)
 
     const getData = async() => {
         const bearer_token = `Bearer ${userData.token}`;
@@ -17,11 +24,6 @@ const SidebarCategory = ( { category, types } ) => {
                   'Authorization': bearer_token
                 }
             };
-
-            await axios.get('/news-list', config)
-            .then(res => {
-                setTags(res.data);
-            });
 
             await axios.get('/ads-right-side', config)
             .then(res => {
@@ -37,24 +39,14 @@ const SidebarCategory = ( { category, types } ) => {
         getData();
     }, [])
 
-    let filteredTag;
-    if( types == 'tags' ) {
-        filteredTag = tags.filter((post) => {
-            const tagValues = post.tags ? Object.values(post.tags) : [];
-            return tagValues.some((tag) => tag.name_en === category);
-        });
-    } else {
-        filteredTag = tags.filter((post) => post.category_en === category);
-    }
-
     return (
         <div className='content-inner sticky top-[12rem]'>
             <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
-                { filteredTag.length > 0 && filteredTag.map((data, index) => ( 
+                { news && news.map((data, index) => ( 
                         <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-                            { data.tags.map( (item, index2) => (
+                            { data.tags && data.tags.map( (item, index2) => (
                                 <li key={index2}>
                                     <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
                                         #{ langMode == 'BN' ? item.name_bn : item.name_en}
@@ -64,7 +56,11 @@ const SidebarCategory = ( { category, types } ) => {
                         </ul>
                     ))
                 }
+
+                <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+                <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
+
 
             <hr className="my-4 md:my-12" />
 

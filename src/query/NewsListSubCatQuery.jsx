@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from '../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
-export default function NewsListQuery(query, pageNumber, type) {
+export default function NewsListSubCatQuery(query, pageNumber) {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -10,10 +10,9 @@ export default function NewsListQuery(query, pageNumber, type) {
     const [hasMores, setHasMores] = useState(false)
 
     const url_slug  = useParams();
-    const history = useNavigate();
 
     const { mainCategory, subCategory } = useParams();
-
+    
     const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
@@ -27,7 +26,8 @@ export default function NewsListQuery(query, pageNumber, type) {
     
     useEffect(() => {
         setNews([])
-    }, [query, type])
+    }, [query])
+
 
     useEffect(() => {
         setLoading(true)
@@ -60,21 +60,19 @@ export default function NewsListQuery(query, pageNumber, type) {
                 //if (axios.isCancel(e)) return
                 setError(true)
             }
-        } else if( type == 'subcategory' ) {
-            
+        } else if( typeof url_slug.subCategory !== 'undefined' ) {
             try { 
-                axios.get(`/news-list?sub_category=${subCategory}`, config)
+                axios.get(`/news-list`, config)
                 .then(res => {
+                    const subCategory = url_slug.subCategory;
                     setNews( (prevItems) => {
                         const existingIds = new Set(prevItems.map((item) => item.id));
                          // Filter out duplicate items based on their IDs
                         const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
 
-                        
+                        const filteredSubPosts = uniqueItems.filter((post) => post.sub_category_en === capitalize(subCategory));
 
-                        // const filteredSubPosts = uniqueItems.filter((post) => post.sub_category_en === capitalize(subCategory));
-
-                        return [...prevItems, ...uniqueItems];
+                        return [...prevItems, ...filteredSubPosts];
                     } )
 
                     //setHasMores(res.data.length > 0)

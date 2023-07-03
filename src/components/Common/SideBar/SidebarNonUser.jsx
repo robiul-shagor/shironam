@@ -2,28 +2,14 @@ import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
 import { Link } from 'react-router-dom';
+import NewsListNonUser from '../../../query/NewsListNonUser';
 
 const SidebarNonUser = () => {
-    const [sideBarAds, setSideBarAds] = useState([]);
-    const [ tags, setTags ] = useState([]);
     const { langMode } = useContext(UserContext);
+    const [ query, setQuery ] = useState([]);
+    const { loading, error, news } = NewsListNonUser(query)
 
-    const getData = async() => {
-        try {
-            await axios.get('/news-list-without-authentication', {})
-            .then(res => {
-                setTags(res.data.data);
-            });
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    useEffect(() => {
-        getData();
-    }, [])
-
-    const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );
+    const filteredTags = news.filter((post) => typeof post.tags !== 'undefined' );
 
     return (
         <div className='content-inner sticky top-[12rem]'>
@@ -42,6 +28,9 @@ const SidebarNonUser = () => {
                         </ul>
                     ))
                 }
+
+                <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+                <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
         </div>
     )

@@ -8,6 +8,10 @@ const MyInterests = () => {
   const [interestsData, setInterestsData] = useState([]);
   const [isCheckedList, setIsCheckedList] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [defaultInt, setDefaultInt] = useState([]);
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
   const bearer_token = `Bearer ${userData.token}`;
   const config = {
@@ -38,15 +42,47 @@ const MyInterests = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get('/interest-list', config);
         setInterestsData(res.data.data);
-        setIsCheckedList(new Array(res.data.data.length).fill(false));
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    getData();
+  
+    const getDefault = async () => {
+      try {
+        setIsLoading(true);
+        const res = await axios.get('/me', config);
+        const obj = JSON.parse(res.data.normal_user.interest);
+        setDefaultInt(obj);
+        setCheckboxState(obj); // Set checkbox state based on defaultInt values
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    const setCheckboxState = (obj) => {
+      const updatedCheckedList = interestsData.map((item) =>
+        Object.values(obj).includes(item.id.toString())
+      );
+      setIsCheckedList(updatedCheckedList);
+    };
+  
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([getData(), getDefault()]);
+      setIsLoading(false);
+    };
+  
+    fetchData();
   }, []);
+
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -71,14 +107,22 @@ const MyInterests = () => {
       
       return subcategoryValues;
     }, []);
-
-
-    console.log(selectedCheckboxValues);
-    console.log(selectedSubcategoryValues);
+    
+    try {
+      const finalChoice = [...selectedCheckboxValues, ...selectedSubcategoryValues];
+      axios.put('/update-interest', {
+        interests: finalChoice.toString()
+      }, {headers: {
+        'Authorization': bearer_token
+      }})
+      .then(res => {
+        setSuccess(true);
+      });
+    } catch (e) {
+      setError(true);
+    }
   };
 
-  //console.log(interestsData);
-  
   return (
     <div className='interest-pages'>
       <Header />
@@ -104,7 +148,7 @@ const MyInterests = () => {
                         { langMode == 'BN' ? item.name_bn : item.name_en }
                       </label>
                     </div>
-                    {isCheckedList[index] && (
+                    {(isCheckedList[index] || Object.values(defaultInt).includes(item.id.toString())) && (
                       <div className="!visible">
                         <h3 className="subcategory font-sans mb-8 font-medium underline underline-offset-[6px]">
                           {langMode == 'BN' ? 'সাব ক্যাটাগরি নির্বাচন করুন' : 'Select Sub Categories'}

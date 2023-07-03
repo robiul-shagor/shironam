@@ -21,6 +21,7 @@ import PrivacyPolicy from "./components/Pages/PrivacyPolicy"
 import SingleTags from "./category/SingleTags"
 import SingleNews from "./components/Pages/SingleNews"
 import AfterRegistrationInterests from "./components/Pages/AfterRegistrationInterests"
+import SingleCategorySub from "./category/SingleCategorySub"
 
 
 
@@ -68,14 +69,14 @@ function App() {
           <Route path='/category' element={<CategoryArchive />} />
           <Route path="/category/:category" element={<SingleCategory />}  />
           <Route path="/tags/:tags" element={<SingleTags />}  />
-          <Route path="/category/:category/:category" element={<SingleCategory />}  />
+          <Route path="/category/:mainCategory/:subCategory" element={<SingleCategorySub />}  />
           <Route path="/forget-password" element={<ForgetPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<Contact />} />
           <Route path="/advertisement" element={<Advertisement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/:single-permalink" element={<SingleNews />} />
+          <Route path="/:id" element={<SingleNews />} />
           <Route path="/interests" element={<AfterRegistrationInterests />} />
         </Routes>
       </UserContext.Provider>
