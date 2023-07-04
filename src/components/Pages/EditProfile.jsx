@@ -33,34 +33,6 @@ const EditProfile = () => {
       }
   };
 
-  // const [selectedImage, setSelectedImage] = useState(null);
-
-  // const handleImageChange = (event) => {
-  //   setSelectedImage(event.target.files[0]);
-  // };
-
-  // const handleFormSubmit = async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('image', selectedImage);
-
-  //     console.log(selectedImage);
-
-  //     const response = await axios.post('/update-profile-picture', formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         'Authorization': bearer_token,
-  //       },
-  //     });
-
-  //     console.log('Image uploaded successfully!', response.data);
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
-
   const handleFileChange = async(event) => {
     const images = event.target.files[0];
     await axios.post('/update-profile-picture', {images: [event.target.files[0]] }, {headers: {

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
 
@@ -13,7 +13,10 @@ const Register = () => {
     const [cPassword, setCpassword] = useState('');
     const [error, setError] = useState('');
     const [ token, setToken ] = useState('');
+    const [ message, setMessage ] = useState('');
     const { langMode } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     const tokenHandle = (event) => {
         event.preventDefault();
@@ -30,9 +33,9 @@ const Register = () => {
             }})
             .then(res => {
                 console.log(res.data);
-                // sessionStorage.setItem("userDetails", JSON.stringify(res.data));
-                // setUserLogin(res.data);
-                // navigate("/");
+                setMessage(res.data.message)
+                sessionStorage.setItem("newUserDetails", JSON.stringify(res.data.user));
+                navigate("/verify");
             });
             // setEmail(email);
             // setPassword(password);

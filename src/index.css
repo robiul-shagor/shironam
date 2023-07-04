@@ -219,3 +219,16 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   opacity: 0.75;
   cursor: not-allowed;
 }
+.interest-list-dropdown {
+  position: absolute;
+  right: 20px;
+  top: 45px;
+  z-index: 999;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 8px;
+}
+.interest-list-dropdown input + label::after {
+  left: 0.5rem !important;
+  top: 0.5rem !important;
+}

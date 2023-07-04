@@ -5,15 +5,18 @@ import { Link, useParams, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
+import SocialShare from '../Component/SocialShare';
 
 
 const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [visiblePostId, setVisiblePostId] = useState(null);
+    const [visibleId, setVisibleId] = useState(null);
     const [visibleAdsId, setVisibleAdstId] = useState(null);
     const [query, setQuery] = useState('')
     const [type, setType] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
+    const [social, setSocial] = useState(false)
 
     const { category, subCategory, tags } = useParams()
 
@@ -130,6 +133,23 @@ const NewsCard = () => {
         } catch (e) {
             console.log(e);
         }
+    }    
+    
+    // Handle View ads
+    const viewAdsData = (view) => {
+        try {           
+            axios.post('/view-ads', {ads_id: view}, {headers: {
+                'Authorization': bearer_token
+            }})
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // Handle Social dropdown
+    const socialHandle = (e) => {
+        e.preventDefault();
+        setSocial(!social);
     }
     
     // Handle scroll
@@ -150,11 +170,14 @@ const NewsCard = () => {
                 setVisiblePostId(Number(getPosts));
                 if (!scrolled && window.scrollY > 0) {
                     scrolled = true;
-                    viewData(Number(getPosts));
+                    setVisibleId(Number(getPosts))
                 }
             }         
             if( typeof getAds !== 'undefined' ) {
-                setVisibleAdstId(Number(getAds));
+                if (!scrolled && window.scrollY > 0) {
+                    scrolled = true;
+                    setVisibleAdstId(Number(getAds));
+                }
             }
             break;
           }
@@ -167,7 +190,13 @@ const NewsCard = () => {
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
-    }, [])    
+    }, [])
+    
+    
+    useEffect(() => {
+        visibleId && viewData(visibleId);
+        visibleAdsId && viewAdsData(visibleAdsId);
+    }, [visibleId, visibleAdsId ])
     
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">
@@ -263,16 +292,16 @@ const NewsCard = () => {
                                                 <li>
                                                     <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
                                                         { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                        &nbsp;
                                                         <i className="fal fa-bookmark"></i>
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme">
+                                                    <a href="#" className="transition-all hover:text-theme" onClick={socialHandle}>
                                                         { langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        <i className="fal fa-share"></i>
+                                                        &nbsp;<i className="fal fa-share"></i>
                                                     </a>
-                                                    <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
-                                                    </ul>
+                                                    {social && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
                                             </ul>
                                         </li>
@@ -370,16 +399,15 @@ const NewsCard = () => {
                                                 <li>
                                                     <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
                                                         { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                        <i className="fal fa-bookmark"></i>
+                                                        &nbsp;<i className="fal fa-bookmark"></i>
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme">
+                                                    <a href="#" className="transition-all hover:text-theme" onClick={socialHandle}>
                                                         { langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        <i className="fal fa-share"></i>
+                                                        &nbsp;<i className="fal fa-share"></i>
                                                     </a>
-                                                    <ul className='z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute bottom-5 right-0 social-share'>
-                                                    </ul>
+                                                    {social && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
                                             </ul>
                                         </li>
@@ -393,7 +421,7 @@ const NewsCard = () => {
                 <div>{langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No news found.'}</div>
             )}
 
-            <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+            <div>{(loading && news.length === 0) && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
             <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />

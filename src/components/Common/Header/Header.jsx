@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -11,16 +11,11 @@ import LanguageSwitcher from './LanguageSwitcher';
 import HamburgerMenu from './HamburgerMenu';
 
 const Header = () => {
-  
-  const { userLogin, setUserLogin } = useContext(UserContext);
 
   const { langMode } = useContext(UserContext);
   
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
-  const navigate = useNavigate();
- 
-  
   return (
     <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024] dark:bg-[#272727]">
         <div className="container md:flex justify-between md:items-center">

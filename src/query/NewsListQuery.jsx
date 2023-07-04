@@ -9,9 +9,6 @@ export default function NewsListQuery(query, pageNumber, type) {
     const [news, setNews] = useState([])
     const [hasMores, setHasMores] = useState(false)
 
-    const url_slug  = useParams();
-    const history = useNavigate();
-
     const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
@@ -64,7 +61,6 @@ export default function NewsListQuery(query, pageNumber, type) {
             try { 
                 axios.get(`/news-list?paginate=${pageNumber}&sub_category=${query}`, config)
                 .then(res => {
-                    console.log(res.data)
                     setNews( (prevItems) => {
                         const existingIds = new Set(prevItems.map((item) => item.id));
                          // Filter out duplicate items based on their IDs

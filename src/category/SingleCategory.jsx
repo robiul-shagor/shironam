@@ -1,8 +1,6 @@
-import {React, useState, useEffect} from 'react'
+import {React } from 'react'
 import { useParams } from 'react-router-dom';
-import axios from '../api/axios'
 import Header from '../components/Common/Header/Header';
-import MainBody from '../components/Common/MainBody/MainBody'
 import Footer from '../components/Common/Footer/Footer'
 import MainCategory from '../components/Common/MainBody/MainCategory'
 

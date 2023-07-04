@@ -10,37 +10,37 @@ const BreakingNews = ({ navigation }) => {
     const customNavigation = navigation ? navigation : "true";
     const { langMode } = useContext(UserContext);
 
-    useEffect(() => {
-        const getData = async() => {
-            if( userData == null ) {
-                try {    
-                    await axios.get('/breaking-news-without-authentication', {})
-                    .then(res => {
-                        setNewsItem(res.data.data);
-                    });
-    
-                } catch (e) {
-                    console.log(e);
-                }
-            } else {
-                const bearer_token = `Bearer ${userData.token}`;
-                try {
-                    const config = {
-                        headers: {
-                          'Authorization': bearer_token
-                        }
-                    };
-    
-                    await axios.get('/breaking-news', config)
-                    .then(res => {
-                        setNewsItem(res.data.data);
-                        
-                    });
-                } catch (e) {
-                    console.log(e);
-                }
+    const getData = async() => {
+        if( userData == null ) {
+            try {    
+                await axios.get('/breaking-news-without-authentication', {})
+                .then(res => {
+                    setNewsItem(res.data.data);
+                });
+
+            } catch (e) {
+                console.log(e);
             }
-        };
+        } else {
+            const bearer_token = `Bearer ${userData.token}`;
+            try {
+                const config = {
+                    headers: {
+                      'Authorization': bearer_token
+                    }
+                };
+
+                await axios.get('/breaking-news', config)
+                .then(res => {
+                    setNewsItem(res.data.data);
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    };
+
+    useEffect(() => {
         getData();
     }, [])
 
@@ -61,7 +61,7 @@ const BreakingNews = ({ navigation }) => {
                         { newsItem.map( (news, index) => (
                             <span className="hover:text-theme dark:text-white font-heading" key={ index }>
                                 <i className="fa fa-square text-theme"></i>
-                                { langMode == 'BN' ? news.summary_bn : news.summary_en}
+                                &nbsp;{ langMode == 'BN' ? news.summary_bn : news.summary_en}
                             </span>
                         ) ) }
                     </marquee>

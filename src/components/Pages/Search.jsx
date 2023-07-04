@@ -52,52 +52,6 @@ const Search = () => {
     }
   };
 
-  // useEffect(() => {
-  //     const getData = async() => {
-  //         const bearer_token = `Bearer ${userData.token}`;
-  //         try {
-  //             const config = {
-  //                 headers: {
-  //                   'Authorization': bearer_token
-  //                 }
-  //             };
-
-  //             axios.get('/news-list?search=' + serachData, config)
-  //             .then(res => {
-  //                 setNewsItem(res.data);
-  //                 //console.log(res.data);
-  //             });
-
-  //         } catch (e) {
-  //             console.log(e);
-  //         }
-  //     };
-  //     getData();
-
-  //     // const handleScroll = () => {
-  //     //     const postElements = document.getElementsByClassName('post-item');
-  //     //     const windowHeight = window.innerHeight;
-    
-  //     //     for (let i = 0; i < postElements.length; i++) {
-  //     //       const postElement = postElements[i];
-  //     //       const rect = postElement.getBoundingClientRect();
-  //     //       const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
-    
-  //     //       if (isVisible) {
-  //     //         setVisiblePostId(Number(postElement.getAttribute('data-id')));
-  //     //         break;
-  //     //       }
-  //     //     }
-  //     // };
-  //     // window.addEventListener('scroll', handleScroll);
-
-      
-  //     // return () => {
-  //     //     window.removeEventListener('scroll', handleScroll);
-  //     // };
-  // }, [])
-
-
   return (
     <div className='dark:bg-dark'>
         <Header />

@@ -11,8 +11,6 @@ export default function NewsListSubCatQuery(query, pageNumber) {
 
     const url_slug  = useParams();
 
-    const { mainCategory, subCategory } = useParams();
-    
     const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {

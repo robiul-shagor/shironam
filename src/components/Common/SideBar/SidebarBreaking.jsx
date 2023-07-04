@@ -29,19 +29,28 @@ const SidebarBreaking = ( { types } ) => {
                     setTags(res.data);
                 });
             }
-
-            await axios.get('/ads-right-side', config)
-            .then(res => {
-                setSideBarAds(res.data);
-            });
-
         } catch (e) {
             console.log(e);
         }
     };
 
+    const getAds = async() => {
+        try {
+            await axios.get('/ads-right-side', config)
+            .then(res => {
+                setSideBarAds(res.data);
+            });
+        } catch (e) {
+            console.log(e);
+        }        
+    }
+
     useEffect(() => {
         getData();
+    }, [])    
+    
+    useEffect(() => {
+        getAds();
     }, [])
 
     const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );

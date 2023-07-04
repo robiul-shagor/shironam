@@ -22,6 +22,7 @@ import SingleTags from "./category/SingleTags"
 import SingleNews from "./components/Pages/SingleNews"
 import AfterRegistrationInterests from "./components/Pages/AfterRegistrationInterests"
 import SingleCategorySub from "./category/SingleCategorySub"
+import RegisterVerify from "./components/Pages/RegisterVerify"
 
 
 
@@ -78,6 +79,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/:id" element={<SingleNews />} />
           <Route path="/interests" element={<AfterRegistrationInterests />} />
+          <Route path="/verify" element={<RegisterVerify />} />
         </Routes>
       </UserContext.Provider>
     </>

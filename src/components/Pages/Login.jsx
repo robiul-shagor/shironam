@@ -27,7 +27,12 @@ const Login = () => {
                 sessionStorage.setItem("userDetails", JSON.stringify(res.data));
                 setUserLogin(res.data);
                 setProcessing(false);
-                navigate("/");
+
+                if( res.data.normal_user.interest == null ) {
+                    navigate("/interests");
+                } else {
+                    navigate("/");
+                }
             });
         } catch (e) {
             if (e.response && e.response.status === 422) {

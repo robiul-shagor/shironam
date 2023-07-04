@@ -8,7 +8,6 @@ const SideBar = () => {
     const [ tags, setTags ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
-
     const bearer_token = `Bearer ${userData.token}`;
 
     const config = {
@@ -22,8 +21,14 @@ const SideBar = () => {
             await axios.get('/news-list', config)
             .then(res => {
                 setTags(res.data);
-            });          
-            
+            });      
+        } catch (e) {
+            console.log(e);
+        }
+    };    
+    
+    const getAds = async() => {
+        try {     
             await axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
@@ -35,6 +40,10 @@ const SideBar = () => {
 
     useEffect(() => {
         getData();
+    }, [])    
+    
+    useEffect(() => {
+        getAds();
     }, [])
 
     const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );

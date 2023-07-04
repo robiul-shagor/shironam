@@ -1,6 +1,9 @@
 import React from 'react'
+import axios from '../../../api/axios';
 
 function SocialShare({ title, url }) {
+    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+
     const shareOnSocialMedia = (platform) => {
         let shareUrl = '';
     
@@ -20,10 +23,37 @@ function SocialShare({ title, url }) {
         default:
             break;
         }
-    
-        if (shareUrl !== '') {
-            window.open(shareUrl, '_blank');
+
+        if( userData !== null ) {
+            const bearer_token = `Bearer ${userData.token}`;
+
+            const config = {
+                headers: {
+                  'Authorization': bearer_token
+                }
+            };
+
+            const parts = url.split("/");
+            const news_id = parts.slice(3).join("/");
+
+            try {           
+                axios.post('/share-news', {news_id: news_id, platform}, {headers: {
+                    'Authorization': bearer_token
+                }})
+                .then(res => { 
+                    if( res.data.status == "Success" ) {
+                        window.open(shareUrl, '_blank');
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        } else {
+            if (shareUrl !== '') {
+                window.open(shareUrl, '_blank');
+            }
         }
+    
     };
 
     return (

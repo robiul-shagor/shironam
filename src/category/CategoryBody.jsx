@@ -3,52 +3,30 @@ import { Link } from 'react-router-dom'
 import axios from '../api/axios';
 import BreakingNews from '../components/Common/BreakingNews/BreakingNews';
 import moment from 'moment';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper";
-
-// Import Swiper styles
-import 'swiper/css'
 
 const CategoryBody = () => {
     const [newsItem, setNewsItem ] = useState([]);
-    const [newsSample, setNewsSample ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const bearer_token = `Bearer ${userData.token}`;
+    const config = {
+        headers: {
+          'Authorization': bearer_token
+        }
+    };
 
     useEffect(() => {
         const getData = async() => {
-            const bearer_token = `Bearer ${userData.token}`;
             try {
-                const config = {
-                    headers: {
-                      'Authorization': bearer_token
-                    }
-                };
-
                 await axios.get('/category-list', config)
                 .then(res => {
                     setNewsItem(res.data);
-                    //console.log(res.data);
                 });
-
-                await axios.get('/news-list', config)
-                .then(res => {
-                    setNewsSample(res.data);
-                    //console.log(res.data);
-                });
-
             } catch (e) {
                 console.log(e);
             }
         };
         getData();
     }, [])
-
-    console.log(newsItem);
-
-    const startIndex = 0; // Start index of the range (inclusive)
-    const endIndex = 4; // End index of the range (exclusive)
-    const itemsToShow = newsSample.slice(startIndex, endIndex);
 
     return (
         <div className="main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] py-8 pb-32">

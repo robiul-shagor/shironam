@@ -8,36 +8,32 @@ const HamburgerMenu = () => {
   const [hamburgerToggle, setHamburgerToggle] = useState(false);
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
-  const handleHamburger = (e) => {
-    e.preventDefault();
-    setHamburger(!hamburger);
-  };
+    const handleHamburger = (e) => {
+        e.preventDefault();
+        setHamburger(!hamburger);
+    };
   
-    useEffect(() => {
-        setData([])
+    const getCategory = async() => {
+        const bearer_token = `Bearer ${userData.token}`;
+        try {
+            const config = {
+                headers: {
+                'Authorization': bearer_token
+                }
+            };
+
+            await axios.get('/interest-list', config)
+            .then(res => {
+                setData(res.data.data);
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    useEffect(()=> {
+        getCategory();
     }, [])
-
-  const getCategory = async() => {
-    const bearer_token = `Bearer ${userData.token}`;
-    try {
-        const config = {
-            headers: {
-              'Authorization': bearer_token
-            }
-        };
-
-        await axios.get('/interest-list', config)
-        .then(res => {
-            setData(res.data.data);
-        });
-    } catch (e) {
-        console.log(e);
-    }
-  };
-
-  useEffect(()=> {
-    getCategory();
-  }, [])
 
   return (
     <li className="relative">
