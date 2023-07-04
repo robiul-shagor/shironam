@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
@@ -12,16 +12,9 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [cPassword, setCpassword] = useState('');
     const [error, setError] = useState('');
-    const [ token, setToken ] = useState('');
-    const [ message, setMessage ] = useState('');
     const { langMode } = useContext(UserContext);
 
     const navigate = useNavigate();
-
-    const tokenHandle = (event) => {
-        event.preventDefault();
-        setToken(true);
-    }
 
     const hanndleRegistration = async(event) => {
         event.preventDefault();
@@ -46,7 +39,7 @@ const Register = () => {
     }
   return (
     <div className="register-main">
-        <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+        <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
             <div className="brand-logo text-center">
                 <Link 
                     to="/"
@@ -58,7 +51,7 @@ const Register = () => {
             </div>
         </header>
 
-        <div className="form_wrapper mt-32 py-24 px-6">
+        <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6">
             <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleRegistration}>
                 <div className="form-title text-center">
                     <h1 className="text-4xl font-medium mb-2 leading-none">
@@ -73,7 +66,7 @@ const Register = () => {
                     <label>
                     { langMode == 'BN' ? 'নামের প্রথম অংশ' : 'First Name'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="text" className="form-control" required value={name} onChange={(e) => setName(e.target.value)} />
+                    <input type="text" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={name} onChange={(e) => setName(e.target.value)} />
                     {typeof error.name !== 'undefined' && <span className="error">{error.name}</span>}
                 </div> 
 
@@ -81,7 +74,7 @@ const Register = () => {
                     <label>
                     { langMode == 'BN' ? 'নামের শেষাংশ' : 'Last Name'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="text" className="form-control" required value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <input type="text" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={lastName} onChange={(e) => setLastName(e.target.value)} />
                     {typeof error.last_name !== 'undefined' && <span className="error">{error.last_name}</span>}
                 </div>
 
@@ -89,7 +82,7 @@ const Register = () => {
                     <label>
                     { langMode == 'BN' ? 'ফোন' : 'Phone'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="text" className="form-control" required value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    <input type="text" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={phone} onChange={(e) => setPhone(e.target.value)} />
                     {typeof error.phone !== 'undefined' && <span className="error">{error.phone}</span>}
                 </div>
 
@@ -97,7 +90,7 @@ const Register = () => {
                     <label>
                     { langMode == 'BN' ? 'ইমেইল' : 'Email'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="email" className="form-control" required value={email} onChange={(e)=> setEmail(e.target.value)} />
+                    <input type="email" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={email} onChange={(e)=> setEmail(e.target.value)} />
                     {typeof error.email !== 'undefined' && <span className="error">{error.email}</span>}
                 </div>
 
@@ -105,14 +98,14 @@ const Register = () => {
                     <label>
                         { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="password" className="form-control" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>                
                 
                 <div className="form-group mt-6">
                     <label>
                         { langMode == 'BN' ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="password" className="form-control" required value={cPassword} onChange={(e) => setCpassword(e.target.value)} />
+                    <input type="password" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={cPassword} onChange={(e) => setCpassword(e.target.value)} />
                     {typeof error.c_password !== 'undefined' && <span className="error">{error.c_password}</span>}
                 </div>
 

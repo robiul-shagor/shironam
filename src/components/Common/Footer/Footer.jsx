@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import LoginModal from '../Component/LoginModal';
 import { UserContext } from '../../../App';
@@ -123,12 +123,12 @@ const Footer = () => {
             </footer>
 
             { ( userData == null && showModal ) && (
-                <div id="show_login_modal" className="fixed inset-0 z-[1055] h-full w-full">
+                <div id="show_login_modal" className="fixed inset-0 z-[1055] h-full w-full bg-white dark:bg-[#272727] dark:text-white">
                     <div className="flex flex-col h-full justify-end">
-                        <div className="bg-white transition-all duration-300 ease-in-out translate-y-[100%] overflow-y-auto transform-none opacity-100">
+                        <div className="bg-white dark:bg-[#272727] dark:text-white transition-all duration-300 ease-in-out translate-y-[100%] overflow-y-auto transform-none opacity-100">
                             <button 
                                 type="button" 
-                                className="w-14 h-14 bg-white border rounded-md flex items-center justify-center absolute right-4 top-4 focus:shadow-none focus:outline-none"  
+                                className="w-14 h-14 bg-white dark:bg-[#272727] dark:text-white border rounded-md flex items-center justify-center absolute right-4 top-4 focus:shadow-none focus:outline-none"  
                                 onClick={handleClose}>
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-6 w-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>

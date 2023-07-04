@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import axios from '../api/axios';
-import { useParams, useNavigate } from 'react-router-dom';
 
 export default function NewsListQuery(query, pageNumber, type) {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -14,10 +13,6 @@ export default function NewsListQuery(query, pageNumber, type) {
         headers: {
           'Authorization': bearer_token
         }
-    }
-
-    const capitalize = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
     }
     
     useEffect(() => {

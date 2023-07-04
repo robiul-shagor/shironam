@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const useIntervalAsync = (fn, ms) => {
   const runningCount = useRef(0);

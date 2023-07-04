@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import axios from '../../api/axios';
+import { UserContext } from '../../App';
 
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
-    const [messege, setMessage] = useState('');
-    const [status, setStatus] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [token, setToken] = useSearchParams();
+    const { langMode } = useContext(UserContext); 
     // const getParms = useSearchParams();
 
     // if( getParms ) {
@@ -37,7 +37,7 @@ const ResetPassword = () => {
 
     return (
         <div className='forget-password-wrappers'>
-            <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+            <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
                 <div className="brand-logo text-center">
                     <Link 
                         to="/"
@@ -49,41 +49,42 @@ const ResetPassword = () => {
                 </div>
             </header>
 
-            <div className="form_wrapper mt-32 py-24 px-6">
+            <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6">
                 <form action="#" className="max-w-[425px] mx-auto mb-0 dark:text-white" onSubmit={resetPassWordHanddle}>
                     <div className="form-title text-center">
                         <h1 className="text-4xl font-medium mb-2 leading-none">
-                            Reset Password
+                             { langMode == 'BN' ? 'পাসওয়ার্ড রিসেট করুন' : 'Reset Password' }
                         </h1>
                         <p className="text-2xl">
-                            Enter your password.
+                            { langMode == 'BN' ? 'আপনার পাসওয়ার্ড লিখুন.' : 'Enter your password.' }
                         </p>
                     </div>
                     <br/> <br/>
                     <div className="form-group mt-6">
                         <label>
-                            Password<span className="text-red-600">*</span>
+                        { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password' }<span className="text-red-600">*</span>
                         </label>
-                        <input type="password" className="form-control form-input" required value={password} onChange={(e)=> setPassword(e.target.value)} />
+                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e)=> setPassword(e.target.value)} />
                     </div>
 
                     <div className="form-group mt-6">
                         <label>
-                            Confirm Password<span className="text-red-600">*</span>
+                            { langMode == 'BN' ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password' }<span className="text-red-600">*</span>
                         </label>
-                        <input type="password" className="form-control form-input" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />                       
+                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />                       
                     </div>
 
                     <div className="form-group mt-6">
                         <button 
                             type="submit" 
                             className="btn-dark-full">
-                            Send Link
+                            { langMode == 'BN' ? 'লিঙ্ক পাঠান' : 'Send Link' }
                         </button> 
                     </div>
                     <br /><br /><br />
                     <p className="text-center">
-                        Have an account? <Link to="/login">Sign In</Link>
+                        { langMode == 'BN' ? 'একাউন্ট আছে?' : 'Have an account?' }
+                        <Link to="/login">{ langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In' }</Link>
                     </p>
                 </form>
             </div>

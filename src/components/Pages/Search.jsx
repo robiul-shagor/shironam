@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Header from '../Common/Header/Header'
 import Footer from '../Common/Footer/Footer'
 import axios from '../../api/axios'
-import { Link } from 'react-router-dom'
 import moment from 'moment';
 
 

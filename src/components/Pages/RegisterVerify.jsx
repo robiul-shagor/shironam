@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
@@ -8,7 +8,6 @@ const RegisterVerify = () => {
     const [verify, setVerify] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [ token, setToken ] = useState('');
     const { langMode } = useContext(UserContext);
     const navigate = useNavigate();
     
@@ -41,7 +40,7 @@ const RegisterVerify = () => {
     }
   return (
     <div className="register-main">
-        <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+        <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
             <div className="brand-logo text-center">
                 <Link 
                     to="/"
@@ -53,7 +52,7 @@ const RegisterVerify = () => {
             </div>
         </header>
 
-        <div className="form_wrapper mt-32 py-24 px-6">
+        <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6">
             <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleRegistration}>
                 <div className="form-title text-center">
                     <h1 className="text-4xl font-medium mb-2 leading-none">
@@ -65,7 +64,7 @@ const RegisterVerify = () => {
                     <label>
                     { langMode == 'BN' ? 'কোড যাচাই করুন' : 'Verify Code'}<span className="text-red-600">*</span>
                     </label>
-                    <input type="text" className="form-control" required value={verify} onChange={handleInputChange} />
+                    <input type="text" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={verify} onChange={handleInputChange} />
 
                     {error && (<span className="error">{error}</span>)}
                 </div> 

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
@@ -24,7 +24,15 @@ const Login = () => {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                sessionStorage.setItem("userDetails", JSON.stringify(res.data));
+                const data = {
+                    token: res.data.token,
+                    normal_user: {
+                        email: res.data.normal_user.email,
+                        name: res.data.normal_user.name
+                    }
+                };
+                  
+                sessionStorage.setItem("userDetails", JSON.stringify(data));
                 setUserLogin(res.data);
                 setProcessing(false);
 
@@ -64,7 +72,7 @@ const Login = () => {
 
   return (
     <div className="login-main">
-        <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+        <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
             <div className="brand-logo text-center">
                 <Link 
                     to="/"
@@ -76,7 +84,7 @@ const Login = () => {
             </div>
         </header>
 
-        <div className="form_wrapper mt-32 py-24 px-6 bg-white">
+        <div className="form_wrapper bg-white dark:bg-[#272727] dark:text-white mt-32 py-24 px-6 bg-white">
             { !userLogin && (userLogin.normal_user !== 'undefined' ) ? (
                 <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleLogin}>
                     <div className="form-title text-center">
@@ -92,14 +100,14 @@ const Login = () => {
                         <label>
                             { langMode == 'BN' ? 'ইমেইল' : 'Email Address'}<span className="text-red-600">*</span>
                         </label>
-                        <input type="email" className="form-control" required value={email} onChange={(e)=> setEmail(e.target.value)}/>
+                        <input type="email" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={email} onChange={(e)=> setEmail(e.target.value)}/>
                     </div>
 
                     <div className="form-group mt-6">
                         <label>
                             { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                         </label>
-                        <input type="password" className="form-control form-input" required value={password} onChange={(e)=> setPassword(e.target.value)} />
+                        <input type="password" className="form-control bg-white dark:bg-[#272727] dark:text-white form-input" required value={password} onChange={(e)=> setPassword(e.target.value)} />
                         <div className="form-check mt-6 mb-7">
                             <input type="checkbox" value="" id="rememberPassword" checked={rememberMe} onChange={handleRememberMeChange} />
                             <label htmlFor="rememberPassword">

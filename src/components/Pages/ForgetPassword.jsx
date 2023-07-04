@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../../api/axios';
+import { UserContext } from '../../App';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
     const [messege, setMessage] = useState('');
     const [status, setStatus] = useState('');
+    const { langMode } = useContext(UserContext);
     
     const forgetPassWordHanddle = async(event) => {
         event.preventDefault();
@@ -27,7 +29,7 @@ const ForgetPassword = () => {
 
     return (
         <div className='forget-password-wrappers'>
-            <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+            <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
                 <div className="brand-logo text-center">
                     <Link 
                         to="/"
@@ -39,22 +41,23 @@ const ForgetPassword = () => {
                 </div>
             </header>
 
-            <div className="form_wrapper mt-32 py-24 px-6">
+            <div className="bg-white dark:bg-dark dark:text-white form_wrapper mt-32 py-24 px-6">
                 <form action="#" className="max-w-[425px] mx-auto mb-0 dark:text-white" onSubmit={forgetPassWordHanddle}>
                     <div className="form-title text-center">
                         <h1 className="text-4xl font-medium mb-2 leading-none">
-                            Recover Password
+                            { langMode == 'BN' ? 'পাসওয়ার্ড পুনরুদ্ধার করুন' : 'Recover Password' }
                         </h1>
                         <p className="text-2xl">
-                            Enter email address that you used.
+                            { langMode == 'BN' ? 'আপনি যে ইমেল ঠিকানা ব্যবহার করেছেন তা লিখুন।' : 'Enter email address that you used.' }
                         </p>
                     </div>
                     <br/> <br/>
                     <div className="form-group mt-6">
                         <label>
-                            Email Address<span className="text-red-600">*</span>
+                            { langMode == 'BN' ? 'ইমেইল' : 'Email Address' }
+                            <span className="text-red-600">*</span>
                         </label>
-                        <input type="email" className="form-control dark:bg-slate-800 dark:border-0" required valu={email} onChange={(e)=> setEmail(e.target.value)} />
+                        <input type="email" className="form-control dark:bg-slate-800 dark:border-0" required value={email} onChange={(e)=> setEmail(e.target.value)} />
 
                         { status == "Error" && (
                             <div className="flex items-center bg-theme text-white text-sm font-bold mt-8 px-4 py-3" role="alert">
@@ -69,12 +72,13 @@ const ForgetPassword = () => {
                         <button 
                             type="submit" 
                             className="btn-dark-full">
-                            Send Link
+                            { langMode == 'BN' ? 'লিঙ্ক পাঠান' : ' Send Link' }
                         </button> 
                     </div>
                     <br /><br /><br />
                     <p className="text-center">
-                        Have an account? <Link to="/login">Sign In</Link>
+                        { langMode == 'BN' ? 'একাউন্ট আছে?' : 'Have an account?' }
+                        <Link to="/login">{ langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In' }</Link>
                     </p>
                 </form>
             </div>

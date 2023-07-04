@@ -1,4 +1,4 @@
-import {React, useState, useCallback, useContext} from 'react'
+import {useState, useCallback, useContext} from 'react'
 import useIntervalAsync from './useIntervalAsync';
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
@@ -83,7 +83,7 @@ const Notification = () => {
             <div 
                 aria-labelledby="dropdown_notification"
                 data-te-dropdown-menu-ref 
-                className="dropdown-notification border mt-2 sm:w-[35rem] shadow-lg z-[1000] m-0 absolute right-0 top-0 list-none overflow-hidden rounded-lg bg-white focus:outline-none [&[data-te-dropdown-show]]:block dark:bg-[#272727]" 
+                className="dropdown-notification border sm:w-[35rem] shadow-lg z-[1000] m-0 absolute right-0 top-0 list-none overflow-hidden rounded-lg bg-white focus:outline-none [&[data-te-dropdown-show]]:block dark:bg-[#272727]" 
                 >
                 <div>
                     <h2 className="dropdown_title bg-[#F0F1F3] py-3 text-2xl m-4 rounded-lg text-center font-sans dark:bg-dark">{langMode == 'BN' ? 'বিজ্ঞপ্তি' : 'Notification'}</h2>   

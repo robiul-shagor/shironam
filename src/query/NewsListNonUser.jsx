@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import axios from '../api/axios';
-import { useParams } from 'react-router-dom';
 
 export default function NewsListNonUser(query) {
     const [loading, setLoading] = useState(true)

@@ -146,12 +146,23 @@
 .interest_form .item input:checked + label::after {
   @apply opacity-100 visible
 }
+@screen sm {
+  header [aria-labelledby="dropdown_lang"] {
+    right: auto !important;
+    left: 0
+  }
+}
 @screen md {
   header [aria-labelledby="dropdown_search"] {
       inset: inherit !important;
       top: 5.5rem !important;
       right: 0 !important;
       color: black;
+  }
+  header [aria-labelledby="user_profile_menu"],
+  header [aria-labelledby="dropdown_lang"],
+  header [aria-labelledby="dropdown_notification"] {
+    top: 56px
   }
 }
 @screen 3xl {

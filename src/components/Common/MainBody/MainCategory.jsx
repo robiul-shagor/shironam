@@ -1,5 +1,3 @@
-import {React, useState, useEffect} from 'react'
-import CategoryCard from '../NewsCard/CategoryCard';
 import SidebarCategory from '../SideBar/SidebarCategory';
 import NewsCard from '../NewsCard/NewsCard';
 

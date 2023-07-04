@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from '../api/axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export default function NewsListSubCatQuery(query, pageNumber) {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));

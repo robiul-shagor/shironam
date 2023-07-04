@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { UserContext } from '../../../App';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../../../api/axios';
@@ -35,7 +35,6 @@ function LoginModal() {
                 navigate("/");
             });
         } catch (e) {
-            console.log(e);
             if (e.response && e.response.status === 422) {
                 setMessage( ( langMode == 'BN' ) ? 'আনপ্রসেস এন্টিটি: অনুগ্রহ করে আপনার ইনপুট চেক করুন।' : 'Unprocessable Entity: Please check your input.');
             } else {
@@ -73,14 +72,14 @@ function LoginModal() {
                 <label>
                     { langMode == 'BN' ? 'ইমেইল' : 'Email Address'}<span className="text-red-600">*</span>
                 </label>
-                <input type="email" className="form-control" required value={email} onChange={(e)=> setEmail(e.target.value)}/>
+                <input type="email" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={email} onChange={(e)=> setEmail(e.target.value)}/>
             </div>
 
             <div className="form-group mt-6">
                 <label>
                     { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                 </label>
-                <input type="password" className="form-control form-input" required value={password} onChange={(e)=> setPassword(e.target.value)} />
+                <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e)=> setPassword(e.target.value)} />
                 <div className="form-check mt-6 mb-7">
                     <input type="checkbox" value="" id="rememberPassword" checked={rememberMe} onChange={handleRememberMeChange} />
                     <label htmlFor="rememberPassword">

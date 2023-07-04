@@ -1,5 +1,3 @@
-import React from 'react'
-
 function ShareNews(plaform, title) {
     const shareOnFacebook = () => {
         const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;

@@ -1,4 +1,4 @@
-import {React, useContext} from 'react';
+import { useContext} from 'react';
 import BreakingNews from '../BreakingNews/BreakingNews';
 import NewsCard from '../NewsCard/NewsCard';
 import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';

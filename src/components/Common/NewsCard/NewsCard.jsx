@@ -1,4 +1,4 @@
-import {React, useEffect, useContext, useRef, useCallback} from 'react'
+import { useEffect, useContext, useRef, useCallback} from 'react'
 import axios from '../../../api/axios'
 import { useState } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
@@ -261,7 +261,7 @@ const NewsCard = () => {
                                         </li>
                                     </ul>
                                 ) : (
-                                    <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <ul className="flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
                                         <li>
                                             <ul className="flex gap-6">
                                                 <li>
@@ -368,7 +368,7 @@ const NewsCard = () => {
                                         </li>
                                     </ul>
                                 ) : (
-                                    <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <ul className="flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
                                         <li>
                                             <ul className="flex gap-6">
                                                 <li>

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { UserContext } from '../../../App';
 
 const HamburgerAccordian = ({ data }) => {

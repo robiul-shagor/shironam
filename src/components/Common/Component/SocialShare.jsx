@@ -1,4 +1,3 @@
-import React from 'react'
 import axios from '../../../api/axios';
 
 function SocialShare({ title, url }) {
@@ -26,12 +25,6 @@ function SocialShare({ title, url }) {
 
         if( userData !== null ) {
             const bearer_token = `Bearer ${userData.token}`;
-
-            const config = {
-                headers: {
-                  'Authorization': bearer_token
-                }
-            };
 
             const parts = url.split("/");
             const news_id = parts.slice(3).join("/");

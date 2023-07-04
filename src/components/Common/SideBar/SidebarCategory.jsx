@@ -1,4 +1,4 @@
-import {React, useState, useEffect, useContext} from 'react'
+import { useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { UserContext } from '../../../App';

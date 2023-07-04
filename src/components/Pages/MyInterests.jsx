@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext} from 'react';
+import { useEffect, useState, useContext} from 'react';
 import Header from '../Common/Header/Header';
 import Footer from '../Common/Footer/Footer';
 import axios from '../../api/axios';

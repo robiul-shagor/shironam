@@ -1,11 +1,10 @@
-import {React, useState, useEffect} from 'react'
+import { useState, useEffect} from 'react'
 import HamburgerAccordian from './HamburgerAccordian';
 import axios from '../../../api/axios';
 
 const HamburgerMenu = () => {
   const [hamburger, setHamburger] = useState(false);
   const [data, setData] = useState([]);
-  const [hamburgerToggle, setHamburgerToggle] = useState(false);
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
 
     const handleHamburger = (e) => {

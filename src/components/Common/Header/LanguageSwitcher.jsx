@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import  { useState, useContext } from 'react'
 import { UserContext } from '../../../App';
 const LanguageSwitcher = () => {
     const [ langBtn, setLangBtn ] = useState(false);
