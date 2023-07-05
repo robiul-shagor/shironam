@@ -1,11 +1,7 @@
 import React from 'react'
 
 import NewsCard from '../NewsCard/NewsCard'
-import SideBar from '../SideBar/SideBar'
-import { UserContext } from '../../../App';
-import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import TabForBreakingPage from '../BreakingNews/TabForBreakingPage';
-import NewsCardBreaking from '../NewsCard/NewsCardBreaking';
 import SidebarBreaking from '../SideBar/SidebarBreaking';
 
 const MainBodyBraking = () => {
@@ -21,7 +17,7 @@ const MainBodyBraking = () => {
 
                         <div className='post-wrapper md:grid md:grid-cols-3 md:gap-x-12'>
                             <div className='space-y-8 lg:space-y-12 col-span-2'>
-                                <NewsCardBreaking />
+                                <NewsCard />
                             </div>
 
                             <div className='post-sidebar hidden md:block md:col-span-1 md:col-start-3 md:row-start-1'>

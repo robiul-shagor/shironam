@@ -1,10 +1,8 @@
 import {React, useContext} from 'react'
-import SideBar from '../SideBar/SideBar'
 import { UserContext } from '../../../App';
-import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import TabForTodayPage from '../BreakingNews/TabForTodayPage';
-import NewsCardToday from '../NewsCard/NewsCardToday';
 import SidebarBreaking from '../SideBar/SidebarBreaking';
+import NewsCard from '../NewsCard/NewsCard';
 
 const MainBodyToday = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -30,11 +28,7 @@ const MainBodyToday = () => {
 
                     <div className='post-wrapper md:grid md:grid-cols-3 md:gap-x-12'>
                         <div className='space-y-8 lg:space-y-12 col-span-2'>
-                            { userData == null ? (
-                                <NewsCardAvarage />
-                            ) : (
-                                <NewsCardToday />
-                            ) }
+                            <NewsCard />
                         </div>
 
                         <div className='post-sidebar hidden md:block md:col-span-1 md:col-start-3 md:row-start-1'>

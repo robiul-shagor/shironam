@@ -103,6 +103,54 @@ export default function NewsListQuery(query, pageNumber, type) {
             }
         } 
 
+        if( type == 'breaking-news' ) {
+            try { 
+                axios.get(`/news-list?paginate=${pageNumber}&breaking=1`, config)
+                .then(res => {
+                    setNews((prevItems) => {
+                        // Create a Set of existing item IDs
+                        const existingIds = new Set(prevItems.map((item) => item.id));
+                    
+                        // Filter out duplicate items based on their IDs
+                        const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
+                    
+                        // Combine the unique items with the existing items
+                        return [...prevItems, ...uniqueItems];
+                    });
+                    
+                    setHasMores(res.data.length > 0)
+                    setLoading(false)
+                })
+            } catch(e) {
+                //if (axios.isCancel(e)) return
+                setError(true)
+            }
+        }
+
+        if( type == 'today-news' ) {
+            try { 
+                axios.get(`/news-list?paginate=${pageNumber}&todays_news=1`, config)
+                .then(res => {
+                    setNews((prevItems) => {
+                        // Create a Set of existing item IDs
+                        const existingIds = new Set(prevItems.map((item) => item.id));
+                    
+                        // Filter out duplicate items based on their IDs
+                        const uniqueItems = res.data.filter((item) => !existingIds.has(item.id));
+                    
+                        // Combine the unique items with the existing items
+                        return [...prevItems, ...uniqueItems];
+                    });
+                    
+                    setHasMores(res.data.length > 0)
+                    setLoading(false)
+                })
+            } catch(e) {
+                //if (axios.isCancel(e)) return
+                setError(true)
+            }
+        }
+
         if( type == 'all' ) {
             try { 
                 axios.get(`/news-list?paginate=${pageNumber}`, config)

@@ -243,3 +243,6 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   left: 0.5rem !important;
   top: 0.5rem !important;
 }
+.lazy-load-image-background.blur.lazy-load-image-loaded {
+  display: block !important;
+}

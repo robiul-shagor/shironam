@@ -5,6 +5,8 @@ import { UserContext } from '../../../App';
 import NewsListNonUser from '../../../query/NewsListNonUser';
 import { Link } from 'react-router-dom';
 import SocialShare from '../Component/SocialShare';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const NewsCardAvarage = () => {
     const [visiblePostId, setVisiblePostId] = useState(null);
@@ -20,6 +22,33 @@ const NewsCardAvarage = () => {
         setSocial(!social);
     }
 
+    const handleScroll = () => {
+        const postElements = document.getElementsByClassName('post-item');
+        const windowHeight = window.innerHeight;
+  
+        for (let i = 0; i < postElements.length; i++) {
+          const postElement = postElements[i];
+          const rect = postElement.getBoundingClientRect();
+          const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
+          const getPosts = postElement.getAttribute('data-id');
+  
+          if (isVisible) {
+            if( typeof getPosts !== 'undefined' ) {
+                setVisiblePostId(Number(getPosts));
+            }         
+            break;
+          }
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [])
+
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">
             {news.length > 0 && news.map((newsData, index) => (
@@ -27,10 +56,12 @@ const NewsCardAvarage = () => {
                     <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                         { newsData.ads_image ? (
                             <a href={newsData.action_url ? newsData.action_url : '#'}>
-                                <img 
-                                src={newsData.ads_image} 
-                                alt="" 
-                                className="thumbnail w-full object-cover" />
+                                <LazyLoadImage src={newsData.ads_image}
+                                    alt=""
+                                    placeholderSrc='/assets/media/placeholder.webp'
+                                    className="thumbnail w-full object-cover"
+                                    effect="blur"
+                                />
                                 { newsData.action_url && (
                                     <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
                                         <span className="">{newsData.button_title}</span>
@@ -39,10 +70,12 @@ const NewsCardAvarage = () => {
                                 ) }
                             </a>           
                         ) : (
-                            <img 
-                            src={newsData.thumbnail} 
-                            alt="" 
-                            className="thumbnail w-full object-cover" />
+                            <LazyLoadImage src={newsData.thumbnail}
+                                alt=""
+                                placeholderSrc='/assets/media/placeholder.webp'
+                                className="thumbnail w-full object-cover"
+                                effect="blur"
+                            />
                         ) }
 
                         { newsData.ads_image ? (

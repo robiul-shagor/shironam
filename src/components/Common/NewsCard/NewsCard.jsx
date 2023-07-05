@@ -6,6 +6,8 @@ import moment from 'moment';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
 import SocialShare from '../Component/SocialShare';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 
 const NewsCard = () => {
@@ -19,6 +21,7 @@ const NewsCard = () => {
     const [social, setSocial] = useState(false)
 
     const { category, subCategory, tags } = useParams()
+    const { pathname } = useLocation()
 
     const makeLowercase = ( item ) => {
         return item.split(" ").join("-").toLowerCase()
@@ -36,6 +39,10 @@ const NewsCard = () => {
         } else if (typeof tags !== 'undefined') {
             setQuery(tags);
             setType('tags');
+        } else if (typeof pathname !== 'undefined' && pathname == "/breaking-news") {
+            setType('breaking-news');
+        } else if (typeof pathname !== 'undefined' && pathname == "/today-news") {
+            setType('today-news');
         } else {
             setType('all');
         }
@@ -207,10 +214,12 @@ const NewsCard = () => {
                             <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
                                 { newsData.ads_image ? (
                                     <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
-                                        <img 
-                                        src={newsData.ads_image} 
-                                        alt="" 
-                                        className="thumbnail w-full object-cover" loading="lazy"  />
+                                        <LazyLoadImage src={newsData.ads_image}
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
                                         { newsData.action_url && (
                                             <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
                                                 <span className="">{newsData.button_title}</span>
@@ -220,10 +229,12 @@ const NewsCard = () => {
                                     </a>           
                                 ) : (
                                     <a href={newsData.source}>
-                                        <img 
-                                        src={newsData.thumbnail} 
-                                        alt="" 
-                                        className="thumbnail w-full object-cover" loading="lazy" />
+                                        <LazyLoadImage src={newsData.thumbnail}
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
                                     </a>
                                 ) }
     
@@ -314,10 +325,12 @@ const NewsCard = () => {
                             <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
                                 { newsData.ads_image ? (
                                     <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
-                                        <img 
-                                        src={newsData.ads_image} 
-                                        alt="" 
-                                        className="thumbnail w-full object-cover" loading="lazy" />
+                                        <LazyLoadImage src={newsData.ads_image} 
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
                                         { newsData.action_url && (
                                             <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
                                                 <span className="">{newsData.button_title}</span>
@@ -327,10 +340,12 @@ const NewsCard = () => {
                                     </a>           
                                 ) : (
                                     <a href={newsData.source}>
-                                        <img 
-                                        src={newsData.thumbnail} 
-                                        alt="" 
-                                        className="thumbnail w-full object-cover" loading="lazy" />
+                                        <LazyLoadImage src={newsData.thumbnail}
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
                                     </a>
                                 ) }
     
