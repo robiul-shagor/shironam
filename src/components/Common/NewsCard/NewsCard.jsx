@@ -210,7 +210,7 @@ const NewsCard = () => {
                                         <img 
                                         src={newsData.ads_image} 
                                         alt="" 
-                                        className="thumbnail w-full object-cover" />
+                                        className="thumbnail w-full object-cover" loading="lazy"  />
                                         { newsData.action_url && (
                                             <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
                                                 <span className="">{newsData.button_title}</span>
@@ -223,7 +223,7 @@ const NewsCard = () => {
                                         <img 
                                         src={newsData.thumbnail} 
                                         alt="" 
-                                        className="thumbnail w-full object-cover" />
+                                        className="thumbnail w-full object-cover" loading="lazy" />
                                     </a>
                                 ) }
     
@@ -281,7 +281,7 @@ const NewsCard = () => {
                                             <li className="ads flex items-center">
                                                 { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
                                                 <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
-                                                    <img src={newsData.ads.sponsor_image} alt="" />
+                                                    <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
                                                     {newsData.ads.sponsor}
                                                 </a>
                                             </li>
@@ -317,7 +317,7 @@ const NewsCard = () => {
                                         <img 
                                         src={newsData.ads_image} 
                                         alt="" 
-                                        className="thumbnail w-full object-cover" />
+                                        className="thumbnail w-full object-cover" loading="lazy" />
                                         { newsData.action_url && (
                                             <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
                                                 <span className="">{newsData.button_title}</span>
@@ -330,7 +330,7 @@ const NewsCard = () => {
                                         <img 
                                         src={newsData.thumbnail} 
                                         alt="" 
-                                        className="thumbnail w-full object-cover" />
+                                        className="thumbnail w-full object-cover" loading="lazy" />
                                     </a>
                                 ) }
     
@@ -388,7 +388,7 @@ const NewsCard = () => {
                                             <li className="ads flex items-center">
                                                 { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
                                                 <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
-                                                    <img src={newsData.ads.sponsor_image} alt="" />
+                                                    <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
                                                     {newsData.ads.sponsor}
                                                 </a>
                                             </li>
