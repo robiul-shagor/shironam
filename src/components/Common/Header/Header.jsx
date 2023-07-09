@@ -28,9 +28,9 @@ const Header = () => {
                     { userData && <SearchBtn /> }
 
                     { userData && <Notification /> }
-                    
-                    <ThemeSwitcher />
 
+                    <ThemeSwitcher />
+                    
                     { userData && <UserData /> }
 
                     { !userData && (
