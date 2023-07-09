@@ -35,29 +35,21 @@ const TabForBreakingPage = () => {
                             <Link to='/' className='active flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fal fa-th-large"></i> &nbsp;
                                 { langMode == 'BN' ? 'ঘটনাচক্র' : 'News Feed'}
-                                
                             </Link>
                         </li>
                         <li className="flex-1">
-                            { userData == null ? (
-                                <Link to='/login' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
-                                    <i className="fas fa-bolt"></i>
-                                    { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
-                                </Link>            
-                            ) : (
-                                <Link to='/today-news' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
-                                    <i className="fas fa-bolt"></i>
-                                    { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
-                                </Link>
-                            ) }
+                            <Link to='/today-news' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
+                                <i className="fas fa-bolt"></i>
+                                { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
+                            </Link>
                         </li>
                         <li className="flex-1">
-                            <a href="#" className="flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap">
+                            <Link to='/category' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fal fa-compass"></i>
-                                Explore
-                            </a>
+                                { langMode == 'BN' ? 'অন্বেষণ' : 'Explore'}
+                            </Link>
                         </li>
-                        <li className="flex-1">
+                        <li className="flex-1 hidden">
                             <a href="#" className="flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap">
                                 <i className="fal fa-th-large"></i>
                                 Deals

@@ -34,8 +34,10 @@ const EditProfile = () => {
   };
 
   const handleFileChange = async(event) => {
-    const images = event.target.files[0];
-    await axios.post('/update-profile-picture', {images: [event.target.files[0]] }, {headers: {
+    const file = event.target.files[0];
+    const fileName = file.name;
+
+    await axios.post('/update-profile-picture', { images: fileName }, {headers: {
       'Authorization': bearer_token,
       'Content-Type': 'multipart/form-data',
     }})

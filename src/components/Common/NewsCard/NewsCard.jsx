@@ -59,7 +59,7 @@ const NewsCard = () => {
         if (loading) return
         if (observer.current) observer.current.disconnect()
         observer.current = new IntersectionObserver(entries => {
-          if (entries[0].isIntersecting && hasMores) {     
+            if (entries[0].isIntersecting && hasMores) {     
             setPageNumber(prevPageNumber => prevPageNumber + 1)
           }
         })
@@ -154,10 +154,28 @@ const NewsCard = () => {
     }
 
     // Handle Social dropdown
-    const socialHandle = (e) => {
+    const socialHandle = (e, id) => {
         e.preventDefault();
-        setSocial(!social);
+        setSocial(prevSocial => (prevSocial === id ? null : id));
     }
+
+    useEffect(() => {
+        const handleDocumentClick = (e) => {
+          const isSocialDropdown = e.target.closest('.social-dropdown');
+          const isSocialTrigger = e.target.closest('.post-item li a');
+      
+          if (!isSocialDropdown && !isSocialTrigger) {
+            setSocial(false);
+          }
+        };
+      
+        document.body.addEventListener('click', handleDocumentClick);
+      
+        return () => {
+          document.body.removeEventListener('click', handleDocumentClick);
+        };
+    }, []);
+      
     
     // Handle scroll
     let scrolled = false;
@@ -308,11 +326,11 @@ const NewsCard = () => {
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme" onClick={socialHandle}>
+                                                    <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
                                                         { langMode == 'BN' ? 'শেয়ার' : 'Share'}
                                                         &nbsp;<i className="fal fa-share"></i>
                                                     </a>
-                                                    {social && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
+                                                    {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
                                             </ul>
                                         </li>
@@ -418,11 +436,11 @@ const NewsCard = () => {
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme" onClick={socialHandle}>
+                                                    <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
                                                         { langMode == 'BN' ? 'শেয়ার' : 'Share'}
                                                         &nbsp;<i className="fal fa-share"></i>
                                                     </a>
-                                                    {social && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
+                                                    {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
                                             </ul>
                                         </li>

@@ -17,10 +17,27 @@ const NewsCardAvarage = () => {
     const [ query, setQuery ] = useState([]);
     const { loading, error, news } = NewsListNonUser(query)
 
-    const socialHandle = (e) => {
+    const socialHandle = (e, id) => {
         e.preventDefault();
-        setSocial(!social);
+        setSocial(prevSocial => (prevSocial === id ? null : id));
     }
+
+    useEffect(() => {
+        const handleDocumentClick = (e) => {
+          const isSocialDropdown = e.target.closest('.social-dropdown');
+          const isSocialTrigger = e.target.closest('.post-item li a');
+      
+          if (!isSocialDropdown && !isSocialTrigger) {
+            setSocial(false);
+          }
+        };
+      
+        document.body.addEventListener('click', handleDocumentClick);
+      
+        return () => {
+          document.body.removeEventListener('click', handleDocumentClick);
+        };
+    }, []);
 
     const handleScroll = () => {
         const postElements = document.getElementsByClassName('post-item');
@@ -125,7 +142,7 @@ const NewsCardAvarage = () => {
                                 <li>
                                     <ul className="flex gap-6">
                                         <li className='relative'>
-                                            <a href="#" className="transition-all hover:text-theme" onClick={socialHandle}>
+                                            <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
                                                 { getUserLang == 'BN' ? 'শেয়ার' : 'Share'}&nbsp;
                                                 <i className="fal fa-share"></i>
                                             </a>
