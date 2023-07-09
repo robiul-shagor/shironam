@@ -1,4 +1,4 @@
-import { useContext, useState} from 'react'
+import { useContext, useState, useEffect} from 'react'
 import { UserContext } from '../../../App'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../../api/axios'
@@ -19,6 +19,23 @@ const UserData = () => {
     e.preventDefault();
     setUserAllMenu(!userAllMenu);
   };
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      const isSocialDropdown = e.target.closest('.user-profile-menu');
+      const isSocialTrigger = e.target.closest('#user_profile_menu');
+  
+      if (!isSocialDropdown && !isSocialTrigger) {
+        setUserAllMenu(false);
+      }
+    };
+  
+    document.body.addEventListener('click', handleDocumentClick);
+  
+    return () => {
+      document.body.removeEventListener('click', handleDocumentClick);
+    };
+}, []);
 
   const hanndleLogout = async(event) => {
     event.preventDefault();
@@ -51,7 +68,7 @@ const UserData = () => {
             <div 
                 aria-labelledby="user_profile_menu"
                 data-te-dropdown-menu-ref 
-                className="border absolute right-0 min-w-max auto z-10 rounded-md p-12 bg-white shadow-lg [&[data-te-dropdown-show]]:block overflow-hidden dark:bg-[#272727]" 
+                className="user-profile-menu border absolute right-0 min-w-max auto z-10 rounded-md p-12 bg-white shadow-lg [&[data-te-dropdown-show]]:block overflow-hidden dark:bg-[#272727]" 
                 >
                 <div role="none">
                     <h4 className="font-sans mb-4 text-[1.4rem]">{ langMode == 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
