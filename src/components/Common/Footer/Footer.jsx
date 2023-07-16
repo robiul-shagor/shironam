@@ -62,6 +62,7 @@ const Footer = () => {
                                 </a>
                             </div>
                         </div>
+                        
                         <div className="widget col-span-6 md:col-span-5 lg:col-span-4">
                             <ul className="footer_top_menu gap-6 grid grid-cols-2">
                                 <li className="inline mr-6">
