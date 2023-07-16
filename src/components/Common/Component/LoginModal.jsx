@@ -29,10 +29,30 @@ function LoginModal() {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                sessionStorage.setItem("userDetails", JSON.stringify(res.data));
-                setUserLogin(res.data);
-                setProcessing(false);
-                navigate("/");
+                if ( typeof res.data.status !== 'undefined') {
+                    if( res.data.status == 'Error' ) {
+                        setProcessing(false)
+                        setMessage( ( langMode == 'BN' ) ? 'আনপ্রসেস এন্টিটি: অনুগ্রহ করে আপনার ইনপুট চেক করুন।' : 'Unprocessable Entity: Please check your input.')
+                    }
+                } else {
+                    const data = {
+                        token: res.data.token,
+                        normal_user: {
+                            email: res.data.normal_user.email,
+                            name: res.data.normal_user.name
+                        }
+                    };
+                      
+                    sessionStorage.setItem("userDetails", JSON.stringify(data));
+                    setUserLogin(res.data);
+                    setProcessing(false);
+    
+                    if( res.data.normal_user.interest == null ) {
+                        navigate("/interests");
+                    } else {
+                        navigate("/");
+                    }
+                }
             });
         } catch (e) {
             if (e.response && e.response.status === 422) {
@@ -40,6 +60,7 @@ function LoginModal() {
             } else {
                 setMessage( ( langMode == 'BN' ) ? 'একটি ত্রুটি ঘটেছে. অনুগ্রহ করে একটু পরে আবার চেষ্টা করুন.' : 'An error occurred. Please try again later.');
             }
+            setProcessing(false)
         }
 
         if (rememberMe) {

@@ -20,6 +20,14 @@ const UserData = () => {
     e.preventDefault();
     setUserAllMenu(!userAllMenu);
   };
+
+  const bearer_token = `Bearer ${userData.token}`;
+  const config = {
+      headers: {
+        'Authorization': bearer_token
+      }
+  }
+  
   useEffect(()=> {
     const user_details_update = async() => {
       try {
@@ -77,8 +85,8 @@ const UserData = () => {
   return (
     <li className="relative ml-auto">
         <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
-            <img src="/assets/media/alex.png" className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
-            <span>{userData && (userData.normal_user.name)}</span>
+            <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
+            <span>{userData && userData.normal_user && userData.normal_user.name}</span>
         </a>
 
         { userAllMenu && (
@@ -92,7 +100,7 @@ const UserData = () => {
                     <div className="flex items-center gap-x-6">
                         <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="rounded-full" alt="" />
                         <div>
-                            <h3 className="font-sans text-[1.6rem] font-medium">{userData && (userData.normal_user.name)}</h3>
+                            <h3 className="font-sans text-[1.6rem] font-medium">{userData && userData.normal_user && userData.normal_user.name}</h3>
                             <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>
                             <Link to="/edit-profile" className='btn bg-green-600 text-white px-7 py-3 rounded-lg text-xl'>
                                 { langMode == 'BN' ? 'জীবন বৃত্তান্ত সম্পাদনা' : 'Edit Profile'}
