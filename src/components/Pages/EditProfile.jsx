@@ -17,6 +17,7 @@ const EditProfile = () => {
   const [cityList, setCityList] = useState([]);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [imgSuccess, setImgSuccess] = useState('');
   const [profileImage, setProfileImage] = useState(null);
 
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -33,19 +34,20 @@ const EditProfile = () => {
       headers: {
         'Authorization': bearer_token
       }
-  };
+  }; 
+
 
   const handleFileChange = async(event) => {
     const file = event.target.files[0];
-    const fileName = file.name;
 
-    await axios.post('/update-profile-picture', { images: fileName }, {headers: {
+    await axios.post('/update-profile-picture', { image: file }, {headers: {
       'Authorization': bearer_token,
       'Content-Type': 'multipart/form-data',
     }})
     .then(res => {
-      console.log(res);
-      //setProfileImage(event.target.files[0]);
+      const baseURL = 'https://shironam-backend.themestransmit.com/' 
+      setProfileImage( baseURL + res.data.image);
+      setImgSuccess(res.data.status);
     });
   }
 
@@ -123,6 +125,10 @@ const EditProfile = () => {
             res.data.normal_user.country && setCountry(res.data.normal_user.country);
             res.data.normal_user.city && setCity(res.data.normal_user.city);
             res.data.normal_user.gender && setGender(res.data.normal_user.gender);
+
+            const baseURL = 'https://shironam-backend.themestransmit.com/' 
+            ;
+            res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
         });                    
       } catch (e) {
           console.log(e);
@@ -131,20 +137,6 @@ const EditProfile = () => {
     user_details_update()
   }, [])  
   
-  useEffect(()=> {
-    const user_profile_picture = async() => {
-      try {
-        await axios.get('/profile-picture', config)
-        .then(res => {
-          setProfileImage(res.data.image);
-          //console.log(res.data.image);
-        });                    
-      } catch (e) {
-          console.log(e);
-      }      
-    }
-    user_profile_picture()
-  }, [])
 
   useEffect(() => {
     const getData = async() => {
@@ -159,7 +151,8 @@ const EditProfile = () => {
     };
     getData();
   }, [])
-  
+
+    
   return (
     <div className='edit-profile-wrapper'>
       <Header />
@@ -176,6 +169,8 @@ const EditProfile = () => {
                   <label htmlFor="user_profile_photo" className="text-blue-600 cursor-pointer text-xl">{ langMode == 'BN' ? 'প্রোফাইল ফটো পরিবর্তন করুন' : 'Change profile photo' }</label>
                 </div>
               </div>
+              
+              {imgSuccess && (<div>{ langMode == 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successfull' }</div>)}
 
               <h3 className="mb-8 font-sans text-3xl">{ langMode == 'BN' ? 'ব্যক্তিগত তথ্য' : 'Personal Information' }</h3>
 

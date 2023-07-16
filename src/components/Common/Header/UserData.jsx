@@ -6,6 +6,7 @@ import axios from '../../../api/axios'
 const UserData = () => {
   const { userLogin, setUserLogin } = useContext(UserContext);
   const [userAllMenu, setUserAllMenu] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
 
   const { langMode } = useContext(UserContext);
 
@@ -19,6 +20,22 @@ const UserData = () => {
     e.preventDefault();
     setUserAllMenu(!userAllMenu);
   };
+  useEffect(()=> {
+    const user_details_update = async() => {
+      try {
+        await axios.get('/me', config)
+        .then(res => {
+            const baseURL = 'https://shironam-backend.themestransmit.com/' 
+            ;
+            res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
+        });                    
+      } catch (e) {
+          console.log(e);
+      }      
+    }
+    user_details_update()
+  }, [])  
+  
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -73,7 +90,7 @@ const UserData = () => {
                 <div role="none">
                     <h4 className="font-sans mb-4 text-[1.4rem]">{ langMode == 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
                     <div className="flex items-center gap-x-6">
-                        <img src="/assets/media/alex.png" className="rounded-full" alt="" />
+                        <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="rounded-full" alt="" />
                         <div>
                             <h3 className="font-sans text-[1.6rem] font-medium">{userData && (userData.normal_user.name)}</h3>
                             <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>
