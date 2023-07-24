@@ -117,8 +117,8 @@ const NewsCardAvarage = () => {
                                 <li>
                                     <ul className="flex gap-6">
                                         <li>
-                                            <i className="fal fa-clock"></i>
-                                            { moment(new Date(newsData.datetime)).startOf('hour').fromNow() }
+                                            <i className="fal fa-clock"></i> &nbsp;
+                                            { moment(new Date(newsData.datetime)).startOf('second').fromNow() }
                                         </li>
                                         <li>
                                             <Link to='/login' className='transition-all hover:text-theme'>
@@ -142,7 +142,7 @@ const NewsCardAvarage = () => {
 
                                 <li>
                                     <ul className="flex gap-6">
-                                        <li className='relative hidden'>
+                                        <li className='relative'>
                                             <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
                                                 { getUserLang == 'BN' ? 'শেয়ার' : 'Share'}&nbsp;
                                                 <i className="fal fa-share"></i>

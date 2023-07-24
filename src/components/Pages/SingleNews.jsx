@@ -4,37 +4,39 @@ import Footer from '../Common/Footer/Footer'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
 import { useParams, Link } from 'react-router-dom'
+import Spinner from '../Elements/Spinner'
 
 
 function SingleNews() {
     const { langMode } = useContext(UserContext);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { id } = useParams();
     const [news, setNews] = useState([]);
-    const bearer_token = `Bearer ${userData.token}`;
+    const [ loading, setLoading ] = useState(false);
 
-    const config = {
-        headers: {
-          'Authorization': bearer_token
-        }
-    };
-
-    const singleData = async(event)=> {
+    const singleData = async(retryCount = 3, delay = 1000)=> {
+        setLoading(true);
         try { 
-            axios.get(`/news/${id}`, config)
+            axios.get(`/news/${id}`, {})
             .then(res => {
                 setNews(res.data.data)
             })
         } catch(e) {
-            console.log(e)
+            if (retryCount > 0 && error.response?.status === 429) {
+                setLoading(true);
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                singleData(retryCount - 1, delay * 2); 
+            } else {
+                console.log(error);
+                setLoading(false);
+            }
+        } finally {
+            setLoading(false)
         }
     }
 
     useEffect(()=> {
         singleData();
     }, [])
-
-    
 
     return (
         <div className='single-news'>
@@ -45,6 +47,7 @@ function SingleNews() {
                     <div className="red-sticky-bg transition [&amp;.is-sticky]:fixed max-[767px]:hidden -z-[1] absolute top-0 left-0 right-0 bg-theme h-[40rem] lg:h-[55rem] 2xl:h-[65rem]"></div>
                     <div className='container'>
                         <div className='md:bg-white dark:bg-dark md:dark:bg-[#272727] md:px-12 md:pt-12 md:pb-20 lg:px-16 lg:pt-16'>
+                            { loading && <Spinner /> }
                             <div className='post-wrapper md:grid md:grid-cols-3 md:gap-x-12'>
                                 <div className='space-y-8 lg:space-y-12 col-span-2'>
                                     <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]">

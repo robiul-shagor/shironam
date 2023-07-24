@@ -19,36 +19,40 @@ export default function NewsListQuery(query, pageNumber, type) {
 
   const fetchNewsList = async () => {
     try {
+      
       let totalPosts, postNum, maxPage;
       switch (type) {
         case 'category':
           totalPosts = await axios.get(`/news-list?category=${query}`, config);
           postNum = await axios.get(`/news-list?paginate=1&category=${query}`, config);
+          maxPage = Math.ceil(totalPosts.data.length / 3);  
           break;
         case 'subcategory':
           totalPosts = await axios.get(`/news-list?sub_category=${query}`, config);
           postNum = await axios.get(`/news-list?paginate=1&sub_category=${query}`, config);
+          maxPage = Math.ceil(totalPosts.data.length / 3);  
           break;
         case 'tags':
           totalPosts = await axios.get(`/news-list?tag=${query}`, config);
           postNum = await axios.get(`/news-list?paginate=1&tag=${query}`, config);
+          maxPage = Math.ceil(totalPosts.data.length / 3);  
           break;
         case 'breaking-news':
           totalPosts = await axios.get('/news-list?breaking=1', config);
           postNum = await axios.get('/news-list?paginate=1&breaking=1', config);
+          maxPage = Math.ceil(totalPosts.data.length / 3);  
           break;
         case 'today-news':
           totalPosts = await axios.get('/news-list?todays_news=1', config);
           postNum = await axios.get('/news-list?paginate=1&todays_news=1', config);
+          maxPage = Math.ceil(totalPosts.data.length / 3);  
           break;
         default:
-          totalPosts = await axios.get('/news-list', config);
-          postNum = await axios.get('/news-list?paginate=1', config);
+          const getPostInfo = await axios.get('/news-feed-info', config)
+          maxPage = getPostInfo.data.max_paginate;  
           break;
       }
-  
-      maxPage = Math.ceil(totalPosts.data.length / 3);  
-      
+
       if (pageNumber <= maxPage) {
         let response;
   
@@ -81,6 +85,7 @@ export default function NewsListQuery(query, pageNumber, type) {
         });
 
         setHasMores(response.data.length > 0);
+        setNoMore(response.data.length == 0);
         setLoading(false);
       } else {
         setHasMores(false); // No more pages available

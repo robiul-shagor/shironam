@@ -106,7 +106,7 @@ const UserData = () => {
                 <div role="none">
                     <h4 className="font-sans mb-4 text-[1.4rem]">{ langMode == 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
                     <div className="flex items-center gap-x-6">
-                        <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="rounded-full" alt="" />
+                        <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="rounded-full" alt="" width="68" height='68' />
                         <div>
                             <h3 className="font-sans text-[1.6rem] font-medium">{userData && userData.normal_user && userData.normal_user.name}</h3>
                             <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>

@@ -291,12 +291,12 @@ const NewsCard = () => {
                                         </li>
                                     </ul>
                                 ) : (
-                                    <ul className="flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
                                         <li>
                                             <ul className="flex gap-6">
                                                 <li>
-                                                    <i className="fal fa-clock"></i>
-                                                    { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                                    <i className="fal fa-clock"></i>&nbsp;
+                                                    { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
                                                 </li>
                                                 <li>
                                                     <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
@@ -321,15 +321,16 @@ const NewsCard = () => {
                                             <ul className="flex gap-6">
                                                 <li>
                                                     <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                        { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                        &nbsp;
+                                                        <span className='sm:hidden'>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                        &nbsp;</span>
                                                         <i className="fal fa-bookmark"></i>
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
-                                                        { langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        &nbsp;<i className="fal fa-share"></i>
+                                                    <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
+                                                        <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                        &nbsp;</span>
+                                                        <i className="fal fa-share"></i>
                                                     </a>
                                                     {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
@@ -402,12 +403,12 @@ const NewsCard = () => {
                                         </li>
                                     </ul>
                                 ) : (
-                                    <ul className="flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
                                         <li>
                                             <ul className="flex gap-6">
                                                 <li>
-                                                    <i className="fal fa-clock"></i>
-                                                    { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                                    <i className="fal fa-clock"></i>&nbsp;
+                                                    { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
                                                 </li>
                                                 <li>
                                                     <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
@@ -432,14 +433,16 @@ const NewsCard = () => {
                                             <ul className="flex gap-6">
                                                 <li>
                                                     <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                        { langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                        &nbsp;<i className="fal fa-bookmark"></i>
+                                                        <span>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                        &nbsp;</span>
+                                                        <i className="fal fa-bookmark"></i>
                                                     </a>
                                                 </li>
                                                 <li className='relative'>
-                                                    <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
-                                                        { langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        &nbsp;<i className="fal fa-share"></i>
+                                                    <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
+                                                        <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                        &nbsp;</span>
+                                                        <i className="fal fa-share"></i>
                                                     </a>
                                                     {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
                                                 </li>
@@ -457,8 +460,6 @@ const NewsCard = () => {
                 {loading && news.length !== 0 && <Spinner />}
                 {loading && news.length === 0 && <Spinner />}
             </div>
-
-            {/* { console.log(noMore) } */}
 
             <div className='text-center'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
             <div className='text-center'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>

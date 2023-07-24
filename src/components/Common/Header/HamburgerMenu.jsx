@@ -19,6 +19,23 @@ const HamburgerMenu = () => {
         e.preventDefault();
         setHamburger(!hamburger);
     };
+
+    useEffect(() => {
+        const handleDocumentClick = (e) => {
+          const isSocialDropdown = e.target.closest('.cat_floating_sidebar');
+          const isSocialTrigger = e.target.closest('.cat-sidebar-toggler');
+      
+          if (!isSocialDropdown && !isSocialTrigger) {
+            setHamburger(false);
+          }
+        };
+      
+        document.body.addEventListener('click', handleDocumentClick);
+      
+        return () => {
+          document.body.removeEventListener('click', handleDocumentClick);
+        };
+    }, []);
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
         const bearer_token = `Bearer ${userData.token}`;

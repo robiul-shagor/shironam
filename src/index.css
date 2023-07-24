@@ -250,3 +250,29 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   opacity: 0.65;
   pointer-events: none;
 }
+@media only screen and (max-width: 767px) {
+  a.bookmark > span {
+    display: none;
+  }
+  .share-news > span {
+    display: none;
+  }
+  a.share-news {
+    background: #f9020b4a;
+    color: var(--color__theme);
+    padding: 7px;
+    border-radius: 100px;
+  }
+  a.bookmark {
+    background: #F7f7f7;
+    padding: 7px 10px;
+    border-radius: 100px;
+  }
+  .ads-with-list > li:first-of-type {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #ebebeb;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+}
