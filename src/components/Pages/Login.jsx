@@ -2,6 +2,8 @@ import { useContext, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
+import { LineWave } from 'react-loader-spinner';
+import Spinner from '../Elements/Spinner';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -127,10 +129,10 @@ const Login = () => {
                     <div className="form-group mt-6">
                         <button 
                             type="submit" 
-                            className="btn-dark-full">
+                            className="btn-dark-full relative">
                             { processing ? ( 
-                                langMode == 'BN' ? 'লগইন করার জন্য অপেক্ষা করুন...' : 'Wait for login...'
-                                ) : (
+                               <Spinner />
+                            ) : (
                                 langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In'
                             ) }
                         </button> 

@@ -2,13 +2,12 @@ import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../../App';
 
-const HamburgerAccordian = ({ data }) => {
-    const [isOpen, setIsOpen] = useState(false);
+const HamburgerAccordian = ({ data, isOpen, toggleAccordion }) => {
     const { langMode } = useContext(UserContext);
 
-    const toggleAccordion = () => {
-        setIsOpen(!isOpen);
-    };
+    // const toggleAccordion = () => {
+    //     setIsOpen(!isOpen);
+    // };
 
     const makeLowercase = ( item ) => {
         return item.split(" ").join("-").toLowerCase()

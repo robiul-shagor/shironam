@@ -246,3 +246,7 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
 .lazy-load-image-background.blur.lazy-load-image-loaded {
   display: block !important;
 }
+.interest-submit {
+  opacity: 0.65;
+  pointer-events: none;
+}

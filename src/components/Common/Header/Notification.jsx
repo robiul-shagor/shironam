@@ -1,15 +1,20 @@
-import {useState, useCallback, useContext} from 'react'
+import {useState, useCallback, useContext, useRef, useEffect} from 'react'
 import useIntervalAsync from './useIntervalAsync';
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
 import moment from 'moment';
+//import 'moment/locale/bn-bd';
+
 import { Link } from 'react-router-dom';
 
 const Notification = () => {
     const [notificationBtn, setNotificationBtn] = useState(false);
     const [notificationData, setNotificationData] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const notificationButtonRef = useRef(null);
     const bearer_token = `Bearer ${userData.token}`;
+    //moment.locale('bn-bd');
+
     const config = {
         headers: {
             'Authorization': bearer_token
@@ -21,6 +26,23 @@ const Notification = () => {
         event.preventDefault();
         setNotificationBtn(!notificationBtn);
     };
+
+    useEffect(() => {
+        const handleDocumentClick = (e) => {
+          const isSocialDropdown = e.target.closest('.dropdown-notification');
+          const isSocialTrigger = e.target.closest('#dropdown_notification');
+      
+          if (!isSocialDropdown && !isSocialTrigger) {
+            setNotificationBtn(false);
+          }
+        };
+      
+        document.body.addEventListener('click', handleDocumentClick);
+      
+        return () => {
+          document.body.removeEventListener('click', handleDocumentClick);
+        };
+    }, []);
 
     const updateState = useCallback(async () => {
         try {
@@ -74,7 +96,7 @@ const Notification = () => {
             id="dropdown_notification" 
             aria-expanded="false" 
             data-te-dropdown-toggle-ref 
-            data-te-auto-close="outside" onClick={handleNotificationBtn}>
+            data-te-auto-close="outside" onClick={handleNotificationBtn} ref={notificationButtonRef}>
             <i className="fas fa-bell"></i>
             <span className="bg-red-500 absolute text-white -top-3 -right-3 w-6 h-6 rounded-full text-sm flex items-center justify-center">{filteredPosts.length}</span>
         </a>

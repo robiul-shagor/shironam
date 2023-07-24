@@ -2,6 +2,7 @@ import { useState, useEffect, useContext} from 'react'
 import { UserContext } from '../../../App';
 import { Link } from 'react-router-dom';
 import NewsListNonUser from '../../../query/NewsListNonUser';
+import Spinner from '../../Elements/Spinner';
 
 const SidebarNonUser = () => {
     const { langMode } = useContext(UserContext);
@@ -28,7 +29,7 @@ const SidebarNonUser = () => {
                     ))
                 }
 
-                <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+                <div>{loading && <Spinner /> }</div>
                 <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
         </div>

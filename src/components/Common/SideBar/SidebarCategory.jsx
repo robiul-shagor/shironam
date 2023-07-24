@@ -3,6 +3,7 @@ import axios from '../../../api/axios';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
+import Spinner from '../../Elements/Spinner';
 
 const SidebarCategory = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
@@ -14,6 +15,7 @@ const SidebarCategory = () => {
     const { category, subCategory, tags } = useParams()
     const [type, setType] = useState('')
     const location = useLocation();
+    const [loadings, setLoadings] = useState(true); 
 
     useEffect(() => {
         if (typeof subCategory !== 'undefined') {
@@ -31,10 +33,10 @@ const SidebarCategory = () => {
     }, [location, category, subCategory, tags]); 
 
     const {
-        loading, error, news, hasMores
+        loading, error, news, hasMores, noMore
     } = NewsListQuery(query, pageNumber, type)
 
-    const getData = async() => {
+    const getData = async(retryCount = 3, delay = 1000) => {
         const bearer_token = `Bearer ${userData.token}`;
         try {
             const config = {
@@ -47,9 +49,16 @@ const SidebarCategory = () => {
             .then(res => {
                 setSideBarAds(res.data);
             });
-
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            if (retryCount > 0 && error.response?.status === 429) {
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                getData(retryCount - 1, delay * 2); 
+            } else {
+                console.log(error);
+                setLoadings(false);
+            }
+        } finally {
+            setLoadings(false); 
         }
     };
 
@@ -75,13 +84,15 @@ const SidebarCategory = () => {
                     ))
                 }
 
-                <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+                <div>{loading && <Spinner />}</div>
+                <div className='text-center'>{noMore && ( langMode == 'BN' ? 'আর এন্ট্রি নেই' : 'No More' )}</div>
                 <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
 
 
             <hr className="my-4 md:my-12" />
 
+            { loadings && <Spinner />}
             { sideBarAds && (
                 <div className="ads">
                     <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>

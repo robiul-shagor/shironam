@@ -74,7 +74,6 @@ const BreakingNews = ({ navigation }) => {
                         <Link to='/' className='current [&.current]:bg-theme [&.current]:border-theme [&.current]:text-white border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                             <i className="fal fa-th-large"></i> &nbsp;
                             { langMode == 'BN' ? 'ঘটনাচক্র' : 'News Feed'}
-                            
                         </Link>
                     </li>
                     <li>

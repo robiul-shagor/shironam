@@ -3,14 +3,18 @@ import Header from '../Common/Header/Header';
 import Footer from '../Common/Footer/Footer';
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
+import Spinner from '../Elements/Spinner';
 
 const MyInterests = () => {
   const [interestsData, setInterestsData] = useState([]);
   const [isCheckedList, setIsCheckedList] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [btnVisable, setBtnVisable] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [parnetInterest, setParnetInterest] = useState(false);
   const userData = JSON.parse(sessionStorage.getItem("userDetails"));
   const bearer_token = `Bearer ${userData.token}`;
   const config = {
@@ -23,6 +27,7 @@ const MyInterests = () => {
 
   const handleCheckboxChangeValue = (event, parentCategoryId) => {
     const { value, checked } = event.target;
+    setBtnVisable(true);
     if (checked) {
       setSelectedValues((prevSelectedValues) => [...prevSelectedValues, { parentCategoryId, value }]);
     } else {
@@ -35,34 +40,47 @@ const MyInterests = () => {
   const handleCheckboxChange = (index) => {
     const updatedCheckedList = [...isCheckedList];
     updatedCheckedList[index] = !updatedCheckedList[index];
+    setBtnVisable(true);
     setIsCheckedList(updatedCheckedList);
   };
 
   useEffect(() => {
-    const getData = async () => {
+    const getData = async (retryCount = 3, delay = 1000) => {
       try {
         setIsLoading(true);
         const res = await axios.get('/interest-list', config);
         setInterestsData(res.data.data);
+        setParnetInterest( res.data.data.length )
       } catch (error) {
-        console.log(error);
+        if (retryCount > 0 && error.response?.status === 429) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          getData(retryCount - 1, delay * 2); 
+        } else {
+            console.log(error);
+            setLoading(false);
+        }
       } finally {
         setIsLoading(false);
       }
     };
-  
     getData();
   }, []);
 
   useEffect(() => {
-    const getDefault = async () => {
+    const getDefault = async (retryCount = 3, delay = 1000) => {
       try {
         setIsLoading(true);
         const res = await axios.get('/me', config);
         const obj = JSON.parse(res.data.normal_user.interest);
         setCheckboxState(obj); // Set checkbox state based on defaultInt values
       } catch (error) {
-        console.log(error);
+        if (retryCount > 0 && error.response?.status === 429) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          getDefault(retryCount - 1, delay * 2); 
+        } else {
+            console.log(error);
+            setLoading(false);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -70,7 +88,7 @@ const MyInterests = () => {
 
     const setCheckboxState = (obj) => {
       const updatedCheckedList = interestsData.map((item) =>
-        Object.values(obj).includes(item.id.toString())
+        Object.values(obj).slice(0, parnetInterest).includes(item.id.toString())
       );    
       
       const subcategories = interestsData.flatMap((item) => {
@@ -81,7 +99,7 @@ const MyInterests = () => {
             const [name, parentCategoryId] = subdata.split('-');
             const subcategoryValue = item.interest.find((data) => data.name_en === name);
             
-            return Object.values(obj).includes(subcategoryValue.id.toString());
+            return Object.values(obj).slice(parnetInterest - 1).includes(subcategoryValue.id.toString());
           })
           .map((matchingSubcategory) => {
             const [name, parentCategoryId] = matchingSubcategory.split('-');
@@ -122,21 +140,36 @@ const MyInterests = () => {
       
       return subcategoryValues;
     }, []);
+
+    setLoading(true);
     
     try {
+      // First 4 should be parent category
+      // rest are child cateogry
       const finalChoice = [...selectedCheckboxValues, ...selectedSubcategoryValues];
+      console.log(finalChoice.toString())
       axios.put('/update-interest', {
         interests: finalChoice.toString()
       }, {headers: {
         'Authorization': bearer_token
       }})
       .then(res => {
+        console.log(res)
         setSuccess(true);
       });
     } catch (e) {
       setError(true);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Your original className with the interest-submit class
+  const originalClassName = 'basis-1/2 border border-[#F9020B] rounded-lg py-4 text-center text-2xl bg-[#F9020B] text-white interest-submit';
+
+  // Conditionally render the className based on btnVisible
+  const btnClassNames = btnVisable ? originalClassName.replace(' interest-submit', '') : originalClassName;
 
   return (
     <div className='interest-pages'>
@@ -196,12 +229,18 @@ const MyInterests = () => {
               ))}
             </ul>
             <div className="form_footer flex gap-8 py-16 justify-center">
-              <button type="submit" className="basis-1/2 border border-[#F9020B] rounded-lg py-4 text-center text-2xl bg-[#F9020B] text-white">
-                { langMode == 'BN' ? 'সম্পন্ন' : 'Done' }
-              </button>
+              { !isLoading && (
+                <button type="submit" className={btnClassNames}>
+                  { loading ? (
+                    <Spinner />
+                  ) : (
+                    langMode == 'BN' ? 'সম্পন্ন' : 'Done'
+                  ) }
+                </button>
+              ) }
             </div>
           </form>
-          <div>{isLoading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
+          <div className='text-center'>{isLoading && <Spinner />}</div>
           <div>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
           { success && (
               <div className="flex items-center bg-theme_blue text-white text-sm font-bold mt-8 px-4 py-3" role="alert">

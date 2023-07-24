@@ -2,11 +2,13 @@ import { useContext, useState, useEffect} from 'react'
 import { UserContext } from '../../../App'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../../api/axios'
+import baseURL from '../../../api/baseURL'
 
 const UserData = () => {
   const { userLogin, setUserLogin } = useContext(UserContext);
   const [userAllMenu, setUserAllMenu] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [loading, setLoading] = useState(true); 
 
   const { langMode } = useContext(UserContext);
 
@@ -29,16 +31,22 @@ const UserData = () => {
   }
   
   useEffect(()=> {
-    const user_details_update = async() => {
+    const user_details_update = async(retryCount = 3, delay = 1000) => {
       try {
         await axios.get('/me', config)
         .then(res => {
-            const baseURL = 'https://shironam-backend.themestransmit.com/' 
-            ;
             res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
         });                    
-      } catch (e) {
-          console.log(e);
+      } catch (error) {
+        if (retryCount > 0 && error.response?.status === 429) {
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            user_details_update(retryCount - 1, delay * 2); 
+        } else {
+            console.log(error);
+            setLoading(false);
+        }
+      } finally {
+        setLoading(false);
       }      
     }
     user_details_update()
@@ -46,21 +54,21 @@ const UserData = () => {
   
 
   useEffect(() => {
-    const handleDocumentClick = (e) => {
-      const isSocialDropdown = e.target.closest('.user-profile-menu');
-      const isSocialTrigger = e.target.closest('#user_profile_menu');
-  
-      if (!isSocialDropdown && !isSocialTrigger) {
-        setUserAllMenu(false);
-      }
-    };
-  
-    document.body.addEventListener('click', handleDocumentClick);
-  
-    return () => {
-      document.body.removeEventListener('click', handleDocumentClick);
-    };
-}, []);
+      const handleDocumentClick = (e) => {
+        const isSocialDropdown = e.target.closest('.user-profile-menu');
+        const isSocialTrigger = e.target.closest('#user_profile_menu');
+    
+        if (!isSocialDropdown && !isSocialTrigger) {
+          setUserAllMenu(false);
+        }
+      };
+    
+      document.body.addEventListener('click', handleDocumentClick);
+    
+      return () => {
+        document.body.removeEventListener('click', handleDocumentClick);
+      };
+  }, []);
 
   const hanndleLogout = async(event) => {
     event.preventDefault();
@@ -85,7 +93,7 @@ const UserData = () => {
   return (
     <li className="relative ml-auto">
         <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
-            <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
+            <img src={ profileImage ? profileImage : '/assets/media/user-avatar.png' } className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
             <span>{userData && userData.normal_user && userData.normal_user.name}</span>
         </a>
 

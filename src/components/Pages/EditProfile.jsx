@@ -3,6 +3,7 @@ import Header from '../Common/Header/Header'
 import Footer from '../Common/Footer/Footer'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
+import baseURL from '../../api/baseURL'
 
 const EditProfile = () => {
   const [firstName, setFristName] = useState('');
@@ -45,7 +46,6 @@ const EditProfile = () => {
       'Content-Type': 'multipart/form-data',
     }})
     .then(res => {
-      const baseURL = 'https://shironam-backend.themestransmit.com/' 
       setProfileImage( baseURL + res.data.image);
       setImgSuccess(res.data.status);
     });
@@ -125,9 +125,6 @@ const EditProfile = () => {
             res.data.normal_user.country && setCountry(res.data.normal_user.country);
             res.data.normal_user.city && setCity(res.data.normal_user.city);
             res.data.normal_user.gender && setGender(res.data.normal_user.gender);
-
-            const baseURL = 'https://shironam-backend.themestransmit.com/' 
-            ;
             res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
         });                    
       } catch (e) {
@@ -169,7 +166,7 @@ const EditProfile = () => {
                   <label htmlFor="user_profile_photo" className="text-blue-600 cursor-pointer text-xl">{ langMode == 'BN' ? 'প্রোফাইল ফটো পরিবর্তন করুন' : 'Change profile photo' }</label>
                 </div>
               </div>
-              
+
               {imgSuccess && (<div>{ langMode == 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successfull' }</div>)}
 
               <h3 className="mb-8 font-sans text-3xl">{ langMode == 'BN' ? 'ব্যক্তিগত তথ্য' : 'Personal Information' }</h3>

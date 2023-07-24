@@ -2,6 +2,7 @@ import { useState, useContext } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
+import Spinner from '../Elements/Spinner'
 
 
 const Register = () => {
@@ -12,13 +13,14 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [cPassword, setCpassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const { langMode } = useContext(UserContext);
 
     const navigate = useNavigate();
 
     const hanndleRegistration = async(event) => {
         event.preventDefault();
-
+        setLoading(true);
         try {
             await axios.post('/register', {name, email, password, c_password: cPassword, last_name: lastName, phone }, {headers: {
                 'content-type': 'application/x-www-form-urlencoded',
@@ -35,6 +37,8 @@ const Register = () => {
         } catch (e) {
             console.log(e)
             setError(e.response.data.errors)
+        } finally {
+            setLoading(false)
         }
     }
   return (
@@ -99,6 +103,7 @@ const Register = () => {
                         { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password'}<span className="text-red-600">*</span>
                     </label>
                     <input type="password" className="form-control bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    {typeof error.password !== 'undefined' && <span className="error">{error.password}</span>}
                 </div>                
                 
                 <div className="form-group mt-6">
@@ -113,7 +118,7 @@ const Register = () => {
                     <button 
                         type="submit" 
                         className="btn-dark-full">
-                        { langMode == 'BN' ? 'নিবন্ধন করুন' : 'Sign Up'}
+                        { loading ? <Spinner /> : langMode == 'BN' ? 'নিবন্ধন করুন' : 'Sign Up' }
                     </button>
                 </div>
 

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import SocialShare from '../Component/SocialShare';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import Spinner from '../../Elements/Spinner';
 
 const NewsCardAvarage = () => {
     const [visiblePostId, setVisiblePostId] = useState(null);
@@ -141,7 +142,7 @@ const NewsCardAvarage = () => {
 
                                 <li>
                                     <ul className="flex gap-6">
-                                        <li className='relative'>
+                                        <li className='relative hidden'>
                                             <a href="#" className="transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
                                                 { getUserLang == 'BN' ? 'শেয়ার' : 'Share'}&nbsp;
                                                 <i className="fal fa-share"></i>
@@ -156,8 +157,8 @@ const NewsCardAvarage = () => {
                 </div>
             ))}
 
-            <div>{loading && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
-            <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
+            <div className='text-center'>{loading && <Spinner /> }</div>
+            <div className='text-center'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
             

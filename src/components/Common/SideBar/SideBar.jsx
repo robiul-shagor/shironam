@@ -2,6 +2,7 @@ import {React, useState, useEffect, useContext} from 'react'
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
 import { Link } from 'react-router-dom';
+import Spinner from '../../Elements/Spinner';
 
 const SideBar = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
@@ -9,6 +10,7 @@ const SideBar = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
     const bearer_token = `Bearer ${userData.token}`;
+    const [loading, setLoading] = useState(true); 
 
     const config = {
         headers: {
@@ -16,25 +18,41 @@ const SideBar = () => {
         }
     };
 
-    const getData = async() => {
+    const getData = async(retryCount = 3, delay = 1000) => {
         try {
             await axios.get('/news-list', config)
             .then(res => {
                 setTags(res.data);
             });      
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            if (retryCount > 0 && error.response?.status === 429) {
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                getData(retryCount - 1, delay * 2); 
+            } else {
+                console.log(error);
+                setLoading(false);
+            }
+        } finally {
+            setLoading(false); 
         }
     };    
     
-    const getAds = async() => {
+    const getAds = async(retryCount = 3, delay = 1000) => {
         try {     
             await axios.get('/ads-right-side', config)
             .then(res => {
                 setSideBarAds(res.data);
             });
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            if (retryCount > 0 && error.response?.status === 429) {
+                await new Promise((resolve) => setTimeout(resolve, delay));
+                getAds(retryCount - 1, delay * 2); 
+            } else {
+                console.log(error);
+                setLoading(false);
+            }
+        } finally {
+            setLoading(false); 
         }
     };
 
@@ -53,6 +71,7 @@ const SideBar = () => {
             <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
+                { loading && <Spinner />}
                 { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
                     <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                         { data.tags && data.tags.map( (item, index2) => (
@@ -67,6 +86,7 @@ const SideBar = () => {
             </div>
 
             <hr className="my-4 md:my-12" />
+            { loading && <Spinner />}
             { sideBarAds && (
                 <div className="ads">
                     <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>

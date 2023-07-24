@@ -8,6 +8,7 @@ import NewsListQuery from '../../../query/NewsListQuery';
 import SocialShare from '../Component/SocialShare';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import Spinner from '../../Elements/Spinner';
 
 
 const NewsCard = () => {
@@ -49,7 +50,7 @@ const NewsCard = () => {
     }, [location, category, subCategory, tags]); 
 
     const {
-        loading, error, news, hasMores
+        loading, error, news, hasMores, noMore
     } = NewsListQuery(query, pageNumber, type)
 
     const newsObserver = useRef(null);
@@ -224,8 +225,8 @@ const NewsCard = () => {
     }, [visibleId, visibleAdsId ])
     
     return (
-        <div className="space-y-8 lg:space-y-12 col-span-2">
-            {news.length > 0 ? (
+        <div className="space-y-8 lg:space-y-12 col-span-2">   
+            {news &&
                 news.map((newsData, index) => {
                     if (news.length === index + 1) {
                         return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''}>
@@ -450,12 +451,17 @@ const NewsCard = () => {
                         </div> 
                     }
                 })
-            ) : (
-                <div>{langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No news found.'}</div>
-            )}
+            }
 
-            <div>{(loading && news.length === 0) && ( langMode == 'BN' ? 'লোড হচ্ছে...' : 'Loading...')}</div>
-            <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
+            <div>
+                {loading && news.length !== 0 && <Spinner />}
+                {loading && news.length === 0 && <Spinner />}
+            </div>
+
+            {/* { console.log(noMore) } */}
+
+            <div className='text-center'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
+            <div className='text-center'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
             <div style={{opacity: 0}}>

@@ -31,7 +31,7 @@ const TabForTodayPage = () => {
                 <div className="mobile_nav fixed bottom-0 left-0 right-0 z-[1024] overflow-hidden rounded-t-3xl before:content-[''] before:inset-0 before:absolute before:-z-[1] before:bg-[#F2F2F2] dark:before:bg-[#4D4D4D] md:hidden">
                     <ul className="flex items-center text-[1.4rem] justify-between text-[#707070] dark:text-[#B7B7B7]">
                         <li className="flex-1">
-                            <Link to='/' className='active flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
+                            <Link to='/' className='active flex flex-col justify-center items-center py-8 px-4 gap-2 nter hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fal fa-th-large"></i> &nbsp;
                                 { langMode == 'BN' ? 'ঘটনাচক্র' : 'News Feed'}
                             </Link>

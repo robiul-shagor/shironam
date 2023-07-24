@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from 'react'
 import { UserContext } from '../../../App';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from '../../../api/axios';
+import Spinner from '../../Elements/Spinner';
 
 function LoginModal() {
     const { langMode } = useContext(UserContext);
@@ -114,7 +115,7 @@ function LoginModal() {
                     type="submit" 
                     className="btn-dark-full">
                     { processing ? ( 
-                        langMode == 'BN' ? 'লগইন করার জন্য অপেক্ষা করুন...' : 'Wait for login...'
+                        <Spinner />
                         ) : (
                         langMode == 'BN' ? 'সাইন ইন করুন' : 'Sign In'
                     ) }
