@@ -268,6 +268,9 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
     padding: 7px 10px;
     border-radius: 100px;
   }
+  html.dark a.bookmark{
+    background: #f7f7f71a;
+  }
   .ads-with-list > li:first-of-type {
     display: block;
     width: 100%;
