@@ -5,6 +5,7 @@ import axios from '../../api/axios'
 import { UserContext } from '../../App'
 import { useParams, Link } from 'react-router-dom'
 import Spinner from '../Elements/Spinner'
+import { Helmet } from 'react-helmet'
 
 
 function SingleNews() {
@@ -12,6 +13,7 @@ function SingleNews() {
     const { id } = useParams();
     const [news, setNews] = useState([]);
     const [ loading, setLoading ] = useState(false);
+    const currentUrl = window.location.href;
 
     const singleData = async(retryCount = 3, delay = 1000)=> {
         setLoading(true);
@@ -40,6 +42,20 @@ function SingleNews() {
 
     return (
         <div className='single-news'>
+            <Helmet>
+                <title>{ langMode == 'BN' ? news.summary_bn : news.summary_en}</title>
+                <meta property="og:url" content={currentUrl} />
+                <meta property="og:title" content={ langMode == 'BN' ? news.summary_bn : news.summary_en} />
+                <meta property="og:description" content="" />
+                <meta property="og:image" content={news.thumbnail}  />
+
+                <meta name="twitter:card" content="" />
+                <meta name="twitter:title" content={ langMode == 'BN' ? news.summary_bn : news.summary_en} />
+                <meta name="twitter:description" content="" />
+                <meta name="twitter:image" content={news.thumbnail} />
+
+                <meta property="og:image:secure_url" content={news.thumbnail}  />
+            </Helmet>
             <Header />
 
             <div className='main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] max-[767px]:bg-[#EEEEEE] max-[767px]:dark:bg-dark'>

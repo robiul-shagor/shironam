@@ -10,11 +10,9 @@ export default function NewsListNonUser(query) {
         setNews([])
     }, [query])
 
-
     useEffect(() => {
         setLoading(true)
         setError(false)
-
         try {
             axios.get('/news-list-without-authentication', {})
             .then(res => {

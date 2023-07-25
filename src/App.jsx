@@ -23,6 +23,8 @@ import SingleNews from "./components/Pages/SingleNews"
 import AfterRegistrationInterests from "./components/Pages/AfterRegistrationInterests"
 import SingleCategorySub from "./category/SingleCategorySub"
 import RegisterVerify from "./components/Pages/RegisterVerify"
+import axios from "./api/axios"
+import { Helmet } from "react-helmet"
 
 
 export const UserContext = createContext();
@@ -30,6 +32,7 @@ export const UserContext = createContext();
 function App() {
   const [userLogin, setUserLogin] = useState(false);
   const [langMode, setLangMode] = useState('EN');
+  const [setting, setSettings] = useState('');
 
   useEffect(()=> {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -44,8 +47,35 @@ function App() {
     }
   }, []);
 
+  const getSettings = async(retryCount = 3, delay = 1000) => {
+    try {
+      await axios.get('/site-settings', {})
+      .then(res => {
+        setSettings( JSON.parse(res.data[0].value) )
+      });
+    } catch (error) {
+      if (retryCount > 0 && error.response?.status === 429) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          getSettings(retryCount - 1, delay * 2); 
+      } if (retryCount > 0 && error.response?.status === 500) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          getSettings(retryCount - 1, delay * 2); 
+      } else {
+        console.log(error);
+      }
+    }
+  };
+
+  useEffect(()=> {
+    getSettings();
+  }, [])
+
   return (
     <>
+      <Helmet>
+        <title>{ langMode == 'BN' ? setting.site_name_bn : setting.site_name_en }</title>
+      </Helmet>
+
       <UserContext.Provider
         value={{
           userLogin,

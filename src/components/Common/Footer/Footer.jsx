@@ -30,6 +30,7 @@ const Footer = () => {
             setShowModal(true);
         }
     };
+    
 
     return (
         <div>

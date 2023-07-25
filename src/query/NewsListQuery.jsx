@@ -86,12 +86,18 @@ export default function NewsListQuery(query, pageNumber, type) {
         setDataFetched(false); 
       }
     } catch (e) {
-      console.log(e)
       if (e.response && e.response.status === 429) {
         // Handle 429 error (Too Many Requests)
         setLoading(true);
         //setError(true);
         // Retry fetching after some time (e.g., 5 seconds)
+        setTimeout(() => {
+          setLoading(true);
+          setError(false);
+          debouncedFetchNewsList(query, pageNumber, type);
+        }, 5000);
+      } else if (e.response && e.response.status === 500) {
+        setLoading(true);
         setTimeout(() => {
           setLoading(true);
           setError(false);
