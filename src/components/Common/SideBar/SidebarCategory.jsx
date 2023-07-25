@@ -72,22 +72,21 @@ const SidebarCategory = () => {
             <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
-                { news && news.map((data, index) => ( 
-                        <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-                            { data.tags && data.tags.map( (item, index2) => (
-                                <li key={index2}>
-                                    <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
-                                        #{ langMode == 'BN' ? item.name_bn : item.name_en}
-                                    </Link>
-                                </li>
-                            ) ) }
-                        </ul>
-                    ))
-                }
+                { news?.map((data, index) => ( 
+                    <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
+                        { data.tags && data.tags.map( (item, index2) => (
+                            <li key={index2}>
+                                <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
+                                    #{ langMode == 'BN' ? item.name_bn : item.name_en}
+                                </Link>
+                            </li>
+                        ) ) }
+                    </ul>
+                )) }
 
                 <div>{loading && <Spinner />}</div>
-                <div className='text-center'>{noMore && ( langMode == 'BN' ? 'আর এন্ট্রি নেই' : 'No More' )}</div>
-                <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
+                <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর এন্ট্রি নেই' : 'No More' )}</div>
+                <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
 
 

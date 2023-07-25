@@ -16,7 +16,7 @@ const SidebarNonUser = () => {
             <h2 className="dark:text-white">{ langMode == 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
-                { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
+                { filteredTags?.map((data, index) => ( 
                         <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                             { data.tags.map( (item, index2) => (
                                 <li key={index2}>
@@ -26,11 +26,10 @@ const SidebarNonUser = () => {
                                 </li>
                             ) ) }
                         </ul>
-                    ))
-                }
+                )) }
 
                 <div>{loading && <Spinner /> }</div>
-                <div>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
+                <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
         </div>
     )

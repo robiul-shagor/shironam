@@ -17,7 +17,8 @@ const SideBar = () => {
           'Authorization': bearer_token
         }
     };
-
+    
+    // Get Tags data
     const getData = async(retryCount = 3, delay = 1000) => {
         try {
             await axios.get('/news-list', config)
@@ -37,6 +38,7 @@ const SideBar = () => {
         }
     };    
     
+    // get ads
     const getAds = async(retryCount = 3, delay = 1000) => {
         try {     
             await axios.get('/ads-right-side', config)
@@ -72,7 +74,7 @@ const SideBar = () => {
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
                 { loading && <Spinner />}
-                { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
+                { filteredTags?.map((data, index) => ( 
                     <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
                         { data.tags && data.tags.map( (item, index2) => (
                             <li key={index2}>

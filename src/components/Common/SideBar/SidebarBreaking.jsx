@@ -79,23 +79,23 @@ const SidebarBreaking = ( { types } ) => {
 
             <div className='inline-flex flex-wrap gap-4 my-6'>
                 { loading && <Spinner />}
-                { filteredTags.length > 0 && filteredTags.map((data, index) => ( 
-                        <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-                            { data.tags.map( (item, index2) => (
-                                <li key={index2}>
-                                    <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
-                                        #{ langMode == 'BN' ? item.name_bn : item.name_en}
-                                    </Link>
-                                </li>
-                            ) ) }
-                        </ul>
-                    ))
-                }
+                { filteredTags?.map((data, index) => ( 
+                    <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
+                        { data.tags.map( (item, index2) => (
+                            <li key={index2}>
+                                <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
+                                    #{ langMode == 'BN' ? item.name_bn : item.name_en}
+                                </Link>
+                            </li>
+                        ) ) }
+                    </ul>
+                )) }
             </div>
 
             <hr className="my-4 md:my-12" />
 
             { loading && <Spinner />}
+            
             { sideBarAds && (   
                 <div className="ads">
                     <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
