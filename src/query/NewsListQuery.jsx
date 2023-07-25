@@ -9,6 +9,7 @@ export default function NewsListQuery(query, pageNumber, type) {
   const [news, setNews] = useState([]);
   const [hasMores, setHasMores] = useState(false);
   const [noMore, setNoMore] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const bearer_token = `Bearer ${userData.token}`;
   const config = {
@@ -19,8 +20,7 @@ export default function NewsListQuery(query, pageNumber, type) {
 
   const fetchNewsList = async () => {
     try {
-      let totalPosts;
-      let maxPage = 1;
+      let totalPosts, maxPage;
       switch (type) {
         case 'category':
           totalPosts = await axios.get(`/news-feed-info?category=${query}`, config)
@@ -28,25 +28,22 @@ export default function NewsListQuery(query, pageNumber, type) {
           break;
         case 'subcategory':
           totalPosts = await axios.get(`/news-feed-info?sub_category=${query}`, config)
-          maxPage = totalPosts.data.max_paginate;  
           break;
         case 'tags':
           totalPosts = await axios.get(`/news-feed-info?tag=${query}`, config)
-          maxPage = totalPosts.data.max_paginate;
           break;
         case 'breaking-news':
           totalPosts = await axios.get('/news-feed-info?breaking=1', config);
-          maxPage = totalPosts.data.max_paginate;
           break;
         case 'today-news':
           totalPosts = await axios.get('/news-feed-info?todays_news=1', config);
-          maxPage = totalPosts.data.max_paginate;  
           break;
         default:
           totalPosts = await axios.get('/news-feed-info', config);
-          maxPage = totalPosts.data.max_paginate;  
           break;
       }
+
+      maxPage = totalPosts.data.max_paginate; 
 
       if (pageNumber <= maxPage) {
         let response;
@@ -81,12 +78,15 @@ export default function NewsListQuery(query, pageNumber, type) {
         setHasMores(response.data.length > 0);
         setNoMore(response.data.length == 0);
         setLoading(false);
+        setDataFetched(true); 
       } else {
         setHasMores(false); // No more pages available
         setLoading(false);
         setNoMore(true);
+        setDataFetched(false); 
       }
     } catch (e) {
+      console.log(e)
       if (e.response && e.response.status === 429) {
         // Handle 429 error (Too Many Requests)
         setLoading(true);
@@ -124,5 +124,5 @@ export default function NewsListQuery(query, pageNumber, type) {
     };
   }, [query, pageNumber, type]);
 
-  return { loading, error, news, hasMores, noMore };
+  return { loading, error, news, hasMores, noMore, dataFetched };
 }

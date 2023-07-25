@@ -32,6 +32,7 @@ const SidebarCategory = () => {
         }
     }, [location, category, subCategory, tags]); 
 
+
     const {
         loading, error, news, hasMores, noMore
     } = NewsListQuery(query, pageNumber, type)

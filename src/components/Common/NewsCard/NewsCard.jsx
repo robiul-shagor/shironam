@@ -10,7 +10,6 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Spinner from '../../Elements/Spinner';
 
-
 const NewsCard = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [visiblePostId, setVisiblePostId] = useState(null);
@@ -20,16 +19,20 @@ const NewsCard = () => {
     const [type, setType] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
     const [social, setSocial] = useState(false)
+    const [routerChanged, setRouterChanged] = useState(false)
 
     const { category, subCategory, tags } = useParams()
     const { pathname } = useLocation()
+    const location = useLocation()
+    const { langMode } = useContext(UserContext);
+    const bearer_token = `Bearer ${userData.token}`;
 
+    // Make lowercase
     const makeLowercase = ( item ) => {
         return item.split(" ").join("-").toLowerCase()
     }
 
-    const location = useLocation();
-
+    // Set which type of event is it
     useEffect(() => {
         if (typeof subCategory !== 'undefined') {
             setQuery(subCategory);
@@ -41,37 +44,41 @@ const NewsCard = () => {
             setQuery(tags);
             setType('tags');
         } else if (typeof pathname !== 'undefined' && pathname == "/breaking-news") {
+            setQuery('breaking-news');
             setType('breaking-news');
         } else if (typeof pathname !== 'undefined' && pathname == "/today-news") {
+            setQuery('today-news');
             setType('today-news');
         } else {
+            setQuery('all');
             setType('all');
         }
-    }, [location, category, subCategory, tags]); 
+    }, [location, category, subCategory, tags, query]); 
 
+    //News Query
     const {
         loading, error, news, hasMores, noMore
     } = NewsListQuery(query, pageNumber, type)
 
-    const newsObserver = useRef(null);
-    const observer = useRef()
+    // Change with router changed
+    useEffect(() => {
+        setRouterChanged(true);
+        setPageNumber(1);
+    }, [location]);
 
+    // Use observer for infinity scroll
+    const observer = useRef()
     const lastNewsElementRef = useCallback(node => {
         if (loading) return
         if (observer.current) observer.current.disconnect()
         observer.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting && hasMores) {     
-            setPageNumber(prevPageNumber => prevPageNumber + 1)
-          }
+            if ( entries[0].isIntersecting && hasMores) {
+                setPageNumber(prevPageNumber => prevPageNumber + 1)
+            }
         })
         if (node) observer.current.observe(node)
-    }, [loading, hasMores])    
+    }, [loading, hasMores, routerChanged])    
      
-    
-    const { langMode } = useContext(UserContext);
-
-    const bearer_token = `Bearer ${userData.token}`;
-    
     // Handle Bookmark
     const bookmarkHandle = async(event) => {
         event.preventDefault();
@@ -218,20 +225,18 @@ const NewsCard = () => {
         };
     }, [])
     
-    
+    // Set Visable news ID
     useEffect(() => {
         visibleId && viewData(visibleId);
         visibleAdsId && viewAdsData(visibleAdsId);
     }, [visibleId, visibleAdsId ])
 
-    console.log(news)
-    
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   
             {news?.map((newsData, index) => {
                 if (news.length === index + 1) {
                     return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''}>
-                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' }>
                             { newsData.ads_image ? (
                                 <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
                                     <LazyLoadImage src={newsData.ads_image}
@@ -343,7 +348,7 @@ const NewsCard = () => {
                     </div>
                 } else {
                     return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''} >
-                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } >
                             { newsData.ads_image ? (
                                 <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
                                     <LazyLoadImage src={newsData.ads_image} 
@@ -461,8 +466,8 @@ const NewsCard = () => {
                 {loading && news.length === 0 && <Spinner />}
             </div>
             
-            <div className='text-center'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
-            <div className='text-center'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
+            <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
+            <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
             <div style={{opacity: 0}}>

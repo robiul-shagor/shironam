@@ -14,18 +14,10 @@ const Search = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [social, setSocial] = useState(false)
   
-    let keyword;
-    keyword = JSON.parse(sessionStorage.getItem("userSearch"));
-    useEffect(() => {
-        setSearchData(keyword);
-        fetchData(keyword);
-    }, [keyword]);
-
-
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(false); 
     const { langMode } = useContext(UserContext);
 
     const bearer_token = `Bearer ${userData.token}`;
@@ -35,6 +27,8 @@ const Search = () => {
         }
     };
 
+    let keyword;
+
     const handleSearchChange = (event) => {
         keyword = event.target.value;
         setSearchData(keyword);
@@ -42,10 +36,13 @@ const Search = () => {
         // Clear the previous typing timeout
         clearTimeout(typingTimeout);
 
+        setLoading(true);
+
         // Set a new timeout to wait before making the API call
         const newTypingTimeout = setTimeout(() => {
-        // Make the API call with the search keyword
-        fetchData(keyword);
+            // Make the API call with the search keyword
+            fetchData(keyword);
+            setLoading(false);
         }, 500); // Adjust the delay time (in milliseconds) according to your preference
         setTypingTimeout(newTypingTimeout);
     };

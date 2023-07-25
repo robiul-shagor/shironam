@@ -5,10 +5,6 @@ import { UserContext } from '../../../App';
 const HamburgerAccordian = ({ data, isOpen, toggleAccordion }) => {
     const { langMode } = useContext(UserContext);
 
-    // const toggleAccordion = () => {
-    //     setIsOpen(!isOpen);
-    // };
-
     const makeLowercase = ( item ) => {
         return item.split(" ").join("-").toLowerCase()
     }
