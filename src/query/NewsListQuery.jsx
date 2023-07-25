@@ -19,43 +19,37 @@ export default function NewsListQuery(query, pageNumber, type) {
 
   const fetchNewsList = async () => {
     try {
-      
-      let totalPosts, postNum, maxPage;
+      let totalPosts;
+      let maxPage = 1;
       switch (type) {
         case 'category':
-          totalPosts = await axios.get(`/news-list?category=${query}`, config);
-          postNum = await axios.get(`/news-list?paginate=1&category=${query}`, config);
-          maxPage = Math.ceil(totalPosts.data.length / 3);  
+          totalPosts = await axios.get(`/news-feed-info?category=${query}`, config)
+          maxPage = totalPosts.data.max_paginate;
           break;
         case 'subcategory':
-          totalPosts = await axios.get(`/news-list?sub_category=${query}`, config);
-          postNum = await axios.get(`/news-list?paginate=1&sub_category=${query}`, config);
-          maxPage = Math.ceil(totalPosts.data.length / 3);  
+          totalPosts = await axios.get(`/news-feed-info?sub_category=${query}`, config)
+          maxPage = totalPosts.data.max_paginate;  
           break;
         case 'tags':
-          totalPosts = await axios.get(`/news-list?tag=${query}`, config);
-          postNum = await axios.get(`/news-list?paginate=1&tag=${query}`, config);
-          maxPage = Math.ceil(totalPosts.data.length / 3);  
+          totalPosts = await axios.get(`/news-feed-info?tag=${query}`, config)
+          maxPage = totalPosts.data.max_paginate;
           break;
         case 'breaking-news':
-          totalPosts = await axios.get('/news-list?breaking=1', config);
-          postNum = await axios.get('/news-list?paginate=1&breaking=1', config);
-          maxPage = Math.ceil(totalPosts.data.length / 3);  
+          totalPosts = await axios.get('/news-feed-info?breaking=1', config);
+          maxPage = totalPosts.data.max_paginate;
           break;
         case 'today-news':
-          totalPosts = await axios.get('/news-list?todays_news=1', config);
-          postNum = await axios.get('/news-list?paginate=1&todays_news=1', config);
-          maxPage = Math.ceil(totalPosts.data.length / 3);  
+          totalPosts = await axios.get('/news-feed-info?todays_news=1', config);
+          maxPage = totalPosts.data.max_paginate;  
           break;
         default:
-          const getPostInfo = await axios.get('/news-feed-info', config)
-          maxPage = getPostInfo.data.max_paginate;  
+          totalPosts = await axios.get('/news-feed-info', config);
+          maxPage = totalPosts.data.max_paginate;  
           break;
       }
 
       if (pageNumber <= maxPage) {
         let response;
-  
         switch (type) {
           case 'category':
             response = await axios.get(`/news-list?paginate=${pageNumber}&category=${query}`, config);
@@ -76,7 +70,7 @@ export default function NewsListQuery(query, pageNumber, type) {
             response = await axios.get(`/news-list?paginate=${pageNumber}`, config);
             break;
         }
-  
+
         setNews(prevItems => {
           const existingIds = new Set(prevItems.map(item => item.id));
           const uniqueItems = response.data.filter(item => !existingIds.has(item.id));

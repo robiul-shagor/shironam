@@ -223,244 +223,244 @@ const NewsCard = () => {
         visibleId && viewData(visibleId);
         visibleAdsId && viewAdsData(visibleAdsId);
     }, [visibleId, visibleAdsId ])
+
+    console.log(news)
     
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   
-            {news &&
-                news.map((newsData, index) => {
-                    if (news.length === index + 1) {
-                        return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''}>
-                            <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
-                                { newsData.ads_image ? (
-                                    <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
-                                        <LazyLoadImage src={newsData.ads_image}
-                                            alt=""
-                                            placeholderSrc='/assets/media/placeholder.webp'
-                                            className="thumbnail w-full object-cover"
-                                            effect="blur"
-                                        />
-                                        { newsData.action_url && (
-                                            <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
-                                                <span className="">{newsData.button_title}</span>
-                                                <i className="fal fa-arrow-right -rotate-45"></i>
-                                            </div>
-                                        ) }
-                                    </a>           
-                                ) : (
-                                    <a href={newsData.source}>
-                                        <LazyLoadImage src={newsData.thumbnail}
-                                            alt=""
-                                            placeholderSrc='/assets/media/placeholder.webp'
-                                            className="thumbnail w-full object-cover"
-                                            effect="blur"
-                                        />
-                                    </a>
-                                ) }
-    
-                                { !newsData.ads_image && (
-                                    <ul className="post-category flex text-xl mt-6 dark:text-white">
+            {news?.map((newsData, index) => {
+                if (news.length === index + 1) {
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" ref={lastNewsElementRef} key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''}>
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver}>
+                            { newsData.ads_image ? (
+                                <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
+                                    <LazyLoadImage src={newsData.ads_image}
+                                        alt=""
+                                        placeholderSrc='/assets/media/placeholder.webp'
+                                        className="thumbnail w-full object-cover"
+                                        effect="blur"
+                                    />
+                                    { newsData.action_url && (
+                                        <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
+                                            <span className="">{newsData.button_title}</span>
+                                            <i className="fal fa-arrow-right -rotate-45"></i>
+                                        </div>
+                                    ) }
+                                </a>           
+                            ) : (
+                                <a href={newsData.source}>
+                                    <LazyLoadImage src={newsData.thumbnail}
+                                        alt=""
+                                        placeholderSrc='/assets/media/placeholder.webp'
+                                        className="thumbnail w-full object-cover"
+                                        effect="blur"
+                                    />
+                                </a>
+                            ) }
+
+                            { !newsData.ads_image && (
+                                <ul className="post-category flex text-xl mt-6 dark:text-white">
+                                    <li>
+                                        <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                            #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                        </Link>
+                                    </li>
+                                    {newsData.sub_category_en && (
                                         <li>
-                                            <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
-                                                #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                            <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
+                                                { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
                                             </Link>
                                         </li>
-                                        {newsData.sub_category_en && (
+                                    )}
+                                </ul>
+                            ) }
+
+                            { newsData.ads_image ? (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    {newsData.title}
+                                </h1>
+                            ) : (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
+                                </h1>         
+                            ) }                    
+                            
+                            { newsData.ads_image ? (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
+                                    </li>
+                                </ul>
+                            ) : (
+                                <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
+                                    <li>
+                                        <ul className="flex gap-6">
                                             <li>
-                                                <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
-                                                    { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
-                                                </Link>
+                                                <i className="fal fa-clock"></i>&nbsp;
+                                                { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
                                             </li>
-                                        )}
-                                    </ul>
-                                ) }
-    
-                                { newsData.ads_image ? (
-                                    <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                        {newsData.title}
-                                    </h1>
-                                ) : (
-                                    <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                        { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
-                                    </h1>         
-                                ) }                    
-                                
-                                { newsData.ads_image ? (
-                                    <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
-                                        <li>
-                                            { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
-                                        </li>
-                                    </ul>
-                                ) : (
-                                    <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
-                                        <li>
-                                            <ul className="flex gap-6">
-                                                <li>
-                                                    <i className="fal fa-clock"></i>&nbsp;
-                                                    { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
-                                                </li>
-                                                <li>
-                                                    <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
-                                                        { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
-                                                        <i className="fal fa-arrow-up rotate-45"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-    
-                                        { newsData.ads && (
-                                            <li className="ads flex items-center">
-                                                { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
-                                                <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
-                                                    <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
-                                                    {newsData.ads.sponsor}
+                                            <li>
+                                                <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
+                                                    { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
+                                                    <i className="fal fa-arrow-up rotate-45"></i>
                                                 </a>
                                             </li>
-                                        ) }
-    
-                                        <li>
-                                            <ul className="flex gap-6">
-                                                <li>
-                                                    <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                        <span className='sm:hidden'>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                        &nbsp;</span>
-                                                        <i className="fal fa-bookmark"></i>
-                                                    </a>
-                                                </li>
-                                                <li className='relative'>
-                                                    <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
-                                                        <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        &nbsp;</span>
-                                                        <i className="fal fa-share"></i>
-                                                    </a>
-                                                    {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
-                                                </li>
-                                            </ul>
+                                        </ul>
+                                    </li>
+
+                                    { newsData.ads && (
+                                        <li className="ads flex items-center">
+                                            { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
+                                            <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
+                                                <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
+                                                {newsData.ads.sponsor}
+                                            </a>
                                         </li>
-                                    </ul>
-                                ) }
-                            </div>
+                                    ) }
+
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
+                                                    <span className='sm:hidden'>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                    &nbsp;</span>
+                                                    <i className="fal fa-bookmark"></i>
+                                                </a>
+                                            </li>
+                                            <li className='relative'>
+                                                <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
+                                                    <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                    &nbsp;</span>
+                                                    <i className="fal fa-share"></i>
+                                                </a>
+                                                {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            ) }
                         </div>
-                    } else {
-                        return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''} >
-                            <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
-                                { newsData.ads_image ? (
-                                    <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
-                                        <LazyLoadImage src={newsData.ads_image} 
-                                            alt=""
-                                            placeholderSrc='/assets/media/placeholder.webp'
-                                            className="thumbnail w-full object-cover"
-                                            effect="blur"
-                                        />
-                                        { newsData.action_url && (
-                                            <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
-                                                <span className="">{newsData.button_title}</span>
-                                                <i className="fal fa-arrow-right -rotate-45"></i>
-                                            </div>
-                                        ) }
-                                    </a>           
-                                ) : (
-                                    <a href={newsData.source}>
-                                        <LazyLoadImage src={newsData.thumbnail}
-                                            alt=""
-                                            placeholderSrc='/assets/media/placeholder.webp'
-                                            className="thumbnail w-full object-cover"
-                                            effect="blur"
-                                        />
-                                    </a>
-                                ) }
-    
-                                { !newsData.ads_image && (
-                                    <ul className="post-category flex text-xl mt-6 dark:text-white">
+                    </div>
+                } else {
+                    return <div className="post-item group max-[767px]:p-6 bg-white dark:bg-transparent max-[767px]:dark:bg-[#1E1E1E]" key={index} data-id={ !newsData.ads_image ? newsData.id : ''} data-ads={newsData.ads_image ? newsData.id : ''} >
+                        <div className={ newsData.ads_image ? 'post-body ads' : 'post-body' } ref={newsObserver} >
+                            { newsData.ads_image ? (
+                                <a href={newsData.action_url ? newsData.action_url : '#'} onClick={clickAds} data-ads={newsData.id}>
+                                    <LazyLoadImage src={newsData.ads_image} 
+                                        alt=""
+                                        placeholderSrc='/assets/media/placeholder.webp'
+                                        className="thumbnail w-full object-cover"
+                                        effect="blur"
+                                    />
+                                    { newsData.action_url && (
+                                        <div className="action flex items-center px-8 py-4 text-base justify-between bg-theme_blue text-white">
+                                            <span className="">{newsData.button_title}</span>
+                                            <i className="fal fa-arrow-right -rotate-45"></i>
+                                        </div>
+                                    ) }
+                                </a>           
+                            ) : (
+                                <a href={newsData.source}>
+                                    <LazyLoadImage src={newsData.thumbnail}
+                                        alt=""
+                                        placeholderSrc='/assets/media/placeholder.webp'
+                                        className="thumbnail w-full object-cover"
+                                        effect="blur"
+                                    />
+                                </a>
+                            ) }
+
+                            { !newsData.ads_image && (
+                                <ul className="post-category flex text-xl mt-6 dark:text-white">
+                                    <li>
+                                        <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                            #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                        </Link>
+                                    </li>
+                                    {newsData.sub_category_en && (
                                         <li>
-                                            <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
-                                                #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
+                                            <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
+                                                { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
                                             </Link>
                                         </li>
-                                        {newsData.sub_category_en && (
+                                    )}
+                                </ul>
+                            ) }
+
+                            { newsData.ads_image ? (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    {newsData.title}
+                                </h1>
+                            ) : (
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                    { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
+                                </h1>         
+                            ) }                    
+                            
+                            { newsData.ads_image ? (
+                                <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
+                                    <li>
+                                        { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
+                                    </li>
+                                </ul>
+                            ) : (
+                                <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
+                                    <li>
+                                        <ul className="flex gap-6">
                                             <li>
-                                                <Link to={`/category/${makeLowercase(newsData.category_en)}/${makeLowercase(newsData.sub_category_en)}`}>
-                                                    { langMode == 'BN' ? newsData.sub_category_bn : newsData.sub_category_en}
-                                                </Link>
+                                                <i className="fal fa-clock"></i>&nbsp;
+                                                { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
                                             </li>
-                                        )}
-                                    </ul>
-                                ) }
-    
-                                { newsData.ads_image ? (
-                                    <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                        {newsData.title}
-                                    </h1>
-                                ) : (
-                                    <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
-                                        { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
-                                    </h1>         
-                                ) }                    
-                                
-                                { newsData.ads_image ? (
-                                    <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
-                                        <li>
-                                            { langMode == 'BN' ? 'সৌজন্যে:' : 'Sponsored by:'} <a href="#" className="font-semibold" onClick={clickAds} data-ads={newsData.id}>{newsData.sponsor}</a>
-                                        </li>
-                                    </ul>
-                                ) : (
-                                    <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
-                                        <li>
-                                            <ul className="flex gap-6">
-                                                <li>
-                                                    <i className="fal fa-clock"></i>&nbsp;
-                                                    { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
-                                                </li>
-                                                <li>
-                                                    <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
-                                                        { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
-                                                        <i className="fal fa-arrow-up rotate-45"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-    
-                                        { newsData.ads && (
-                                            <li className="ads flex items-center">
-                                                { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
-                                                <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
-                                                    <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
-                                                    {newsData.ads.sponsor}
+                                            <li>
+                                                <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
+                                                    { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
+                                                    <i className="fal fa-arrow-up rotate-45"></i>
                                                 </a>
                                             </li>
-                                        ) }
-    
-                                        <li>
-                                            <ul className="flex gap-6">
-                                                <li>
-                                                    <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                        <span>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
-                                                        &nbsp;</span>
-                                                        <i className="fal fa-bookmark"></i>
-                                                    </a>
-                                                </li>
-                                                <li className='relative'>
-                                                    <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
-                                                        <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
-                                                        &nbsp;</span>
-                                                        <i className="fal fa-share"></i>
-                                                    </a>
-                                                    {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
-                                                </li>
-                                            </ul>
+                                        </ul>
+                                    </li>
+
+                                    { newsData.ads && (
+                                        <li className="ads flex items-center">
+                                            { langMode == 'BN' ? 'স্পন্সর:' : 'Sponsored:'} &nbsp;
+                                            <a href={newsData.ads.action_url} className="inline-flex gap-x-2 items-center">
+                                                <img src={newsData.ads.sponsor_image} alt="" loading="lazy" />
+                                                {newsData.ads.sponsor}
+                                            </a>
                                         </li>
-                                    </ul>
-                                ) }
-                            </div>
-                        </div> 
-                    }
-                })
-            }
+                                    ) }
+
+                                    <li>
+                                        <ul className="flex gap-6">
+                                            <li>
+                                                <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
+                                                    <span>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                    &nbsp;</span>
+                                                    <i className="fal fa-bookmark"></i>
+                                                </a>
+                                            </li>
+                                            <li className='relative'>
+                                                <a href="#" className="share-news transition-all hover:text-theme" onClick={(e)=> socialHandle(e, newsData.id)}>
+                                                    <span>{ langMode == 'BN' ? 'শেয়ার' : 'Share'}
+                                                    &nbsp;</span>
+                                                    <i className="fal fa-share"></i>
+                                                </a>
+                                                {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            ) }
+                        </div>
+                    </div> 
+                }
+            }) }
 
             <div>
                 {loading && news.length !== 0 && <Spinner />}
                 {loading && news.length === 0 && <Spinner />}
             </div>
-
+            
             <div className='text-center'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
             <div className='text-center'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
 
