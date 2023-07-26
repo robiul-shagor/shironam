@@ -76,7 +76,7 @@ const SideBar = () => {
                 { loading && <Spinner />}
                 { filteredTags?.map((data, index) => ( 
                     <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-                        { data.tags && data.tags.map( (item, index2) => (
+                        { data.tags?.map( (item, index2) => (
                             <li key={index2}>
                                 <Link to={`tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
                                     #{ langMode == 'BN' ? item.name_bn : item.name_en}

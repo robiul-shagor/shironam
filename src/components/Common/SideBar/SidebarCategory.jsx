@@ -37,6 +37,8 @@ const SidebarCategory = () => {
         loading, error, news, hasMores, noMore
     } = NewsListQuery(query, pageNumber, type)
 
+    
+
     const getData = async(retryCount = 3, delay = 1000) => {
         const bearer_token = `Bearer ${userData.token}`;
         try {
@@ -66,6 +68,11 @@ const SidebarCategory = () => {
     useEffect(() => {
         getData();
     }, [])
+
+    // Change with router changed
+    useEffect(() => {
+        setPageNumber(1);
+    }, [location]);
 
     return (
         <div className='content-inner sticky top-[12rem]'>
