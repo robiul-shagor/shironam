@@ -7,7 +7,8 @@ const Footer = () => {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [showModal, setShowModal] = useState(false);
     const  { langMode } = useContext(UserContext);
-
+    const { footerSetting } = useContext(UserContext);
+    const { siteSetting } = useContext(UserContext);
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => {
@@ -40,27 +41,17 @@ const Footer = () => {
                         <div className="widget col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-4">
                             <div className="brand_nav mb-10">
                                 <Link to='/'>
-                                    <img src="/assets/media/logo.svg" className="dark:hidden" alt="Shironam" />
-                                    <img src="/assets/media/logo-dark.svg" className="hidden dark:inline" alt="Shironam" />
+                                    <img src={`${siteSetting.base_url}/public/${footerSetting.logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
+                                    <img src={`${siteSetting.base_url}/public/${footerSetting.logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
                                 </Link>
                             </div>
-                            <h6 className="text-2xl mb-4">{langMode == 'BN' ? 'আমাদের অনুসরণ করো' : 'Follow Us'}</h6>
+                            <h6 className="text-2xl mb-4">{langMode == 'BN' ? footerSetting.social_media_title_bn : footerSetting.social_media_title_en}</h6>
                             <div className="social_icons space-x-4">
-                                <a href="#" className="text-2xl hover:text-red-600 transition-all">
-                                    <i className="fab fa-facebook-square"></i>
-                                </a>
-                                <a href="#" className="text-2xl hover:text-red-600 transition-all">
-                                    <i className="fab fa-twitter"></i>
-                                </a>
-                                <a href="#" className="text-2xl hover:text-red-600 transition-all">
-                                    <i className="fab fa-youtube"></i>
-                                </a>
-                                <a href="#" className="text-2xl hover:text-red-600 transition-all">
-                                    <i className="fab fa-instagram"></i>
-                                </a>
-                                <a href="#" className="text-2xl hover:text-red-600 transition-all">
-                                    <i className="fab fa-discord"></i>
-                                </a>
+                                { footerSetting.socialMedia?.map((item, index)=> (
+                                    <a href={item.url} className="text-2xl hover:text-red-600 transition-all" target={item.newtab == 'on' ? '_blank' : '_self' } key={index}>
+                                      <i className={`fab ${item.name}`}></i>
+                                    </a>
+                                )) }
                             </div>
                         </div>
                         
@@ -87,14 +78,14 @@ const Footer = () => {
                             </ul>
                         </div>
                         <div className="widget col-span-full md:col-span-3 lg:col-span-3 lg:col-start-9 xl:col-start-10">
-                            <h6 className="text-2xl">{langMode == 'BN' ? 'মোবাইল অ্যাপস ডাউনলোড করুন' : 'Download mobile apps'}</h6>
+                            <h6 className="text-2xl">{langMode == 'BN' ? footerSetting.qr_title_bn : footerSetting.qr_title_en}</h6>
                             <ul className="mt-6 flex items-center space-x-6 divide-x divide-gray-500">
                                 <li>
                                     <div className="buttons space-y-4 grid">
-                                        <a href="#">
+                                        <a href={footerSetting.download_google_apps_button} target='_blank'>
                                             <img src="/assets/media/google-play-badge.svg" alt="" />
                                         </a>
-                                        <a href="#">
+                                        <a href={footerSetting.download_apple_button}  target='_blank'>
                                             <img src="/assets/media/appstore-button.svg" alt="" />
                                         </a>
                                     </div>
@@ -111,8 +102,7 @@ const Footer = () => {
                     <div className="footer_bottom sm:flex items-center justify-between pt-10 md:pt-14 pb-10">
                         <div className="copyright basis-1/2 text-2xl text-center sm:text-left">
                             <p>
-                                {langMode == 'BN' ? 'কপিরাইট @ 2023, শিরোনাম। সমস্ত অধিকার সংরক্ষিত.' : 'Copyright @ 2023, SHIRONAM. All rights reserved.'}
-                                
+                                {langMode == 'BN' ? footerSetting.copy_right_bn : footerSetting.copy_right_en}
                             </p>
                         </div>
                         <div className="footer_bottom_menu basis-1/2 space-x-7 text-2xl text-center sm:text-right">

@@ -25,6 +25,9 @@ import SingleCategorySub from "./category/SingleCategorySub"
 import RegisterVerify from "./components/Pages/RegisterVerify"
 import axios from "./api/axios"
 import { Helmet } from "react-helmet"
+// import moment from "moment"
+// import 'moment/locale/en-gb'; // Import English locale for Moment.js
+// import 'moment/locale/bn-bd'; // Import Bangla locale for Moment.js
 
 
 export const UserContext = createContext();
@@ -32,7 +35,8 @@ export const UserContext = createContext();
 function App() {
   const [userLogin, setUserLogin] = useState(false);
   const [langMode, setLangMode] = useState('EN');
-  const [setting, setSettings] = useState('');
+  const [siteSetting, setSiteSettings] = useState('');
+  const [footerSetting, setFooterSettings] = useState('');
 
   useEffect(()=> {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -41,17 +45,19 @@ function App() {
     if( userLang ) {
       setLangMode(userLang);
     }
-
     if( userData ) {
       setUserLogin(userData);
     }
+
+
   }, []);
 
   const getSettings = async(retryCount = 3, delay = 1000) => {
     try {
       await axios.get('/site-settings', {})
       .then(res => {
-        setSettings( JSON.parse(res.data[0].value) )
+        setSiteSettings( JSON.parse(res.data[0].value) )
+        setFooterSettings( JSON.parse(res.data[2].value) )
       });
     } catch (error) {
       if (retryCount > 0 && error.response?.status === 429) {
@@ -73,7 +79,7 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>{ langMode == 'BN' ? setting.site_name_bn : setting.site_name_en }</title>
+        <title>{ langMode == 'BN' ? `${siteSetting.site_name_bn} | ${siteSetting.tagline_bn}`  : `${siteSetting.site_name_en} | ${siteSetting.tagline_en }` }</title>
       </Helmet>
 
       <UserContext.Provider
@@ -81,7 +87,9 @@ function App() {
           userLogin,
           setUserLogin,
           langMode,
-          setLangMode
+          setLangMode,
+          siteSetting,
+          footerSetting
         }}
       >
         <Routes>

@@ -9,6 +9,7 @@ const AboutUs = () => {
     const [ about, setAbout ] = useState('');
     const [ loading, setLoading ] = useState(true);
     const { langMode } = useContext( UserContext );
+    const { siteSetting } = useContext( UserContext );
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
         try {
@@ -51,7 +52,7 @@ const AboutUs = () => {
                     <div className="mt-16 md:mt-28 md:grid md:grid-cols-12 gap-x-12 max-[767px]:space-y-8">
 
                         <div className="image col-span-6 md:col-span-4 xl:col-span-5">
-                            <img src={ about.about_thumbnail } alt="Our Values And Mission" />
+                            <img src={ `${siteSetting.base_url}${about.about_thumbnail}` } alt="Our Values And Mission" />
                         </div>
 
                         <div className="col-span-6 md:col-span-8 xl:col-start-6">
