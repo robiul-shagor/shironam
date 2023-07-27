@@ -3,41 +3,34 @@ import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
 import { Link } from 'react-router-dom';
 import Spinner from '../../Elements/Spinner';
+import NewsListQuery from '../../../query/NewsListQuery';
 
 const SideBar = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const [ tags, setTags ] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
+    const { globalPageNum } = useContext(UserContext);
     const bearer_token = `Bearer ${userData.token}`;
-    const [loading, setLoading] = useState(true); 
+    const [loadings, setLoadings] = useState(true); 
+    const [query, setQuery] = useState('')
+    const [type, setType] = useState('')
+
+    useEffect(() => {
+        setQuery('all');
+        setType('all');
+    }, [])
+
+    const {
+        loading, error, news, hasMores, noMore
+    } = NewsListQuery(query, globalPageNum, type)
 
     const config = {
         headers: {
           'Authorization': bearer_token
         }
     };
-    
-    // Get Tags data
-    const getData = async(retryCount = 3, delay = 1000) => {
-        try {
-            await axios.get('/news-list', config)
-            .then(res => {
-                setTags(res.data);
-            });      
-        } catch (error) {
-            if (retryCount > 0 && error.response?.status === 429) {
-                await new Promise((resolve) => setTimeout(resolve, delay));
-                getData(retryCount - 1, delay * 2); 
-            } else {
-                console.log(error);
-                setLoading(false);
-            }
-        } finally {
-            setLoading(false); 
-        }
-    };    
-    
+       
     // get ads
     const getAds = async(retryCount = 3, delay = 1000) => {
         try {     
@@ -51,22 +44,18 @@ const SideBar = () => {
                 getAds(retryCount - 1, delay * 2); 
             } else {
                 console.log(error);
-                setLoading(false);
+                setLoadings(false);
             }
         } finally {
-            setLoading(false); 
+            setLoadings(false); 
         }
-    };
-
-    useEffect(() => {
-        getData();
-    }, [])    
+    }; 
     
     useEffect(() => {
         getAds();
     }, [])
 
-    const filteredTags = tags.filter((post) => typeof post.tags !== 'undefined' );
+    const filteredTags = news.filter((post) => typeof post.tags !== 'undefined' );
 
     return (
         <div className='content-inner sticky top-[12rem]'>
@@ -85,10 +74,13 @@ const SideBar = () => {
                         ) ) }
                     </ul>
                 )) }
+                
+                <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags' )}</div>
+                <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
 
             <hr className="my-4 md:my-12" />
-            { loading && <Spinner />}
+            { loadings && <Spinner />}
             { sideBarAds && (
                 <div className="ads">
                     <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>

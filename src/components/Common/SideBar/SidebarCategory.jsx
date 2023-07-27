@@ -9,6 +9,7 @@ const SidebarCategory = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
+    const { globalPageNum } = useContext(UserContext);
 
     const [query, setQuery] = useState('')
     const [pageNumber, setPageNumber] = useState(1)
@@ -35,7 +36,7 @@ const SidebarCategory = () => {
 
     const {
         loading, error, news, hasMores, noMore
-    } = NewsListQuery(query, pageNumber, type)
+    } = NewsListQuery(query, globalPageNum, type)
 
     
 
@@ -92,7 +93,7 @@ const SidebarCategory = () => {
                 )) }
 
                 <div>{loading && <Spinner />}</div>
-                <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর এন্ট্রি নেই' : 'No More' )}</div>
+                <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags' )}</div>
                 <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>
 

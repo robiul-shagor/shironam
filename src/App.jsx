@@ -37,6 +37,7 @@ function App() {
   const [langMode, setLangMode] = useState('EN');
   const [siteSetting, setSiteSettings] = useState('');
   const [footerSetting, setFooterSettings] = useState('');
+  const [globalPageNum, setGlobalPageNum] = useState('');
 
   useEffect(()=> {
     const userData = JSON.parse(sessionStorage.getItem("userDetails"));
@@ -48,8 +49,6 @@ function App() {
     if( userData ) {
       setUserLogin(userData);
     }
-
-
   }, []);
 
   const getSettings = async(retryCount = 3, delay = 1000) => {
@@ -89,7 +88,9 @@ function App() {
           langMode,
           setLangMode,
           siteSetting,
-          footerSetting
+          footerSetting,
+          globalPageNum,
+          setGlobalPageNum
         }}
       >
         <Routes>

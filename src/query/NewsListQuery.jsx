@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import axios from '../api/axios';
 import { debounce } from 'lodash';
+import { UserContext } from '../App';
+
 
 export default function NewsListQuery(query, pageNumber, type) {
   const userData = JSON.parse(sessionStorage.getItem('userDetails'));
@@ -10,6 +12,7 @@ export default function NewsListQuery(query, pageNumber, type) {
   const [hasMores, setHasMores] = useState(false);
   const [noMore, setNoMore] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
+  const { setGlobalPageNum } = useContext(UserContext);
 
   const bearer_token = `Bearer ${userData.token}`;
   const config = {
@@ -75,6 +78,7 @@ export default function NewsListQuery(query, pageNumber, type) {
           return updatedNews;
         });
 
+        setGlobalPageNum(pageNumber);
         setHasMores(response.data.length > 0);
         setNoMore(response.data.length == 0);
         setLoading(false);

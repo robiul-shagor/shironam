@@ -466,7 +466,7 @@ const NewsCard = () => {
                 {loading && news.length === 0 && <Spinner />}
             </div>
             
-            <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'কোন খবর পাওয়া যায়নি.' : 'No More News found' )}</div>
+            <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আপনি আপনার ফিডের শেষ প্রান্তে পৌঁছে গেছেন.' : 'You have reached the end of your feed.' )}</div>
             <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none} .tags-item:first-of-type{display: inline-flex}` }} />
