@@ -20,23 +20,20 @@ const EditProfile = () => {
   const [phone, setPhone] = useState('');
   const [imgSuccess, setImgSuccess] = useState('');
   const [profileImage, setProfileImage] = useState(null);
-
-  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-  const bearer_token = `Bearer ${userData.token}`;
-
   const [error, setError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [staticdata, setStaticData] = useState('');
-  const { langMode } = useContext( UserContext );
+
+  const { langMode, userLogin } = useContext( UserContext );
+  const bearer_token = `Bearer ${userLogin.token}`;
 
   const config = {
       headers: {
         'Authorization': bearer_token
       }
   }; 
-
 
   const handleFileChange = async(event) => {
     const file = event.target.files[0];

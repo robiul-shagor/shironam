@@ -7,11 +7,11 @@ import Spinner from '../../Elements/Spinner';
 const SidebarBreaking = ( { types } ) => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const [ tags, setTags ] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
+    const { userLogin } = useContext(UserContext);
     const [loading, setLoading] = useState(true); 
 
-    const bearer_token = `Bearer ${userData.token}`;
+    const bearer_token = `Bearer ${userLogin.token}`;
     const config = {
         headers: {
           'Authorization': bearer_token

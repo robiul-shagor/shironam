@@ -40,7 +40,7 @@ function App() {
   const [globalPageNum, setGlobalPageNum] = useState('');
 
   useEffect(()=> {
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
     const userLang = localStorage.getItem('lang');
 
     if( userLang ) {

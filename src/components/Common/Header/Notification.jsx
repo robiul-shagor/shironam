@@ -10,9 +10,15 @@ import { Link } from 'react-router-dom';
 const Notification = () => {
     const [notificationBtn, setNotificationBtn] = useState(false);
     const [notificationData, setNotificationData] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const notificationButtonRef = useRef(null);
-    const bearer_token = `Bearer ${userData.token}`;
+    
+    const { langMode, userLogin } = useContext(UserContext);
+    const handleNotificationBtn = event => {
+        event.preventDefault();
+        setNotificationBtn(!notificationBtn);
+    };
+    
+    const bearer_token = `Bearer ${userLogin.token}`;
     //moment.locale('bn-bd');
 
     const config = {
@@ -20,13 +26,6 @@ const Notification = () => {
             'Authorization': bearer_token
         }
     };
-
-    const { langMode } = useContext(UserContext);
-    const handleNotificationBtn = event => {
-        event.preventDefault();
-        setNotificationBtn(!notificationBtn);
-    };
-
     useEffect(() => {
         const handleDocumentClick = (e) => {
           const isSocialDropdown = e.target.closest('.dropdown-notification');

@@ -5,7 +5,6 @@ import SidebarBreaking from '../SideBar/SidebarBreaking';
 import NewsCard from '../NewsCard/NewsCard';
 
 const MainBodyToday = () => {
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
 
   return (

@@ -14,8 +14,6 @@ const UserData = () => {
 
 
    //Get user details
-  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-
   const navigate = useNavigate();
 
   const userMenuhandle = (e) => {
@@ -23,7 +21,7 @@ const UserData = () => {
     setUserAllMenu(!userAllMenu);
   };
 
-  const bearer_token = `Bearer ${userData.token}`;
+  const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
       headers: {
         'Authorization': bearer_token
@@ -39,11 +37,14 @@ const UserData = () => {
         });                    
       } catch (error) {
         if (retryCount > 0 && error.response?.status === 429) {
-            await new Promise((resolve) => setTimeout(resolve, delay));
-            user_details_update(retryCount - 1, delay * 2); 
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          user_details_update(retryCount - 1, delay * 2); 
+        } else if (retryCount > 0 && error.response?.status === 500 ) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+          user_details_update(retryCount - 1, delay * 2); 
         } else {
-            console.log(error);
-            setLoading(false);
+          console.log(error);
+          setLoading(false);
         }
       } finally {
         setLoading(false);
@@ -73,14 +74,14 @@ const UserData = () => {
   const hanndleLogout = async(event) => {
     event.preventDefault();
 
-    const bearer_token = `Bearer ${userData.token}`;
+    const bearer_token = `Bearer ${userLogin.token}`;
 
     try {
         await axios.post('/logout', {}, {headers: {
             'Authorization': bearer_token
         }})
         .then(res => {
-            sessionStorage.setItem("userDetails", JSON.stringify(null));
+            localStorage.setItem("userDetails", JSON.stringify(null));
             setUserLogin(false);
             navigate("/");
         });
@@ -94,7 +95,7 @@ const UserData = () => {
     <li className="relative ml-auto">
         <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
             <img src={ profileImage ? profileImage : '/assets/media/user-avatar.png' } className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
-            <span>{userData && userData.normal_user && userData.normal_user.name}</span>
+            <span>{userLogin && userLogin.normal_user && userLogin.normal_user.name}</span>
         </a>
 
         { userAllMenu && (
@@ -108,8 +109,8 @@ const UserData = () => {
                     <div className="flex items-center gap-x-6">
                         <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="rounded-full" alt="" width="68" height='68' />
                         <div>
-                            <h3 className="font-sans text-[1.6rem] font-medium">{userData && userData.normal_user && userData.normal_user.name}</h3>
-                            <p className="leading-normal mb-2 dark:text-white">{userData && (userData.normal_user.email)}</p>
+                            <h3 className="font-sans text-[1.6rem] font-medium">{userLogin && userLogin.normal_user && userLogin.normal_user.name}</h3>
+                            <p className="leading-normal mb-2 dark:text-white">{userLogin && (userLogin.normal_user.email)}</p>
                             <Link to="/edit-profile" className='btn bg-green-600 text-white px-7 py-3 rounded-lg text-xl'>
                                 { langMode == 'BN' ? 'জীবন বৃত্তান্ত সম্পাদনা' : 'Edit Profile'}
                             </Link>                                  

@@ -11,7 +11,6 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import Spinner from '../../Elements/Spinner';
 
 const NewsCard = () => {
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [visiblePostId, setVisiblePostId] = useState(null);
     const [visibleId, setVisibleId] = useState(null);
     const [visibleAdsId, setVisibleAdstId] = useState(null);
@@ -24,8 +23,8 @@ const NewsCard = () => {
     const { category, subCategory, tags } = useParams()
     const { pathname } = useLocation()
     const location = useLocation()
-    const { langMode } = useContext(UserContext);
-    const bearer_token = `Bearer ${userData.token}`;
+    const { langMode, userLogin } = useContext(UserContext);
+    const bearer_token = `Bearer ${userLogin.token}`;
 
     // Make lowercase
     const makeLowercase = ( item ) => {

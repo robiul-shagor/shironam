@@ -10,15 +10,15 @@ const AfterRegistrationInterests = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
-  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-  const bearer_token = `Bearer ${userData.token}`;
+  const { langMode, userLogin } = useContext(UserContext);
+  const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token
     }
   };
 
-  const { langMode } = useContext(UserContext);
+  
   const navigate = useNavigate();
 
   const onSkip = (e) => {

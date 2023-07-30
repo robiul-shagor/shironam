@@ -115,7 +115,7 @@ const Contact = () => {
                         </div>
                         <div className="col-span-6 lg:col-start-7">
                             <div className="loacation-map md:h-full">
-                                <iframe className="w-full h-[40rem] md:h-full" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2715.788325377906!2d90.40337409946578!3d23.768362300084465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1678465294324!5m2!1sen!2sbd" ></iframe>
+                                <div dangerouslySetInnerHTML={{ __html: contact.map_iframe }}/>
                             </div>
                         </div>
                     </div>

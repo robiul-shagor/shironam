@@ -11,45 +11,42 @@ import LanguageSwitcher from './LanguageSwitcher';
 import HamburgerMenu from './HamburgerMenu';
 
 const Header = () => {
+    const { langMode, userLogin } = useContext(UserContext);
 
-  const { langMode } = useContext(UserContext);
-  
-  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    return (
+        <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024] dark:bg-[#272727]">
+            <div className="container md:flex justify-between md:items-center">
+                <LogoElement />
 
-  return (
-    <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024] dark:bg-[#272727]">
-        <div className="container md:flex justify-between md:items-center">
-            <LogoElement />
+                <DateToday />
 
-            <DateToday />
+                <div className="right_nav_controls self-center max-[767px]:-mt-8">
+                    <ul className="flex gap-6 flex-row-reverse max-lg:justify-between md:flex-row md:gap-14 max-[575px]:pr-4 dark:text-white">
+                        { userLogin && <SearchBtn /> }
 
-            <div className="right_nav_controls self-center max-[767px]:-mt-8">
-                <ul className="flex gap-6 flex-row-reverse max-lg:justify-between md:flex-row md:gap-14 max-[575px]:pr-4 dark:text-white">
-                    { userData && <SearchBtn /> }
+                        { userLogin && <Notification /> }
 
-                    { userData && <Notification /> }
+                        <ThemeSwitcher />
+                        
+                        { userLogin && <UserData /> }
 
-                    <ThemeSwitcher />
-                    
-                    { userData && <UserData /> }
+                        { !userLogin && (
+                            <li className="xl:block">
+                                <Link to='/login' className='text-2xl dark:text-white'>
+                                    <i className="fas fa-user"></i>&nbsp; 
+                                    <span>{ langMode == 'BN' ? 'লগইন' : 'Login'}</span>
+                                </Link>
+                            </li>
+                        ) }
 
-                    { !userData && (
-                        <li className="xl:block">
-                            <Link to='/login' className='text-2xl dark:text-white'>
-                                <i className="fas fa-user"></i>&nbsp; 
-                                <span>{ langMode == 'BN' ? 'লগইন' : 'Login'}</span>
-                            </Link>
-                        </li>
-                    ) }
+                        <LanguageSwitcher />
 
-                    <LanguageSwitcher />
-
-                    { userData && <HamburgerMenu /> }
-                </ul>
+                        { userLogin && <HamburgerMenu /> }
+                    </ul>
+                </div>
             </div>
-        </div>
-    </header>
-  )
+        </header>
+    )
 }
 
 export default Header

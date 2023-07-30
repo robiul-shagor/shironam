@@ -5,16 +5,15 @@ import { UserContext } from '../App';
 
 
 export default function NewsListQuery(query, pageNumber, type) {
-  const userData = JSON.parse(sessionStorage.getItem('userDetails'));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [news, setNews] = useState([]);
   const [hasMores, setHasMores] = useState(false);
   const [noMore, setNoMore] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
-  const { setGlobalPageNum } = useContext(UserContext);
+  const { setGlobalPageNum, userLogin } = useContext(UserContext);
 
-  const bearer_token = `Bearer ${userData.token}`;
+  const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token

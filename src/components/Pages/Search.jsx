@@ -11,16 +11,15 @@ import SocialShare from '../Common/Component/SocialShare';
 const Search = () => {
     const [ serachData, setSearchData ] = useState('');
     const [ count, setCount ] = useState(0);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [social, setSocial] = useState(false)
   
     const [newsItem, setNewsItem ] = useState([]);
     const [visiblePostId, setVisiblePostId] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [loading, setLoading] = useState(false); 
-    const { langMode } = useContext(UserContext);
+    const { langMode, userLogin } = useContext(UserContext);
 
-    const bearer_token = `Bearer ${userData.token}`;
+    const bearer_token = `Bearer ${userLogin.token}`;
     const config = {
         headers: {
             'Authorization': bearer_token

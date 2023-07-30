@@ -27,7 +27,7 @@ const Register = () => {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                console.log(res.data);
+                //console.log(res.data);
                 setMessage(res.data.message)
                 sessionStorage.setItem("newUserDetails", JSON.stringify(res.data.user));
                 navigate("/verify");

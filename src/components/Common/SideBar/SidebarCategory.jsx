@@ -7,12 +7,10 @@ import Spinner from '../../Elements/Spinner';
 
 const SidebarCategory = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-    const { langMode } = useContext(UserContext);
-    const { globalPageNum } = useContext(UserContext);
+    const { langMode, userLogin } = useContext(UserContext);
+    const { globalPageNum, setGlobalPageNum } = useContext(UserContext);
 
     const [query, setQuery] = useState('')
-    const [pageNumber, setPageNumber] = useState(1)
     const { category, subCategory, tags } = useParams()
     const [type, setType] = useState('')
     const location = useLocation();
@@ -38,10 +36,9 @@ const SidebarCategory = () => {
         loading, error, news, hasMores, noMore
     } = NewsListQuery(query, globalPageNum, type)
 
-    
 
     const getData = async(retryCount = 3, delay = 1000) => {
-        const bearer_token = `Bearer ${userData.token}`;
+        const bearer_token = `Bearer ${userLogin.token}`;
         try {
             const config = {
                 headers: {
@@ -72,7 +69,7 @@ const SidebarCategory = () => {
 
     // Change with router changed
     useEffect(() => {
-        setPageNumber(1);
+        setGlobalPageNum(1);
     }, [location]);
 
     return (

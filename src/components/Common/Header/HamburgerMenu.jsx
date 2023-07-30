@@ -1,15 +1,16 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useContext} from 'react'
 import HamburgerAccordian from './HamburgerAccordian';
 import axios from '../../../api/axios';
 import ThemeSwitcherMobile from './ThemeSwitcherMobile';
 import Spinner from '../../Elements/Spinner';
+import { UserContext } from '../../../App';
 
 const HamburgerMenu = () => {
     const [hamburger, setHamburger] = useState(false);
     const [data, setData] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [activeAccordion, setActiveAccordion] = useState(null);
     const [loading, setLoading] = useState(true); 
+    const { userLogin } = useContext( UserContext )
 
     const toggleAccordion = (index) => {
         setActiveAccordion((prevIndex) => (prevIndex === index ? null : index));
@@ -38,7 +39,7 @@ const HamburgerMenu = () => {
     }, []);
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
-        const bearer_token = `Bearer ${userData.token}`;
+        const bearer_token = `Bearer ${userLogin.token}`;
         try {
             const config = {
                 headers: {

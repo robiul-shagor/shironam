@@ -5,13 +5,12 @@ import { UserContext } from '../../../App';
 
 
 const BreakingNews = ({ navigation }) => {
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const [newsItem, setNewsItem ] = useState([]);
     const customNavigation = navigation ? navigation : "true";
-    const { langMode } = useContext(UserContext);
+    const { langMode, userLogin } = useContext(UserContext);
 
     const getData = async() => {
-        if( userData == null ) {
+        if( userLogin == null || userLogin == false ) {
             try {    
                 await axios.get('/breaking-news-without-authentication', {})
                 .then(res => {
@@ -22,7 +21,7 @@ const BreakingNews = ({ navigation }) => {
                 console.log(e);
             }
         } else {
-            const bearer_token = `Bearer ${userData.token}`;
+            const bearer_token = `Bearer ${userLogin.token}`;
             try {
                 const config = {
                     headers: {
@@ -77,7 +76,7 @@ const BreakingNews = ({ navigation }) => {
                         </Link>
                     </li>
                     <li>
-                        { userData == null ? (
+                        { userLogin == null ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-newspaper"></i> &nbsp;
                                 { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
@@ -90,7 +89,7 @@ const BreakingNews = ({ navigation }) => {
                         ) }
                     </li>
                     <li>
-                        { userData == null ? (
+                        { userLogin == null ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
                                 { langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}
@@ -115,7 +114,7 @@ const BreakingNews = ({ navigation }) => {
                         </Link>
                     </li>
                     <li className="flex-1">
-                        { userData == null ? (
+                        { userLogin == null ? (
                             <Link to='/login' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fas fa-bolt"></i>
                                 { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
@@ -128,7 +127,7 @@ const BreakingNews = ({ navigation }) => {
                         ) }
                     </li>
                     <li className="flex-1">
-                        { userData == null ? (
+                        { userLogin == null ? (
                             <Link to='/login' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fas fa-bolt"></i>
                                 { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}

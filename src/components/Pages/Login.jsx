@@ -40,7 +40,7 @@ const Login = () => {
                         }
                     };
                       
-                    sessionStorage.setItem("userDetails", JSON.stringify(data));
+                    localStorage.setItem("userDetails", JSON.stringify(data));
                     setUserLogin(res.data);
                     setProcessing(false);
     

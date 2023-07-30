@@ -4,7 +4,6 @@ import { UserContext } from '../../../App';
 
 const TabForBreakingPage = () => {
     const { langMode } = useContext(UserContext);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     return (
         <div className="breaking_news_slider py-6 md:py-8 bg-white dark:bg-dark">
             <div className="container">

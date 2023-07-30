@@ -1,7 +1,7 @@
 import axios from '../../../api/axios';
 
 function SocialShare({ title, url }) {
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
+    const { userLogin } = useContext(UserContext);
 
     const shareOnSocialMedia = (platform) => {
         let shareUrl = '';
@@ -23,8 +23,8 @@ function SocialShare({ title, url }) {
             break;
         }
 
-        if( userData !== null ) {
-            const bearer_token = `Bearer ${userData.token}`;
+        if( userLogin !== null ) {
+            const bearer_token = `Bearer ${userLogin.token}`;
 
             const parts = url.split("/");
             const news_id = parts.slice(3).join("/");

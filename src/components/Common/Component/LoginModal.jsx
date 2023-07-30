@@ -6,7 +6,7 @@ import Spinner from '../../Elements/Spinner';
 
 function LoginModal() {
     const { langMode } = useContext(UserContext);
-    const { userLogin, setUserLogin } = useContext(UserContext);
+    const { setUserLogin } = useContext(UserContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
@@ -44,7 +44,7 @@ function LoginModal() {
                         }
                     };
                       
-                    sessionStorage.setItem("userDetails", JSON.stringify(data));
+                    localStorage.setItem("userDetails", JSON.stringify(data));
                     setUserLogin(res.data);
                     setProcessing(false);
     

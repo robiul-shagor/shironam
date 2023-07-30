@@ -1,13 +1,14 @@
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useContext} from 'react'
 import { Link } from 'react-router-dom'
 import axios from '../api/axios';
 import BreakingNews from '../components/Common/BreakingNews/BreakingNews';
 import moment from 'moment';
+import { UserContext } from '../App';
 
 const CategoryBody = () => {
     const [newsItem, setNewsItem ] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-    const bearer_token = `Bearer ${userData.token}`;
+    const { userLogin } = useContext( UserContext );
+    const bearer_token = `Bearer ${userLogin.token}`;
     const config = {
         headers: {
           'Authorization': bearer_token

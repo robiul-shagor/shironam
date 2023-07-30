@@ -7,11 +7,10 @@ import NewsListQuery from '../../../query/NewsListQuery';
 
 const SideBar = () => {
     const [sideBarAds, setSideBarAds] = useState([]);
-    const [ tags, setTags ] = useState([]);
-    const userData = JSON.parse(sessionStorage.getItem("userDetails"));
     const { langMode } = useContext(UserContext);
+    const { userLogin } = useContext(UserContext);
     const { globalPageNum } = useContext(UserContext);
-    const bearer_token = `Bearer ${userData.token}`;
+    const bearer_token = `Bearer ${userLogin.token}`;
     const [loadings, setLoadings] = useState(true); 
     const [query, setQuery] = useState('')
     const [type, setType] = useState('')
@@ -74,7 +73,7 @@ const SideBar = () => {
                         ) ) }
                     </ul>
                 )) }
-                
+
                 <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags' )}</div>
                 <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
             </div>

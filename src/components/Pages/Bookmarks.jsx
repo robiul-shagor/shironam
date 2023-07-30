@@ -8,15 +8,14 @@ import Spinner from '../Elements/Spinner'
 import SocialShare from '../Common/Component/SocialShare'
 
 const Bookmarks = () => {
-  const userData = JSON.parse(sessionStorage.getItem("userDetails"));
-  const bearer_token = `Bearer ${userData.token}`;
   const [bookmark, setBookmark] = useState([]);
   const [regenerateData, setRegenerateData] = useState(false);
   const [ loading, setLoading ] = useState(true);
   const [social, setSocial] = useState(false)
   const [empty, setEmpty] = useState(false)
 
-  const { langMode } = useContext(UserContext);
+  const { langMode, userLogin } = useContext(UserContext);
+  const bearer_token = `Bearer ${userLogin.token}`;
 
   const config = {
     headers: {
