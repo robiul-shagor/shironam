@@ -2,7 +2,6 @@ import { useContext, useState, useEffect} from 'react'
 import { UserContext } from '../../../App'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../../api/axios'
-import baseURL from '../../../api/baseURL'
 
 const UserData = () => {
   const { userLogin, setUserLogin } = useContext(UserContext);
@@ -10,10 +9,9 @@ const UserData = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true); 
 
-  const { langMode } = useContext(UserContext);
+  const { langMode, siteSetting } = useContext(UserContext);
 
-
-   //Get user details
+  //Get user details
   const navigate = useNavigate();
 
   const userMenuhandle = (e) => {
@@ -33,7 +31,7 @@ const UserData = () => {
       try {
         await axios.get('/me', config)
         .then(res => {
-            res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
+            res.data.normal_user.image && setProfileImage( siteSetting.base_url +'/'+res.data.normal_user.image);            
         });                    
       } catch (error) {
         if (retryCount > 0 && error.response?.status === 429) {

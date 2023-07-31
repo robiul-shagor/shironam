@@ -5,9 +5,7 @@ import { UserContext } from '../../../App';
 
 const Footer = () => {
     const [showModal, setShowModal] = useState(false);
-    const  { langMode, userLogin } = useContext(UserContext);
-    const { footerSetting } = useContext(UserContext);
-    const { siteSetting } = useContext(UserContext);
+    const  { langMode, userLogin, footerSetting, siteSetting } = useContext(UserContext);
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => {
@@ -23,10 +21,10 @@ const Footer = () => {
     const handleScroll = () => {
         const windowHeight = window.innerHeight;
         const documentHeight = document.documentElement.scrollHeight;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
         const scrollPosition = windowHeight + scrollTop;
 
-        if (scrollPosition >= documentHeight) {
+        if (scrollPosition >= (documentHeight - 300)) {
             setShowModal(true);
         }
     };
@@ -113,7 +111,7 @@ const Footer = () => {
                 </div>
             </footer>
 
-            { ( userLogin == null && showModal ) && (
+            { ( (userLogin == null || userLogin == false) && showModal ) && (
                 <div id="show_login_modal" className="fixed inset-0 z-[1055] h-full w-full bg-white dark:bg-[#272727] dark:text-white">
                     <div className="flex flex-col h-full justify-end">
                         <div className="bg-white dark:bg-[#272727] dark:text-white transition-all duration-300 ease-in-out translate-y-[100%] overflow-y-auto transform-none opacity-100">
@@ -134,7 +132,7 @@ const Footer = () => {
                 </div>
             ) }
 
-            { ( userLogin == null && showModal  ) && (
+            { ( (userLogin == null || userLogin == false) && showModal  ) && (
                 <div className="undefined opacity-50 transition-all duration-300 ease-in-out fixed top-0 left-0 z-[1040] bg-black w-screen h-screen"></div>
             ) }
         </div>

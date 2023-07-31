@@ -13,6 +13,8 @@ export default function NewsListQuery(query, pageNumber, type) {
   const [dataFetched, setDataFetched] = useState(false);
   const { setGlobalPageNum, userLogin } = useContext(UserContext);
 
+  console.log(userLogin)
+
   const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
     headers: {

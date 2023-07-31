@@ -42,7 +42,7 @@ function App() {
   useEffect(()=> {
     const userData = JSON.parse(localStorage.getItem("userDetails"));
     const userLang = localStorage.getItem('lang');
-
+    
     if( userLang ) {
       setLangMode(userLang);
     }
@@ -79,6 +79,7 @@ function App() {
     <>
       <Helmet>
         <title>{ langMode == 'BN' ? `${siteSetting.site_name_bn} | ${siteSetting.tagline_bn}`  : `${siteSetting.site_name_en} | ${siteSetting.tagline_en }` }</title>
+        <link rel="icon" type="image/x-icon" href={siteSetting.base_url+siteSetting.favicon} />
       </Helmet>
 
       <UserContext.Provider

@@ -3,7 +3,6 @@ import Header from '../Common/Header/Header'
 import Footer from '../Common/Footer/Footer'
 import axios from '../../api/axios'
 import { UserContext } from '../../App'
-import baseURL from '../../api/baseURL'
 
 const EditProfile = () => {
   const [firstName, setFristName] = useState('');
@@ -26,7 +25,8 @@ const EditProfile = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [staticdata, setStaticData] = useState('');
 
-  const { langMode, userLogin } = useContext( UserContext );
+  const { langMode, userLogin, siteSetting } = useContext( UserContext );
+
   const bearer_token = `Bearer ${userLogin.token}`;
 
   const config = {
@@ -43,7 +43,7 @@ const EditProfile = () => {
       'Content-Type': 'multipart/form-data',
     }})
     .then(res => {
-      setProfileImage( baseURL + res.data.image);
+      setProfileImage( siteSetting.base_url  +'/'+ res.data.image);
       setImgSuccess(res.data.status);
     });
   }
@@ -60,7 +60,7 @@ const EditProfile = () => {
         gender: parseInt(gender),
         phone: phone,
         marital_status: parseInt(maritalStatus),
-        occupation: parseInt(occupation)
+        occupations: parseInt(occupation)
       }, {headers: {
         'Authorization': bearer_token
       }})
@@ -118,11 +118,12 @@ const EditProfile = () => {
             res.data.normal_user.phone && setPhone(res.data.normal_user.phone);
             res.data.normal_user.dob && setBirthDate(res.data.normal_user.dob);
             res.data.normal_user.marital_status && setMaritalStatus(res.data.normal_user.marital_status);
-            res.data.normal_user.occupation && setOccupation(res.data.normal_user.occupation);
+            res.data.normal_user.occupations && setOccupation(JSON.parse(res.data.normal_user.occupations)[0]);
             res.data.normal_user.country && setCountry(res.data.normal_user.country);
             res.data.normal_user.city && setCity(res.data.normal_user.city);
             res.data.normal_user.gender && setGender(res.data.normal_user.gender);
-            res.data.normal_user.image && setProfileImage( baseURL + res.data.normal_user.image);            
+            res.data.normal_user.image && setProfileImage( siteSetting.base_url  +'/'+ res.data.normal_user.image);            
+            console.log(res.data.normal_user)
         });                    
       } catch (e) {
           console.log(e);

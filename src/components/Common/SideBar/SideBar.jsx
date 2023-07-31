@@ -75,7 +75,7 @@ const SideBar = () => {
                 )) }
 
                 <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags' )}</div>
-                <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...' )}</div>
+                <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error' )}</div>
             </div>
 
             <hr className="my-4 md:my-12" />

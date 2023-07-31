@@ -278,4 +278,7 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
+  [aria-labelledby="dropdown_lang"] {
+    left: 0 !important;
+  }
 }
