@@ -217,6 +217,10 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   --tw-bg-opacity: 1;
   background-color: rgb(80 80 80 / var(--tw-bg-opacity));
 }
+.qr img {
+  background: white;
+  padding: 5px;
+}
 .error {
   color: red;
 }
@@ -280,5 +284,8 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
   }
   [aria-labelledby="dropdown_lang"] {
     left: 0 !important;
+  }
+  #user_profile_menu span {
+    display: none;
   }
 }

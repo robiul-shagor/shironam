@@ -4,13 +4,15 @@ import axios from '../../../api/axios';
 import ThemeSwitcherMobile from './ThemeSwitcherMobile';
 import Spinner from '../../Elements/Spinner';
 import { UserContext } from '../../../App';
+import { useLocation } from 'react-router-dom';
 
 const HamburgerMenu = () => {
     const [hamburger, setHamburger] = useState(false);
     const [data, setData] = useState([]);
     const [activeAccordion, setActiveAccordion] = useState(null);
     const [loading, setLoading] = useState(true); 
-    const { userLogin } = useContext( UserContext )
+    const { userLogin } = useContext( UserContext );
+    const location = useLocation();
 
     const toggleAccordion = (index) => {
         setActiveAccordion((prevIndex) => (prevIndex === index ? null : index));
@@ -25,18 +27,37 @@ const HamburgerMenu = () => {
         const handleDocumentClick = (e) => {
           const isSocialDropdown = e.target.closest('.cat_floating_sidebar');
           const isSocialTrigger = e.target.closest('.cat-sidebar-toggler');
+          
       
           if (!isSocialDropdown && !isSocialTrigger) {
             setHamburger(false);
           }
         };
-      
         document.body.addEventListener('click', handleDocumentClick);
-      
         return () => {
-          document.body.removeEventListener('click', handleDocumentClick);
+            document.body.removeEventListener('click', handleDocumentClick);
         };
     }, []);
+
+    const close = (e) => {
+        setHamburger(false);
+    }
+
+    useEffect(() => {
+
+        const getAccordianItem = document.querySelectorAll('.accordion-item a');
+      
+        getAccordianItem.forEach(item => {
+            console.log(item)
+            item.addEventListener('click', close);
+        });
+
+        return () => {
+            getAccordianItem.forEach(item => {
+                item.removeEventListener('click', close);
+            });
+        };
+    }, [location]);
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
         const bearer_token = `Bearer ${userLogin.token}`;

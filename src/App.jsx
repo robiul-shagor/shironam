@@ -42,7 +42,7 @@ function App() {
   useEffect(()=> {
     const userData = JSON.parse(localStorage.getItem("userDetails"));
     const userLang = localStorage.getItem('lang');
-    
+
     if( userLang ) {
       setLangMode(userLang);
     }
@@ -55,16 +55,16 @@ function App() {
     try {
       await axios.get('/site-settings', {})
       .then(res => {
-        setSiteSettings( JSON.parse(res.data[0].value) )
-        setFooterSettings( JSON.parse(res.data[2].value) )
+        setSiteSettings( JSON.parse( res.data[0].value ? res.data[0].value : {} ) )
+        setFooterSettings( JSON.parse( res.data[1].value ? res.data[1].value : {} ) )
       });
     } catch (error) {
       if (retryCount > 0 && error.response?.status === 429) {
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          getSettings(retryCount - 1, delay * 2); 
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        getSettings(retryCount - 1, delay * 2); 
       } if (retryCount > 0 && error.response?.status === 500) {
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          getSettings(retryCount - 1, delay * 2); 
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        getSettings(retryCount - 1, delay * 2); 
       } else {
         console.log(error);
       }

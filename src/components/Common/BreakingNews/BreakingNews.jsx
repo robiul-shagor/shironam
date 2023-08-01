@@ -67,7 +67,6 @@ const BreakingNews = ({ navigation }) => {
                 </div>
             ) }
             { customNavigation == "true" && (
-
                 <ul className="inline-flex flex-wrap gap-[.6rem] sm:gap-6 pt-5 lg:pt-10">
                     <li>
                         <Link to='/' className='current [&.current]:bg-theme [&.current]:border-theme [&.current]:text-white border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
@@ -76,7 +75,7 @@ const BreakingNews = ({ navigation }) => {
                         </Link>
                     </li>
                     <li>
-                        { userLogin == null ? (
+                        { userLogin == null || userLogin == false ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-newspaper"></i> &nbsp;
                                 { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
@@ -89,16 +88,16 @@ const BreakingNews = ({ navigation }) => {
                         ) }
                     </li>
                     <li>
-                        { userLogin == null ? (
+                        { userLogin == null || userLogin == false ? (
                             <Link to='/login' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
-                                { langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}
+                                { langMode == 'BN' ? 'ব্রেকিং নিউজ' : 'Breakings'}
                                 
                             </Link>          
                         ) : (
                             <Link to='/breaking-news' className='[&.current]:bg-theme [&.current]:border-theme border m-0 py-4 px-8 cursor-pointer max-[480px]:text-[1.3rem] max-[480px]:px-[1.2rem] hover:bg-theme hover:text-white dark:text-white hover:border-theme transition-all block'>
                                 <i className="fal fa-bullhorn -rotate-[30deg]"></i> &nbsp;
-                                { langMode == 'BN' ? 'সাম্প্রতিক খবর' : 'Breakings'}
+                                { langMode == 'BN' ? 'ব্রেকিং নিউজ' : 'Breakings'}
                             </Link>
                         ) }
                     </li>
@@ -114,7 +113,7 @@ const BreakingNews = ({ navigation }) => {
                         </Link>
                     </li>
                     <li className="flex-1">
-                        { userLogin == null ? (
+                        { userLogin == null || userLogin == false ? (
                             <Link to='/login' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fas fa-bolt"></i>
                                 { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
@@ -127,10 +126,10 @@ const BreakingNews = ({ navigation }) => {
                         ) }
                     </li>
                     <li className="flex-1">
-                        { userLogin == null ? (
+                        { userLogin == null || userLogin == false ? (
                             <Link to='/login' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>
                                 <i className="fas fa-bolt"></i>
-                                { langMode == 'BN' ? 'আজকের খবর' : 'Today News'}
+                                { langMode == 'BN' ? 'অন্বেষণ' : 'Explore'}
                             </Link>            
                         ) : (
                             <Link to='/category' className='flex flex-col justify-center items-center py-8 px-4 gap-2 text-center hover:text-theme dark:hover:text-white [&.active]:text-theme dark:[&.active]:text-white whitespace-nowrap'>

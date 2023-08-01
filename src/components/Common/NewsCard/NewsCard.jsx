@@ -56,7 +56,7 @@ const NewsCard = () => {
 
     //News Query
     const {
-        loading, error, news, hasMores, noMore
+        loading, error, news, hasMores, noMore, noPosts
     } = NewsListQuery(query, pageNumber, type)
 
     // Change with router changed

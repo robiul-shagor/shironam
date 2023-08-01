@@ -96,11 +96,11 @@ const Bookmarks = () => {
                     { bookmark.length > 0 && bookmark.map( (item, index) => (
                       <li className="flex items-center gap-6 sm:gap-10" key={index}>
                           <div className="thumb shrink-0">
-                              <a href="#">
+                              <a href={item.source} target='_blank'>
                                   <img src={item.thumbnail} className="w-32 h-32 md:w-40 md:h-40 rounded-lg" alt="Bookmark News" />
                               </a>
                           </div>
-                          <div className="news_info max-w-[50rem] dark:text-white">
+                          <div className="news_info min-w-[50rem] dark:text-white">
                               <h3 className="font-sans text-[1.4rem] sm:text-[1.6rem] leading-[1.7em] line-clamp-2">
                                   <a href="#" className="hover:opacity-80">
                                     { langMode == 'BN' ? item.summary_bn : item.summary_en}
@@ -108,11 +108,11 @@ const Bookmarks = () => {
                               </h3>
                               <ul className="post_meta flex justify-between pb-2 text-xl mt-4 md:mt-8">
                                   <li className="opacity-50">
-                                      <i className="far fa-clock"></i>
+                                      <i className="far fa-clock"></i>&nbsp;
                                       { moment(new Date(item.date)).startOf('seconds').fromNow() }
                                   </li>
                                   <li>
-                                      <a href={item.source} className="text-blue hover:underline">
+                                      <a href={item.source} className="text-blue hover:underline" target='_blank'>
                                         { langMode == 'BN' ? 'উৎস দেখুন' : 'View Source'}
                                       </a>
                                   </li>

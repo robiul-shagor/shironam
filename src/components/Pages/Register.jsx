@@ -14,6 +14,7 @@ const Register = () => {
     const [cPassword, setCpassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [ message, setMessage ] = useState('');
     const { langMode } = useContext(UserContext);
 
     const navigate = useNavigate();
@@ -27,16 +28,12 @@ const Register = () => {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                //console.log(res.data);
-                setMessage(res.data.message)
+                setMessage(res.data.message);
                 sessionStorage.setItem("newUserDetails", JSON.stringify(res.data.user));
                 navigate("/verify");
             });
-            // setEmail(email);
-            // setPassword(password);
         } catch (e) {
-            console.log(e)
-            setError(e.response.data.errors)
+            setError(e.response.data.message)
         } finally {
             setLoading(false)
         }

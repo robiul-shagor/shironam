@@ -111,6 +111,7 @@ const EditProfile = () => {
       try {
         await axios.get('/me', config)
         .then(res => {
+          console.log(res)
           //setCountryList(res.data.data);
             res.data.normal_user.name && setFristName(res.data.normal_user.name);
             res.data.normal_user.last_name && setLastName(res.data.normal_user.last_name);

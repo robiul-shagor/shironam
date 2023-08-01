@@ -29,7 +29,7 @@ const Login = () => {
                 if ( typeof res.data.status !== 'undefined') {
                     if( res.data.status == 'Error' ) {
                         setProcessing(false)
-                        setMessage( ( langMode == 'BN' ) ? 'আনপ্রসেস এন্টিটি: অনুগ্রহ করে আপনার ইনপুট চেক করুন।' : 'Unprocessable Entity: Please check your input.')
+                        setMessage( ( langMode == 'BN' ) ? res.data.message_bn : res.data.message)
                     }
                 } else {
                     const data = {

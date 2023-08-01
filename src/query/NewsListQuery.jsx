@@ -10,10 +10,8 @@ export default function NewsListQuery(query, pageNumber, type) {
   const [news, setNews] = useState([]);
   const [hasMores, setHasMores] = useState(false);
   const [noMore, setNoMore] = useState(false);
-  const [dataFetched, setDataFetched] = useState(false);
-  const { setGlobalPageNum, userLogin } = useContext(UserContext);
-
-  console.log(userLogin)
+  const [noPosts, setNoPosts] = useState('');
+  const { setGlobalPageNum, userLogin, langMode } = useContext(UserContext);
 
   const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
@@ -82,13 +80,12 @@ export default function NewsListQuery(query, pageNumber, type) {
         setGlobalPageNum(pageNumber);
         setHasMores(response.data.length > 0);
         setNoMore(response.data.length == 0);
+        setNoPosts(response.data.length == 0 && langMode == 'BN' ?  'আর কোন পোস্ট নেই' : 'No More Posts' );
         setLoading(false);
-        setDataFetched(true); 
       } else {
         setHasMores(false); // No more pages available
         setLoading(false);
         setNoMore(true);
-        setDataFetched(false); 
       }
     } catch (e) {
       if (e.response && e.response.status === 429) {
@@ -135,5 +132,5 @@ export default function NewsListQuery(query, pageNumber, type) {
     };
   }, [query, pageNumber, type]);
 
-  return { loading, error, news, hasMores, noMore, dataFetched };
+  return { loading, error, news, hasMores, noMore, noPosts };
 }

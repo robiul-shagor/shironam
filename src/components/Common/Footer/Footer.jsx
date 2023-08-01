@@ -24,11 +24,12 @@ const Footer = () => {
         const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
         const scrollPosition = windowHeight + scrollTop;
 
-        if (scrollPosition >= (documentHeight - 300)) {
+        if (scrollPosition >= (documentHeight - 100 ) ) {
             setShowModal(true);
+        } else {
+            setShowModal(false);
         }
     };
-    
 
     return (
         <div>
@@ -38,13 +39,13 @@ const Footer = () => {
                         <div className="widget col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-4">
                             <div className="brand_nav mb-10">
                                 <Link to='/'>
-                                    <img src={`${siteSetting.base_url}/public/${footerSetting.logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
-                                    <img src={`${siteSetting.base_url}/public/${footerSetting.logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
+                                    <img src={`${siteSetting.base_url}/${footerSetting.footer_logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
+                                    <img src={`${siteSetting.base_url}/${footerSetting.footer_logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
                                 </Link>
                             </div>
                             <h6 className="text-2xl mb-4">{langMode == 'BN' ? footerSetting.social_media_title_bn : footerSetting.social_media_title_en}</h6>
                             <div className="social_icons space-x-4">
-                                { footerSetting.socialMedia?.map((item, index)=> (
+                                { footerSetting && Object.values(footerSetting.socialMedia).map((item, index)=> (
                                     <a href={item.url} className="text-2xl hover:text-red-600 transition-all" target={item.newtab == 'on' ? '_blank' : '_self' } key={index}>
                                       <i className={`fab ${item.name}`}></i>
                                     </a>
