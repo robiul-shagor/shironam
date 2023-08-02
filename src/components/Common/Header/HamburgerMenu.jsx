@@ -39,24 +39,8 @@ const HamburgerMenu = () => {
         };
     }, []);
 
-    const close = (e) => {
-        setHamburger(false);
-    }
-
     useEffect(() => {
-
-        const getAccordianItem = document.querySelectorAll('.accordion-item a');
-      
-        getAccordianItem.forEach(item => {
-            console.log(item)
-            item.addEventListener('click', close);
-        });
-
-        return () => {
-            getAccordianItem.forEach(item => {
-                item.removeEventListener('click', close);
-            });
-        };
+        setHamburger(false);
     }, [location]);
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
@@ -108,7 +92,7 @@ const HamburgerMenu = () => {
                     </button>
                 </div>
 
-                {data.map((item, index) => (
+                {data?.map((item, index) => (
                     <HamburgerAccordian 
                         key={index} 
                         data={item}

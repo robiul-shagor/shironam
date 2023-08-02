@@ -45,12 +45,11 @@ function App() {
   const [siteSetting, setSiteSettings] = useState('');
   const [footerSetting, setFooterSettings] = useState('');
   const [globalPageNum, setGlobalPageNum] = useState('');
-  
+
   const userData = JSON.parse(localStorage.getItem("userDetails"));
   const userLang = localStorage.getItem('lang');
 
   useEffect(()=> {
-
     if( userLang ) {
       setLangMode(userLang);
     }
@@ -61,7 +60,7 @@ function App() {
 
   const getSettings = async(retryCount = 3, delay = 1000) => {
     try {
-      await axios.get('/site-settings', {})
+      axios.get('/site-settings', {})
       .then(res => {
         setSiteSettings( JSON.parse( res.data[0].value ? res.data[0].value : {} ) )
         setFooterSettings( JSON.parse( res.data[1].value ? res.data[1].value : {} ) )
