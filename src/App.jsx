@@ -29,8 +29,15 @@ import { Helmet } from "react-helmet"
 // import 'moment/locale/en-gb'; // Import English locale for Moment.js
 // import 'moment/locale/bn-bd'; // Import Bangla locale for Moment.js
 
+//export const UserContext = createContext();
 
-export const UserContext = createContext();
+export const UserContext = createContext({
+  userLogin: false,
+  langMode: 'BN',
+  siteSetting: '',
+  footerSetting: '',
+  globalPageNum: '',
+});
 
 function App() {
   const [userLogin, setUserLogin] = useState(false);
@@ -38,10 +45,11 @@ function App() {
   const [siteSetting, setSiteSettings] = useState('');
   const [footerSetting, setFooterSettings] = useState('');
   const [globalPageNum, setGlobalPageNum] = useState('');
+  
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+  const userLang = localStorage.getItem('lang');
 
   useEffect(()=> {
-    const userData = JSON.parse(localStorage.getItem("userDetails"));
-    const userLang = localStorage.getItem('lang');
 
     if( userLang ) {
       setLangMode(userLang);

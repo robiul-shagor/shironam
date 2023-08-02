@@ -43,6 +43,7 @@ const EditProfile = () => {
       'Content-Type': 'multipart/form-data',
     }})
     .then(res => {
+      console.log(res.data)
       setProfileImage( siteSetting.base_url  +'/'+ res.data.image);
       setImgSuccess(res.data.status);
     });
