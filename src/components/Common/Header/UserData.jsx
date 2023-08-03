@@ -8,6 +8,7 @@ const UserData = () => {
   const [userAllMenu, setUserAllMenu] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imgError, setImgError] = useState(false);
 
   const navigate = useNavigate();
   const bearer_token = `Bearer ${userLogin.token}`;
@@ -80,10 +81,18 @@ const UserData = () => {
     }
   };
 
+  const imageError = (e) => {
+    setImgError(true)
+  }
+
   return (
     <li className="relative ml-auto">
       <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
-        <img src={profileImage || '/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" />
+        { imgError ? (
+          <img src={'/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
+        ) : (
+          <img src={profileImage || '/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
+        ) }
         <span>{userLogin && userLogin.normal_user && userLogin.normal_user.name}</span>
       </a>
 
@@ -96,7 +105,11 @@ const UserData = () => {
           <div role="none">
             <h4 className="font-sans mb-4 text-[1.4rem]">{langMode === 'BN' ? 'আমার প্রোফাইল' : 'My Profile'}</h4>
             <div className="flex items-center gap-x-6">
-              <img src={profileImage || '../assets/media/user-avatar.png'} className="rounded-full" alt="" width="68" height='68' />
+              { imgError ? (
+                <img src={'/assets/media/user-avatar.png'} className="rounded-full" alt="" width="68" height='68' />
+              ) : (
+                <img src={profileImage || '../assets/media/user-avatar.png'} className="rounded-full" alt="" width="68" height='68' />
+              ) }
               <div>
                 <h3 className="font-sans text-[1.6rem] font-medium">{userLogin?.normal_user?.name}</h3>
                 <p className="leading-normal mb-2 dark:text-white">{userLogin?.normal_user?.email}</p>
