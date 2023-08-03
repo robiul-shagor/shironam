@@ -23,8 +23,9 @@ const NewsCard = () => {
     const { category, subCategory, tags } = useParams()
     const { pathname } = useLocation()
     const location = useLocation()
-    const { langMode, userLogin } = useContext(UserContext);
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const { langMode } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
+    const bearer_token = `Bearer ${userData.token}`;
 
     // Make lowercase
     const makeLowercase = ( item ) => {
@@ -84,6 +85,7 @@ const NewsCard = () => {
         const currentItem = event.currentTarget;
         const bookmarkId = currentItem.getAttribute('data-bookmark');
         const bookmarks = parseInt(bookmarkId);
+        
                 
         try {           
             const isBookmarked = currentItem.classList.contains('success');
@@ -99,6 +101,7 @@ const NewsCard = () => {
                     'Authorization': bearer_token
                 }})
                 .then(res => {    
+                    console.log(res)
                     if( res.data.status == 'Success' ) {
                         currentItem.className = 'success';
                     }
@@ -459,7 +462,7 @@ const NewsCard = () => {
                                                     &nbsp;</span>
                                                     <i className="fal fa-share"></i>
                                                 </a>
-                                                {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}${newsData.id}`} />}
+                                                {social === newsData.id && <SocialShare title={ langMode == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}/news/${newsData.id}`} />}
                                             </li>
                                         </ul>
                                     </li>

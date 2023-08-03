@@ -17,9 +17,10 @@ const Search = () => {
     const [visiblePostId, setVisiblePostId] = useState(null);
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [loading, setLoading] = useState(false); 
-    const { langMode, userLogin } = useContext(UserContext);
+    const { langMode } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
 
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
             'Authorization': bearer_token

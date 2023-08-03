@@ -12,13 +12,14 @@ const Notification = () => {
     const [notificationData, setNotificationData] = useState([]);
     const notificationButtonRef = useRef(null);
     
-    const { langMode, userLogin } = useContext(UserContext);
+    const { langMode } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
     const handleNotificationBtn = event => {
         event.preventDefault();
         setNotificationBtn(!notificationBtn);
     };
     
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const bearer_token = `Bearer ${userData.token}`;
     //moment.locale('bn-bd');
 
     const config = {

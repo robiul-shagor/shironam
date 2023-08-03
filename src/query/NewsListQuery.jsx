@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import axios from '../api/axios';
 import { debounce } from 'lodash';
 import { UserContext } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function NewsListQuery(query, pageNumber, type) {
@@ -11,9 +12,11 @@ export default function NewsListQuery(query, pageNumber, type) {
   const [hasMores, setHasMores] = useState(false);
   const [noMore, setNoMore] = useState(false);
   const [noPosts, setNoPosts] = useState('');
-  const { setGlobalPageNum, userLogin, langMode } = useContext(UserContext);
+  const { setGlobalPageNum, langMode } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+  const navigate = useNavigate();
 
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const bearer_token = `Bearer ${userData.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token
@@ -105,6 +108,14 @@ export default function NewsListQuery(query, pageNumber, type) {
           setError(false);
           debouncedFetchNewsList(query, pageNumber, type);
         }, 5000);
+      } else if(e.response?.data?.message === 'Unauthenticated.' ) {
+        const hasReloaded = localStorage.getItem("hasReloaded");
+        if (!hasReloaded) {
+          localStorage.removeItem("userDetails");
+          localStorage.setItem("hasReloaded", "true");
+          navigate('/');
+          window.location.reload();
+        }
       } else {
         setError(true);
         setLoading(false);

@@ -59,7 +59,6 @@ function App() {
         setSiteSettings(JSON.parse(res.data[0]?.value || {}));
         setFooterSettings(JSON.parse(res.data[1]?.value || {}));
       } catch (error) {
-        console.log(error)
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));
           getSettings(retryCount - 1, delay * 2);
@@ -79,7 +78,6 @@ function App() {
     <>
       <Helmet>
         <title>{pageTitle}</title>
-        <link rel="icon" type="image/x-icon" href={baseURL + siteSetting.favicon} />
       </Helmet>
 
       <UserContext.Provider
@@ -115,7 +113,7 @@ function App() {
           <Route path="/contact-us" element={<Contact />} />
           <Route path="/advertisement" element={<Advertisement />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/:id" element={<SingleNews />} />
+          <Route path="/news/:id" element={<SingleNews />} />
           <Route path="/interests" element={<AfterRegistrationInterests />} />
           <Route path="/verify" element={<RegisterVerify />} />
         </Routes>

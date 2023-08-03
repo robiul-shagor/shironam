@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
-import { LineWave } from 'react-loader-spinner';
 import Spinner from '../Elements/Spinner';
 
 const Login = () => {
@@ -36,7 +35,8 @@ const Login = () => {
                         token: res.data.token,
                         normal_user: {
                             email: res.data.normal_user.email,
-                            name: res.data.normal_user.name
+                            name: res.data.normal_user.name,
+                            lastName: res.data.normal_user.last_name
                         }
                     };
                       

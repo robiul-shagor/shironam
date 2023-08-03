@@ -6,8 +6,9 @@ import Spinner from '../../Elements/Spinner';
 import NewsListQuery from '../../../query/NewsListQuery';
 
 const SideBar = () => {
-  const { langMode, userLogin, globalPageNum } = useContext(UserContext);
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const { langMode, globalPageNum } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+  const bearer_token = `Bearer ${userData.token}`;
   const [loadings, setLoadings] = useState(true);
   const [query, setQuery] = useState('');
   const [type, setType] = useState('');
@@ -84,7 +85,7 @@ const SideBar = () => {
 
       <hr className="my-4 md:my-12" />
       {loadings && <Spinner />}
-      {sideBarAds && (
+      {sideBarAds.length > 0 && (
         <div className="ads">
           <h5 className="font-sans mb-4 dark:text-white">{langMode === 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
           <ul>

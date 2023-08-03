@@ -14,8 +14,9 @@ const Bookmarks = () => {
   const [social, setSocial] = useState(false);
   const [empty, setEmpty] = useState(false);
 
-  const { langMode, userLogin } = useContext(UserContext);
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const { langMode } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+  const bearer_token = `Bearer ${userData.token}`;
 
   const config = {
     headers: {

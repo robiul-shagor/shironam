@@ -7,8 +7,8 @@ import { UserContext } from '../App';
 
 const CategoryBody = () => {
     const [newsItem, setNewsItem ] = useState([]);
-    const { userLogin } = useContext( UserContext );
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
+    const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
           'Authorization': bearer_token

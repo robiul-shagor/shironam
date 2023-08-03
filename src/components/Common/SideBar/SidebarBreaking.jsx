@@ -8,10 +8,10 @@ const SidebarBreaking = ( { types } ) => {
     const [sideBarAds, setSideBarAds] = useState([]);
     const [ tags, setTags ] = useState([]);
     const { langMode } = useContext(UserContext);
-    const { userLogin } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
     const [loading, setLoading] = useState(true); 
 
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const bearer_token = `Bearer ${userData.token}`;
     const config = {
         headers: {
           'Authorization': bearer_token
@@ -104,7 +104,7 @@ const SidebarBreaking = ( { types } ) => {
 
             { loading && <Spinner />}
             
-            { sideBarAds && (   
+            { sideBarAds.length > 0 && (   
                 <div className="ads">
                     <h5 className="font-sans mb-4 dark:text-white">{ langMode == 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
                     <ul>

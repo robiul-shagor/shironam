@@ -147,7 +147,7 @@ const NewsCardAvarage = () => {
                                                 { getUserLang == 'BN' ? 'শেয়ার' : 'Share'}&nbsp;
                                                 <i className="fal fa-share"></i>
                                             </a>
-                                            {social && <SocialShare title={ getUserLang == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}/${newsData.id}`} />} 
+                                            {social === newsData.id && <SocialShare title={ getUserLang == 'BN' ? newsData.summary_bn : newsData.summary_en} url={`${window.location.href}/news/${newsData.id}`} />} 
                                         </li>
                                     </ul>
                                 </li>

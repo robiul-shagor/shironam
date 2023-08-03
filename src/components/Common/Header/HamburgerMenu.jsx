@@ -11,7 +11,7 @@ const HamburgerMenu = () => {
     const [data, setData] = useState([]);
     const [activeAccordion, setActiveAccordion] = useState(null);
     const [loading, setLoading] = useState(true); 
-    const { userLogin } = useContext( UserContext );
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
     const location = useLocation();
 
     const toggleAccordion = (index) => {
@@ -44,7 +44,7 @@ const HamburgerMenu = () => {
     }, [location]);
   
     const getCategory = async(retryCount = 3, delay = 1000) => {
-        const bearer_token = `Bearer ${userLogin.token}`;
+        const bearer_token = `Bearer ${userData.token}`;
         try {
             const config = {
                 headers: {

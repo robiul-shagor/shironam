@@ -6,7 +6,8 @@ import NewsListQuery from '../../../query/NewsListQuery';
 import Spinner from '../../Elements/Spinner';
 
 const SidebarCategory = () => {
-  const { langMode, userLogin, globalPageNum, setGlobalPageNum } = useContext(UserContext);
+  const { langMode, globalPageNum, setGlobalPageNum } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
   const [sideBarAds, setSideBarAds] = useState([]);
   const [loadings, setLoadings] = useState(true);
   const { category, subCategory, tags } = useParams();
@@ -32,7 +33,7 @@ const SidebarCategory = () => {
   const { loading, error, news, noMore } = NewsListQuery(query, globalPageNum, type);
 
   const getData = async (retryCount = 3, delay = 1000) => {
-    const bearer_token = `Bearer ${userLogin.token}`;
+    const bearer_token = `Bearer ${userData.token}`;
     try {
       const config = {
         headers: {
@@ -97,7 +98,7 @@ const SidebarCategory = () => {
       <hr className="my-4 md:my-12" />
 
       {loadings && <Spinner />}
-      {sideBarAds && (
+      {sideBarAds.length > 0 && (
         <div className="ads">
           <h5 className="font-sans mb-4 dark:text-white">{langMode === 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
           <ul>

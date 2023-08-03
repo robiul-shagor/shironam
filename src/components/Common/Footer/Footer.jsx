@@ -5,7 +5,9 @@ import { UserContext } from '../../../App';
 
 const Footer = () => {
     const [showModal, setShowModal] = useState(false);
-    const  { langMode, userLogin, footerSetting, siteSetting, baseURL } = useContext(UserContext);
+    const  { langMode, footerSetting, baseURL } = useContext(UserContext);
+
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => {
@@ -39,8 +41,12 @@ const Footer = () => {
                         <div className="widget col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-4">
                             <div className="brand_nav mb-10">
                                 <Link to='/'>
-                                    <img src={`${baseURL}/${footerSetting.footer_logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
-                                    <img src={`${baseURL}/${footerSetting.footer_logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
+                                    { footerSetting?.footer_logo_dark && (
+                                        <img src={`${baseURL}${footerSetting.footer_logo_dark}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
+                                    ) } 
+                                    { footerSetting?.footer_logo_light && (
+                                        <img src={`${baseURL}${footerSetting.footer_logo_light}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
+                                    ) }
                                 </Link>
                             </div>
                             <h6 className="text-2xl mb-4">{langMode == 'BN' ? footerSetting.social_media_title_bn : footerSetting.social_media_title_en}</h6>
@@ -112,7 +118,7 @@ const Footer = () => {
                 </div>
             </footer>
 
-            { ( (userLogin == null || userLogin == false) && showModal ) && (
+            { ( userData == null  && showModal ) && (
                 <div id="show_login_modal" className="fixed inset-0 z-[1055] h-full w-full bg-white dark:bg-[#272727] dark:text-white">
                     <div className="flex flex-col h-full justify-end">
                         <div className="bg-white dark:bg-[#272727] dark:text-white transition-all duration-300 ease-in-out translate-y-[100%] overflow-y-auto transform-none opacity-100">
@@ -133,7 +139,7 @@ const Footer = () => {
                 </div>
             ) }
 
-            { ( (userLogin == null || userLogin == false) && showModal  ) && (
+            { ( userData == null && showModal  ) && (
                 <div className="undefined opacity-50 transition-all duration-300 ease-in-out fixed top-0 left-0 z-[1040] bg-black w-screen h-screen"></div>
             ) }
         </div>

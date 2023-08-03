@@ -9,9 +9,10 @@ const UserData = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
 
   const navigate = useNavigate();
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const bearer_token = `Bearer ${userData.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token
@@ -93,7 +94,7 @@ const UserData = () => {
         ) : (
           <img src={profileImage || '/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
         ) }
-        <span>{userLogin && userLogin.normal_user && userLogin.normal_user.name}</span>
+        <span>{ userData?.normal_user?.name}</span>
       </a>
 
       {userAllMenu && (
@@ -111,8 +112,8 @@ const UserData = () => {
                 <img src={profileImage || '../assets/media/user-avatar.png'} className="rounded-full" alt="" width="68" height='68' />
               ) }
               <div>
-                <h3 className="font-sans text-[1.6rem] font-medium">{userLogin?.normal_user?.name}</h3>
-                <p className="leading-normal mb-2 dark:text-white">{userLogin?.normal_user?.email}</p>
+                <h3 className="font-sans text-[1.6rem] font-medium">{userData?.normal_user?.name} {userData?.normal_user?.lastName}</h3>
+                <p className="leading-normal mb-2 dark:text-white">{userData?.normal_user?.email}</p>
                 <Link to="/edit-profile" className='btn bg-green-600 text-white px-7 py-3 rounded-lg text-xl'>
                   {langMode === 'BN' ? 'জীবন বৃত্তান্ত সম্পাদনা' : 'Edit Profile'}
                 </Link>

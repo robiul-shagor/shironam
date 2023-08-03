@@ -15,16 +15,16 @@ const MyInterests = () => {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
   const [parnetInterest, setParnetInterest] = useState(false);
-  
-  const { langMode, userLogin } = useContext(UserContext);
 
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const { langMode } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+
+  const bearer_token = `Bearer ${userData.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token
     }
   };
-
 
   const handleCheckboxChangeValue = (event, parentCategoryId) => {
     const { value, checked } = event.target;

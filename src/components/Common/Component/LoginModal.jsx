@@ -40,7 +40,8 @@ function LoginModal() {
                         token: res.data.token,
                         normal_user: {
                             email: res.data.normal_user.email,
-                            name: res.data.normal_user.name
+                            name: res.data.normal_user.name,
+                            lastName: res.data.normal_user.last_name
                         }
                     };
                       

@@ -5,8 +5,9 @@ import axios from '../../api/axios'
 import { UserContext } from '../../App'
 
 const EditProfile = () => {
-  const { langMode, userLogin, siteSetting, baseURL } = useContext(UserContext);
-  const bearer_token = `Bearer ${userLogin.token}`;
+  const { langMode, baseURL } = useContext(UserContext);
+  const userData = JSON.parse(localStorage.getItem("userDetails"));
+  const bearer_token = `Bearer ${userData.token}`;
   const config = {
     headers: {
       'Authorization': bearer_token

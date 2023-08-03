@@ -7,7 +7,8 @@ import SideBar from '../SideBar/SideBar';
 import { UserContext } from '../../../App';
 
 const MainBody = () => {
-    const { langMode, userLogin } = useContext(UserContext);
+    const { langMode } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
 
     return (
         <div className='main_content mt-[8.7rem] sm:mt-[8.5rem] md:mt-[7.5rem] xl:mt-[8.5rem] max-[767px]:bg-[#EEEEEE] max-[767px]:dark:bg-dark'>
@@ -28,7 +29,7 @@ const MainBody = () => {
 
                         <div className='post-wrapper md:grid md:grid-cols-3 md:gap-x-12'>
                             <div className='space-y-8 lg:space-y-12 col-span-2'>
-                                { (userLogin == null || userLogin == false) ? (
+                                { userData == null ? (
                                     <NewsCardAvarage />
                                 ) : (
                                     <NewsCard />
@@ -36,7 +37,7 @@ const MainBody = () => {
                             </div>
 
                             <div className='post-sidebar hidden md:block md:col-span-1 md:col-start-3 md:row-start-1'>
-                                { (userLogin == null || userLogin == false) ? (
+                                { userData == null ? (
                                     <SidebarNonUser />
                                 ) : (
                                     <SideBar />

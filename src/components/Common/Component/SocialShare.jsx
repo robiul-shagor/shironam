@@ -1,9 +1,7 @@
 import axios from '../../../api/axios';
-import { useContext } from 'react';
-import { UserContext } from '../../../App';
 
 function SocialShare({ title, url }) {
-    const { userLogin } = useContext(UserContext);
+    const userData = JSON.parse(localStorage.getItem("userDetails"));
 
     const shareOnSocialMedia = (platform) => {
         let shareUrl = '';
@@ -25,8 +23,12 @@ function SocialShare({ title, url }) {
             break;
         }
 
-        if( userLogin !== null ) {
-            const bearer_token = `Bearer ${userLogin.token}`;
+        if( userData == null ) {
+            if (shareUrl !== '') {
+                window.open(shareUrl, '_blank');
+            }
+        } else {
+            const bearer_token = `Bearer ${userData.token}`;
 
             const parts = url.split("/");
             const news_id = parts.slice(3).join("/");
@@ -42,10 +44,6 @@ function SocialShare({ title, url }) {
                 });
             } catch (e) {
                 console.log(e);
-            }
-        } else {
-            if (shareUrl !== '') {
-                window.open(shareUrl, '_blank');
             }
         }
     
