@@ -5,7 +5,7 @@ import { UserContext } from '../../../App';
 
 const Footer = () => {
     const [showModal, setShowModal] = useState(false);
-    const  { langMode, userLogin, footerSetting, siteSetting } = useContext(UserContext);
+    const  { langMode, userLogin, footerSetting, siteSetting, baseURL } = useContext(UserContext);
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
         return () => {
@@ -39,8 +39,8 @@ const Footer = () => {
                         <div className="widget col-span-6 md:col-span-4 lg:col-span-3 xl:col-span-4">
                             <div className="brand_nav mb-10">
                                 <Link to='/'>
-                                    <img src={`${siteSetting.base_url}/${footerSetting.footer_logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
-                                    <img src={`${siteSetting.base_url}/${footerSetting.footer_logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
+                                    <img src={`${baseURL}/${footerSetting.footer_logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
+                                    <img src={`${baseURL}/${footerSetting.footer_logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
                                 </Link>
                             </div>
                             <h6 className="text-2xl mb-4">{langMode == 'BN' ? footerSetting.social_media_title_bn : footerSetting.social_media_title_en}</h6>

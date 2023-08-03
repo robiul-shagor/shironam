@@ -35,6 +35,14 @@ const SidebarBreaking = ( { types } ) => {
             if (retryCount > 0 && error.response?.status === 429) {
                 await new Promise((resolve) => setTimeout(resolve, delay));
                 getData(retryCount - 1, delay * 2); 
+            } else if(error.response?.data?.message === 'Unauthenticated.' ) {
+                const hasReloaded = localStorage.getItem("hasReloaded");
+                if (!hasReloaded) {
+                    localStorage.removeItem("userDetails");
+                    localStorage.setItem("hasReloaded", "true");
+                    // Reload the window only if it hasn't been reloaded before
+                    window.location.reload();
+                }
             } else {
                 console.log(error);
                 setLoading(false);

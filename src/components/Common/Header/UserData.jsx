@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from '../../../api/axios';
 
 const UserData = () => {
-  const { userLogin, setUserLogin, langMode, siteSetting } = useContext(UserContext);
+  const { userLogin, setUserLogin, langMode, siteSetting, baseURL } = useContext(UserContext);
   const [userAllMenu, setUserAllMenu] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,8 +16,6 @@ const UserData = () => {
       'Authorization': bearer_token
     }
   };
-  
-  const baseURL = siteSetting.base_url;
 
   const userMenuhandle = (e) => {
     e.preventDefault();
@@ -33,6 +31,14 @@ const UserData = () => {
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));
           user_details_update(retryCount - 1, delay * 2);
+        } else if(error.response?.data?.message === 'Unauthenticated.' ) {
+          const hasReloaded = localStorage.getItem("hasReloaded");
+          if (!hasReloaded) {
+              localStorage.removeItem("userDetails");
+              localStorage.setItem("hasReloaded", "true");
+              // Reload the window only if it hasn't been reloaded before
+              window.location.reload();
+          }
         } else {
           console.log(error);
           setLoading(false);

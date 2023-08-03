@@ -5,7 +5,7 @@ import axios from '../../api/axios'
 import { UserContext } from '../../App'
 
 const EditProfile = () => {
-  const { langMode, userLogin, siteSetting } = useContext(UserContext);
+  const { langMode, userLogin, siteSetting, baseURL } = useContext(UserContext);
   const bearer_token = `Bearer ${userLogin.token}`;
   const config = {
     headers: {
@@ -40,7 +40,7 @@ const EditProfile = () => {
       const formData = new FormData();
       formData.append('image', file);
       const res = await axios.post('/update-profile-picture', formData, config);
-      setProfileImage(siteSetting.base_url + '/' + res.data.image);
+      setProfileImage(baseURL + '/' + res.data.image);
       setSuccess('success');
       setSuccessMessage(langMode === 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successful');
     } catch (error) {
@@ -108,7 +108,7 @@ const EditProfile = () => {
         setCountry(userData.country || '');
         setCity(userData.city || '');
         setGender(userData.gender || '');
-        setProfileImage(siteSetting.base_url + '/' + userData.image);
+        setProfileImage(baseURL + '/' + userData.image);
         setLoading(false);
       } catch (error) {
         console.log(error);

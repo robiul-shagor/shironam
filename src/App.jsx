@@ -59,6 +59,7 @@ function App() {
         setSiteSettings(JSON.parse(res.data[0]?.value || {}));
         setFooterSettings(JSON.parse(res.data[1]?.value || {}));
       } catch (error) {
+        console.log(error)
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));
           getSettings(retryCount - 1, delay * 2);
@@ -72,11 +73,13 @@ function App() {
 
   const pageTitle = langMode === 'BN' ? `${siteSetting.site_name_bn} | ${siteSetting.tagline_bn}` : `${siteSetting.site_name_en} | ${siteSetting.tagline_en}`;
 
+  const baseURL = 'https://admin.shironam.live';
+
   return (
     <>
       <Helmet>
         <title>{pageTitle}</title>
-        <link rel="icon" type="image/x-icon" href={siteSetting.base_url + siteSetting.favicon} />
+        <link rel="icon" type="image/x-icon" href={baseURL + siteSetting.favicon} />
       </Helmet>
 
       <UserContext.Provider
@@ -88,7 +91,8 @@ function App() {
           siteSetting,
           footerSetting,
           globalPageNum,
-          setGlobalPageNum
+          setGlobalPageNum,
+          baseURL
         }}
       >
         <Routes>

@@ -275,7 +275,7 @@ const NewsCard = () => {
                             { !newsData.ads_image && (
                                 <ul className="post-category flex text-xl mt-6 dark:text-white">
                                     <li>
-                                        <Link to={`/category/${newsData.category_en.toLowerCase()}`} className='text-theme'>
+                                        <Link to={`/category/${newsData.category_en?.toLowerCase()}`} className='text-theme'>
                                             #{ langMode == 'BN' ? newsData.category_bn : newsData.category_en}
                                         </Link>
                                     </li>
