@@ -162,7 +162,7 @@ const Search = () => {
                                                 <ul className="flex gap-6">
                                                     <li>
                                                         <i className="fal fa-clock"></i>
-                                                        { moment(new Date(newsData.publish_date)).startOf('hour').fromNow() }
+                                                        { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
                                                     </li>
                                                     <li>
                                                         <a href={newsData.source} className="transition-all hover:text-theme">

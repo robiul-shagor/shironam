@@ -125,7 +125,7 @@ const Notification = () => {
                                             langMode == 'BN' ? item.data.message_bn : item.data.message_en
                                         )}
                                     </p>
-                                    <p className="leading-normal text-[1.2rem] mt-1 dark:text-white">{ moment(new Date(item.created_at)).startOf('hour').fromNow() }</p>
+                                    <p className="leading-normal text-[1.2rem] mt-1 dark:text-white">{ moment(new Date(item.created_at)).startOf('seconds').fromNow() }</p>
                                 </div>
                             </li>
                         )) }

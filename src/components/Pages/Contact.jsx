@@ -73,7 +73,7 @@ const Contact = () => {
                 { loading && <Spinner /> }
                 <div className="container">
                     <div className="md:grid grid-cols-12 gap-8 max-[768px]:space-y-16 pt-32">
-                        <div className="contact-form col-span-6 lg:col-span-5 dark:text-white">
+                        <div className="contact-form col-span-12 lg:col-span-5 dark:text-white">
                             <h1 className="font-bold mb-12">{ langMode == 'BN' ? contact.contact_page_title_bn : contact.contact_page_title_en }</h1>
 
                             <form action="#" className="space-y-8" onSubmit={contactHanddler}>

@@ -54,7 +54,7 @@ const CategoryBody = () => {
                                     <ul className="flex gap-5 mt-4 items-end">
                                         <li className="text-xl">
                                             <i className="fal fa-clock"></i>
-                                            { moment(new Date(item.created_at)).startOf('hour').fromNow() }
+                                            { moment(new Date(item.created_at)).startOf('seconds').fromNow() }
                                         </li>
                                         <li className="text-xl">
                                             <i className="far fa-eye"></i>

@@ -118,7 +118,7 @@ const NewsCardAvarage = () => {
                                     <ul className="flex gap-6">
                                         <li>
                                             <i className="fal fa-clock"></i> &nbsp;
-                                            { moment(new Date(newsData.datetime)).startOf('second').fromNow() }
+                                            { moment(new Date(newsData.datetime)).startOf('seconds').fromNow() }
                                         </li>
                                         <li>
                                             <Link to='/login' className='transition-all hover:text-theme'>

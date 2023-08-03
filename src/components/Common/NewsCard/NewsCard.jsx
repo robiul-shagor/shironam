@@ -86,14 +86,24 @@ const NewsCard = () => {
         const bookmarks = parseInt(bookmarkId);
                 
         try {           
-            await axios.post('/bookmark-news', {news_id: bookmarks}, {headers: {
-                'Authorization': bearer_token
-            }})
-            .then(res => {    
-                if( res.data.status == 'Success' ) {
-                    currentItem.className = 'success';
-                }
-            });
+            const isBookmarked = currentItem.classList.contains('success');
+            if( isBookmarked ) {
+                await axios.post('/bookmark-remove', { news_id: bookmarks }, { headers: { 'Authorization': bearer_token } })
+                .then((res) => {
+                  if (res.data.status === 'Success') {
+                    currentItem.classList.remove('success');
+                  }
+                });
+            } else {
+                await axios.post('/bookmark-news', {news_id: bookmarks}, {headers: {
+                    'Authorization': bearer_token
+                }})
+                .then(res => {    
+                    if( res.data.status == 'Success' ) {
+                        currentItem.className = 'success';
+                    }
+                });
+            }
         } catch (e) {
             console.log(e);
         }
@@ -301,7 +311,7 @@ const NewsCard = () => {
                                         <ul className="flex gap-6">
                                             <li>
                                                 <i className="fal fa-clock"></i>&nbsp;
-                                                { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
+                                                { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
                                             </li>
                                             <li>
                                                 <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
@@ -326,7 +336,7 @@ const NewsCard = () => {
                                         <ul className="flex gap-6">
                                             <li>
                                                 <a href="#" onClick={bookmarkHandle} className={`transition-all hover:text-theme bookmark ${newsData.book_marks && 'warning'}`} data-bookmark={newsData.id}>
-                                                    <span className='sm:hidden'>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
+                                                    <span>{ langMode == 'BN' ? 'বুকমার্ক' : 'Bookmark'}
                                                     &nbsp;</span>
                                                     <i className="fal fa-bookmark"></i>
                                                 </a>
@@ -413,7 +423,7 @@ const NewsCard = () => {
                                         <ul className="flex gap-6">
                                             <li>
                                                 <i className="fal fa-clock"></i>&nbsp;
-                                                { moment(new Date(newsData.publish_date)).startOf('second').fromNow() }
+                                                { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
                                             </li>
                                             <li>
                                                 <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>

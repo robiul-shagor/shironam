@@ -5,136 +5,144 @@ import axios from '../../api/axios'
 import { UserContext } from '../../App'
 
 const EditProfile = () => {
-  const [firstName, setFristName] = useState('');
+  const { langMode, userLogin, siteSetting } = useContext(UserContext);
+  const bearer_token = `Bearer ${userLogin.token}`;
+  const config = {
+    headers: {
+      'Authorization': bearer_token
+    }
+  };
+
+  const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [gender, setGender] = useState('');
   const [maritalStatus, setMaritalStatus] = useState('');
   const [occupation, setOccupation] = useState('');
-  const [contry, setCountry] = useState('');
-  const [contryList, setCountryList] = useState([]);
+  const [country, setCountry] = useState('');
+  const [countryList, setCountryList] = useState([]);
   const [city, setCity] = useState('');
   const [cityList, setCityList] = useState([]);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [imgSuccess, setImgSuccess] = useState('');
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState('');
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [staticdata, setStaticData] = useState('');
+  const [staticData, setStaticData] = useState({});
 
-  const { langMode, userLogin, siteSetting } = useContext( UserContext );
-
-  const bearer_token = `Bearer ${userLogin.token}`;
-
-  const config = {
-      headers: {
-        'Authorization': bearer_token
-      }
-  }; 
-
-  const handleFileChange = async(event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
 
-    await axios.post('/update-profile-picture', { image: file }, {headers: {
-      'Authorization': bearer_token,
-      'Content-Type': 'multipart/form-data',
-    }})
-    .then(res => {
-      console.log(res.data)
-      setProfileImage( siteSetting.base_url  +'/'+ res.data.image);
-      setImgSuccess(res.data.status);
-    });
-  }
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await axios.post('/update-profile-picture', formData, config);
+      setProfileImage(siteSetting.base_url + '/' + res.data.image);
+      setSuccess('success');
+      setSuccessMessage(langMode === 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successful');
+    } catch (error) {
+      setError('error');
+      setErrorMessage(langMode === 'BN' ? 'প্রোফাইল ছবি আপডেট ব্যর্থ' : 'Failed to update profile picture');
+    }
+  };
 
-  const updateProfile = async(event) => {
+  const updateProfile = async (event) => {
     event.preventDefault();
     try {
-      await axios.put('/profile-update', {
+      const res = await axios.put('/profile-update', {
         name: firstName,
         last_name: lastName,
-        country_id: parseInt(contry),
+        country_id: parseInt(country),
         city_id: parseInt(city),
         date_of_birth: birthDate,
         gender: parseInt(gender),
         phone: phone,
         marital_status: parseInt(maritalStatus),
         occupations: parseInt(occupation)
-      }, {headers: {
-        'Authorization': bearer_token
-      }})
-      .then(res => {
-        if( res.data.status == 'Error' ) {
-          setError('error');
-          setErrorMessage(res.data.message);
-        } else {
-          setSuccess('success');
-          setSuccessMessage(res.data.message);
-        }
-      });
-    } catch (e) {
-        setError(e.response.data.status);
-        setErrorMessage(Object.values(e.response.data.message));
-    }
-  }
+      }, config);
 
-  const handleCountryChange = (event) => {
-    setCountry(event.target.value); // Update the selectedOption state
+      if (res.data.status === 'Error') {
+        setError('error');
+        setErrorMessage(res.data.message);
+      } else {
+        setSuccess('success');
+        setSuccessMessage(res.data.message);
+      }
+    } catch (e) {
+      setError('error');
+      setErrorMessage(e.response?.data?.message || (langMode === 'BN' ? 'ত্রুটি হয়েছে' : 'Error occurred'));
+    }
   };
 
-  // Perform any desired actions when the select option changes
+  const handleCountryChange = (event) => {
+    setCountry(event.target.value);
+  };
+
   useEffect(() => {
-    contry && axios.get('/city-list/'+ contry, config)
-    .then(res => {
-      setCityList(res.data.cities);
-    });
-  }, [contry]); // Include contry as a dependency
-
-  useEffect(()=> {
-    const get_country_list = async() => {
+    async function fetchData() {
       try {
-        await axios.get('/country-list', config)
-        .then(res => {
-          setCountryList(res.data.data);
-            //console.log(res.data);
-        });                     
-      } catch (e) {
-          console.log(e);
-      }      
+        const res = await axios.get('/personal-static-data', config);
+        setStaticData(res.data);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    get_country_list()
-  }, [])
+    fetchData();
+  }, []);
 
-  useEffect(()=> {
-    const user_details_update = async() => {
+  useEffect(() => {
+    async function getUserData() {
       try {
-        await axios.get('/me', config)
-        .then(res => {
-          console.log(res)
-          //setCountryList(res.data.data);
-            res.data.normal_user.name && setFristName(res.data.normal_user.name);
-            res.data.normal_user.last_name && setLastName(res.data.normal_user.last_name);
-            res.data.normal_user.email && setEmail(res.data.normal_user.email);
-            res.data.normal_user.phone && setPhone(res.data.normal_user.phone);
-            res.data.normal_user.dob && setBirthDate(res.data.normal_user.dob);
-            res.data.normal_user.marital_status && setMaritalStatus(res.data.normal_user.marital_status);
-            res.data.normal_user.occupations && setOccupation(JSON.parse(res.data.normal_user.occupations)[0]);
-            res.data.normal_user.country && setCountry(res.data.normal_user.country);
-            res.data.normal_user.city && setCity(res.data.normal_user.city);
-            res.data.normal_user.gender && setGender(res.data.normal_user.gender);
-            res.data.normal_user.image && setProfileImage( siteSetting.base_url  +'/'+ res.data.normal_user.image);            
-            console.log(res.data.normal_user)
-        });                    
-      } catch (e) {
-          console.log(e);
-      }      
+        const res = await axios.get('/me', config);
+        const userData = res.data.normal_user;
+        setFirstName(userData.name || '');
+        setLastName(userData.last_name || '');
+        setEmail(userData.email || '');
+        setPhone(userData.phone || '');
+        setBirthDate(userData.dob || '');
+        setMaritalStatus(userData.marital_status || '');
+        setOccupation(userData.occupations ? JSON.parse(userData.occupations)[0] : '');
+        setCountry(userData.country || '');
+        setCity(userData.city || '');
+        setGender(userData.gender || '');
+        setProfileImage(siteSetting.base_url + '/' + userData.image);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    user_details_update()
-  }, [])  
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    async function getCountryList() {
+      try {
+        const res = await axios.get('/country-list', config);
+        setCountryList(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getCountryList();
+  }, []);
+
+  useEffect(() => {
+    async function getCityList() {
+      try {
+        if (country) {
+          const res = await axios.get(`/city-list/${country}`, config);
+          setCityList(res.data.cities);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getCityList();
+  }, [country]);
   
-
   useEffect(() => {
     const getData = async() => {
         try {                            
@@ -167,7 +175,7 @@ const EditProfile = () => {
                 </div>
               </div>
 
-              {imgSuccess && (<div>{ langMode == 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successfull' }</div>)}
+              {successMessage && (<div>{ langMode == 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successfull' }</div>)}
 
               <h3 className="mb-8 font-sans text-3xl">{ langMode == 'BN' ? 'ব্যক্তিগত তথ্য' : 'Personal Information' }</h3>
 
@@ -175,7 +183,7 @@ const EditProfile = () => {
                   <div className="form-row grid md:grid-cols-2 gap-8">
                       <div className="input-group">
                           <label>{ langMode == 'BN' ? 'নামের প্রথম অংশ' : 'First Name' }</label>
-                          <input type="text" className="form-control dark:bg-slate-800 focus:border-gray-800" name="f_name" placeholder="Name" required value={ firstName } onChange={(e)=> setFristName( e.target.value )} />
+                          <input type="text" className="form-control dark:bg-slate-800 focus:border-gray-800" name="f_name" placeholder="Name" required value={ firstName } onChange={(e)=> setFirstName( e.target.value )} />
                       </div>
                       <div className="input-group">
                           <label>{ langMode == 'BN' ? 'নামের শেষাংশ' : 'Last Name' }</label>
@@ -189,35 +197,35 @@ const EditProfile = () => {
                           <label>{ langMode == 'BN' ? 'লিঙ্গ' : 'Gender' }</label>
                           <select name="gender" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={gender} onChange={ (e) => setGender( e.target.value ) }>
                               <option value="*">{ langMode == 'BN' ? 'লিঙ্গ নির্বাচন' : 'Select Gender' }</option>
-                              { staticdata &&  staticdata.genders.map( (item, index) => (
-                                <option value={item.id} key={ index }>{item.name_en}</option>
-                              ) ) }
+                              {staticData?.genders?.map((item, index) => (
+                                <option value={item.id} key={index}>{item.name_en}</option>
+                              ))}
                           </select>
                       </div>
                       <div className="input-group">
                           <label>{ langMode == 'BN' ? 'বৈবাহিক অবস্থা' : 'Marital Status' }</label>
                           <select name="marital_status" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={maritalStatus} onChange={ (e) => setMaritalStatus( e.target.value ) }>
                               <option value="*">Select Status</option>
-                              { staticdata &&  staticdata.marital_status.map( (item, index) => (
-                                <option value={item.id} key={ index }>{item.name_en}</option>
-                              ) ) }
+                              {staticData?.marital_status?.map((item, index) => (
+                                <option value={item.id} key={index}>{item.name_en}</option>
+                              ))}
                           </select>
                       </div>
                       <div className="input-group">
                           <label>{ langMode == 'BN' ? 'পেশা' : 'Occupation' }</label>
                           <select name="gender" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={occupation} onChange={ (e) => setOccupation( e.target.value ) }>
                               <option value="*">Select Occupation</option>
-                              { staticdata &&  staticdata.occupations.map( (item, index) => (
-                                <option value={item.id} key={ index }>{item.name_en}</option>
-                              ) ) }
+                              {staticData?.occupations?.map((item, index) => (
+                                <option value={item.id} key={index}>{item.name_en}</option>
+                              ))}
                           </select>
                       </div>
                       
                       <div className="input-group">
                           <label>{ langMode == 'BN' ? 'দেশ' : 'Country' }</label>
-                          <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={contry} onChange={ handleCountryChange }>
+                          <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={country} onChange={ handleCountryChange }>
                               <option value="*">Select Country</option>
-                              { contryList && contryList.map((item, index) => (
+                              { countryList?.map((item, index) => (
                                 <option value={item.id} key={ index }>{item.name}</option>
                               )) }
                           </select>
@@ -226,7 +234,7 @@ const EditProfile = () => {
                           <label>{ langMode == 'BN' ? 'শহর' : 'City' }</label>
                           <select name="country" className="form-control dark:bg-slate-800 !ring-0 outline-none focus:border-gray-800" value={city} onChange={ (e) => setCity( e.target.value ) }>
                               <option value="*">Select City</option>
-                              { cityList && cityList.map((item, index) => (
+                              { cityList?.map((item, index) => (
                                 <option value={item.id} key={ index }>{item.name}</option>
                               )) }
                           </select>

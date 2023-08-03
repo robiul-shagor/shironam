@@ -1,4 +1,6 @@
 import axios from '../../../api/axios';
+import { useContext } from 'react';
+import { UserContext } from '../../../App';
 
 function SocialShare({ title, url }) {
     const { userLogin } = useContext(UserContext);
