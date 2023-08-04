@@ -28,7 +28,7 @@ const UserData = () => {
     const user_details_update = async (retryCount = 3, delay = 1000) => {
       try {
         const res = await axios.get('/me', config);
-        res.data.normal_user.image && setProfileImage(baseURL + '/' + res.data.normal_user.image);
+        res.data?.normal_user?.image && setProfileImage(baseURL + '/' + res.data.normal_user.image);
       } catch (error) {
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));
@@ -90,9 +90,9 @@ const UserData = () => {
     <li className="relative ml-auto">
       <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
         { imgError ? (
-          <img src={'/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
+          <img src={'/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" /> 
         ) : (
-          <img src={profileImage || '/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
+          <img src={profileImage} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 
         ) }
         <span>{ userData?.normal_user?.name}</span>
       </a>

@@ -56,8 +56,11 @@ function App() {
     const getSettings = async (retryCount = 3, delay = 1000) => {
       try {
         const res = await axios.get('/site-settings', {});
-        setSiteSettings(JSON.parse(res.data[0]?.value || {}));
-        setFooterSettings(JSON.parse(res.data[1]?.value || {}));
+        const settingsData = JSON.parse(res.data[0]?.value || "{}");
+        const footerData = JSON.parse(res.data[1]?.value || "{}");
+
+        setSiteSettings(settingsData);
+        setFooterSettings(footerData);
       } catch (error) {
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));

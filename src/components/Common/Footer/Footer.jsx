@@ -51,7 +51,7 @@ const Footer = () => {
                             </div>
                             <h6 className="text-2xl mb-4">{langMode == 'BN' ? footerSetting.social_media_title_bn : footerSetting.social_media_title_en}</h6>
                             <div className="social_icons space-x-4">
-                                { footerSetting && Object.values(footerSetting.socialMedia).map((item, index)=> (
+                                { footerSetting && Object.values(footerSetting?.socialMedia).map((item, index)=> (
                                     <a href={item.url} className="text-2xl hover:text-red-600 transition-all" target={item.newtab == 'on' ? '_blank' : '_self' } key={index}>
                                       <i className={`fab ${item.name}`}></i>
                                     </a>
