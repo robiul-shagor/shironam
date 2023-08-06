@@ -196,41 +196,53 @@ const NewsCard = () => {
         };
     }, []);
       
-    
     // Handle scroll
-    let scrolled = false;
     const handleScroll = () => {
-        const postElements = document.getElementsByClassName('post-item');
+        const postElements = document.querySelectorAll('.post-item');
         const windowHeight = window.innerHeight;
-        const threshold = 0.5; 
-  
+        const threshold = 0.5;
+      
+        let visiblePostId = null;
+        let visibleAdstId = null;
+        let scrolled = false;
+      
         for (let i = 0; i < postElements.length; i++) {
-            const postElement = postElements[i];
-            const rect = postElement.getBoundingClientRect();
-            const isVisible = (rect.top >= 0 && rect.bottom <= windowHeight) ||
-                            (rect.top < 0 && rect.bottom >= windowHeight * threshold) || (rect.bottom > windowHeight && rect.top <= windowHeight * (1 - threshold));
-            const getAds = postElement.getAttribute('data-ads');
-            const getPosts = postElement.getAttribute('data-id');
-            
-            if (isVisible) {
-                if( typeof getPosts !== 'undefined' ) {
-                    setVisiblePostId(Number(getPosts));
-                    if (!scrolled && window.scrollY > 0) {
-                        scrolled = true;
-                        setVisibleId(Number(getPosts))
-                    }
-                }         
-                if( typeof getAds !== 'undefined' ) {
-                    if (!scrolled && window.scrollY > 0) {
-                        scrolled = true;
-                        setVisibleAdstId(Number(getAds));
-                    }
-                }
-                break;
+          const postElement = postElements[i];
+          const { top, bottom } = postElement.getBoundingClientRect();
+          const isVisible =
+            (top >= 0 && bottom <= windowHeight) ||
+            (top < 0 && bottom >= windowHeight * threshold) ||
+            (bottom > windowHeight && top <= windowHeight * (1 - threshold));
+      
+          const postId = postElement.dataset.id;
+          const adstId = postElement.dataset.ads;
+      
+          if (isVisible) {
+            if (postId) {
+              visiblePostId = Number(postId);
+              if (!scrolled && window.scrollY > 0) {
+                scrolled = true;
+                setVisibleId(visiblePostId);
+              }
             }
+            if (adstId) {
+              if (!scrolled && window.scrollY > 0) {
+                scrolled = true;
+                setVisibleAdstId(Number(adstId));
+              }
+            }
+            break;
+          }
+        }
+      
+        // Perform state updates outside the loop
+        if (visiblePostId !== null) {
+          setVisiblePostId(visiblePostId);
+        }
+        if (visibleAdstId !== null) {
+          setVisibleAdstId(visibleAdstId);
         }
     };
-
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
@@ -486,7 +498,6 @@ const NewsCard = () => {
 
             <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}` }} />
             <div style={{opacity: 0}}>
-                { console.log(visiblePostId) }
                 {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
             </div>
         </div>
