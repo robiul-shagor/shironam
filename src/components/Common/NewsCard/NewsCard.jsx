@@ -198,70 +198,70 @@ const NewsCard = () => {
       
     
     // Handle scroll
-    // let scrolled = false;
-    // const handleScroll = () => {
-    //     const postElements = document.getElementsByClassName('post-item');
-    //     const windowHeight = window.innerHeight;
-  
-    //     for (let i = 0; i < postElements.length; i++) {
-    //       const postElement = postElements[i];
-    //       const rect = postElement.getBoundingClientRect();
-    //       const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
-    //       const getAds = postElement.getAttribute('data-ads');
-    //       const getPosts = postElement.getAttribute('data-id');
-  
-    //       if (isVisible) {
-    //         if( typeof getPosts !== 'undefined' ) {
-    //             setVisiblePostId(Number(getPosts));
-    //             if (!scrolled && window.scrollY > 0) {
-    //                 scrolled = true;
-    //                 setVisibleId(Number(getPosts))
-    //             }
-    //         }         
-    //         if( typeof getAds !== 'undefined' ) {
-    //             if (!scrolled && window.scrollY > 0) {
-    //                 scrolled = true;
-    //                 setVisibleAdstId(Number(getAds));
-    //             }
-    //         }
-    //         break;
-    //       }
-    //     }
-    // };
-
+    let scrolled = false;
     const handleScroll = () => {
         const postElements = document.getElementsByClassName('post-item');
         const windowHeight = window.innerHeight;
-        const threshold = 0.5; // Set the visibility threshold to 50%
-        let scrolled = false; 
-
+  
         for (let i = 0; i < postElements.length; i++) {
-            const postElement = postElements[i];
-            const rect = postElement.getBoundingClientRect();
-            const isVisible = (rect.top >= 0 && rect.bottom <= windowHeight) ||
-                            (rect.top < 0 && rect.bottom >= windowHeight * threshold) || (rect.bottom > windowHeight && rect.top <= windowHeight * (1 - threshold));
-
-            const getAds = postElement.getAttribute('data-ads');
-            const getPosts = postElement.getAttribute('data-id');
-
-            if (isVisible) {
-                if (typeof getPosts !== 'undefined') {
-                    setVisiblePostId(Number(getPosts));
-                    if (!scrolled && window.scrollY > 0) {
-                        scrolled = true;
-                        setVisibleId(Number(getPosts));
-                    }
+          const postElement = postElements[i];
+          const rect = postElement.getBoundingClientRect();
+          const isVisible = rect.top >= 0 && rect.bottom <= windowHeight;
+          const getAds = postElement.getAttribute('data-ads');
+          const getPosts = postElement.getAttribute('data-id');
+  
+          if (isVisible) {
+            if( typeof getPosts !== 'undefined' ) {
+                setVisiblePostId(Number(getPosts));
+                if (!scrolled && window.scrollY > 0) {
+                    scrolled = true;
+                    setVisibleId(Number(getPosts))
                 }
-                if (typeof getAds !== 'undefined') {
-                    if (!scrolled && window.scrollY > 0) {
-                        scrolled = true;
-                        setVisibleAdstId(Number(getAds));
-                    }
+            }         
+            if( typeof getAds !== 'undefined' ) {
+                if (!scrolled && window.scrollY > 0) {
+                    scrolled = true;
+                    setVisibleAdstId(Number(getAds));
                 }
-                break;
             }
+            break;
+          }
         }
     };
+
+    // const handleScroll = () => {
+    //     const postElements = document.getElementsByClassName('post-item');
+    //     const windowHeight = window.innerHeight;
+    //     const threshold = 0.5; // Set the visibility threshold to 50%
+    //     let scrolled = false; 
+
+    //     for (let i = 0; i < postElements.length; i++) {
+    //         const postElement = postElements[i];
+    //         const rect = postElement.getBoundingClientRect();
+    //         const isVisible = (rect.top >= 0 && rect.bottom <= windowHeight) ||
+    //                         (rect.top < 0 && rect.bottom >= windowHeight * threshold) || (rect.bottom > windowHeight && rect.top <= windowHeight * (1 - threshold));
+
+    //         const getAds = postElement.getAttribute('data-ads');
+    //         const getPosts = postElement.getAttribute('data-id');
+
+    //         if (isVisible) {
+    //             if (typeof getPosts !== 'undefined') {
+    //                 setVisiblePostId(Number(getPosts));
+    //                 if (!scrolled && window.scrollY > 0) {
+    //                     scrolled = true;
+    //                     setVisibleId(Number(getPosts));
+    //                 }
+    //             }
+    //             if (typeof getAds !== 'undefined') {
+    //                 if (!scrolled && window.scrollY > 0) {
+    //                     scrolled = true;
+    //                     setVisibleAdstId(Number(getAds));
+    //                 }
+    //             }
+    //             break;
+    //         }
+    //     }
+    // };
      
 
     useEffect(() => {

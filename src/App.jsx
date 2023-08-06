@@ -73,14 +73,14 @@ function App() {
     getSettings();
   }, []);
 
-  const pageTitle = langMode === 'BN' ? `${siteSetting.site_name_bn} | ${siteSetting.tagline_bn}` : `${siteSetting.site_name_en} | ${siteSetting.tagline_en}`;
+  const pageTitle = langMode === 'BN' ? `${siteSetting?.site_name_bn} | ${siteSetting?.tagline_bn}` : `${siteSetting?.site_name_en} | ${siteSetting?.tagline_en}`;
 
   const baseURL = 'https://admin.shironam.live';
 
   return (
     <>
       <Helmet>
-        <title>{pageTitle}</title>
+        <title>{siteSetting && pageTitle}</title>
       </Helmet>
 
       <UserContext.Provider
