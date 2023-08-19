@@ -42,10 +42,10 @@ const Footer = () => {
                             <div className="brand_nav mb-10">
                                 <Link to='/'>
                                     { footerSetting?.footer_logo_dark && (
-                                        <img src={`${baseURL}${footerSetting.footer_logo_dark}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
+                                        <img src={`${baseURL}${footerSetting.footer_logo_dark}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
                                     ) } 
                                     { footerSetting?.footer_logo_light && (
-                                        <img src={`${baseURL}${footerSetting.footer_logo_light}`} className="hidden dark:inline" alt="Shironam" width="138" height="52" />
+                                        <img src={`${baseURL}${footerSetting.footer_logo_light}`} className="dark:hidden" alt="Shironam" width="138" height="52" />
                                     ) }
                                 </Link>
                             </div>
