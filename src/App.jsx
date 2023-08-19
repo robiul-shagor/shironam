@@ -75,7 +75,30 @@ function App() {
 
   const pageTitle = langMode === 'BN' ? `${siteSetting?.site_name_bn} | ${siteSetting?.tagline_bn}` : `${siteSetting?.site_name_en} | ${siteSetting?.tagline_en}`;
 
+  // User Expire Set
   const baseURL = 'https://admin.shironam.live';
+  const TOKEN_EXPIRATION_DURATION = 7 * 24 * 60 * 60 * 1000; 
+  const getlogintime = localStorage.getItem("tokenExpiration");
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      if ( getlogintime ) {
+        const currentTime = Date.now();
+        const expirationTime = parseInt(getlogintime, 10) + TOKEN_EXPIRATION_DURATION;
+        
+        if (currentTime >= expirationTime) {
+          // Token has expired, handle accordingly
+          const hasReloaded = localStorage.getItem("hasReloaded");
+          if (!hasReloaded) {
+            localStorage.removeItem("userDetails");
+            localStorage.setItem("hasReloaded", "true");
+            // Reload the window only if it hasn't been reloaded before
+            window.location.reload();
+          }
+        }
+      }
+    };
+    checkTokenExpiration();
+  }, [getlogintime]);
 
   return (
     <>

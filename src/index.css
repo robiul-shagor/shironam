@@ -159,11 +159,6 @@
       right: 0 !important;
       color: black;
   }
-  header [aria-labelledby="user_profile_menu"],
-  header [aria-labelledby="dropdown_lang"],
-  header [aria-labelledby="dropdown_notification"] {
-    top: 56px
-  }
 }
 @screen 3xl {
   header [aria-labelledby="user_profile_menu"],
@@ -233,6 +228,10 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
 .bookmark.warning {
   opacity: 0.75;
   cursor: not-allowed;
+}
+[aria-labelledby="user_profile_menu"] .rounded-full {
+  width: 68px;
+  height: 68px;
 }
 .interest-list-dropdown {
   position: absolute;

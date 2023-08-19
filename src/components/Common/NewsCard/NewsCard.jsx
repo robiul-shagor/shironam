@@ -223,12 +223,14 @@ const NewsCard = () => {
               if (!scrolled && window.scrollY > 0) {
                 scrolled = true;
                 setVisibleId(visiblePostId);
+                viewData(visiblePostId);
               }
             }
             if (adstId) {
               if (!scrolled && window.scrollY > 0) {
                 scrolled = true;
                 setVisibleAdstId(Number(adstId));
+                viewAdsData(adstId);
               }
             }
             break;
@@ -237,10 +239,11 @@ const NewsCard = () => {
       
         // Perform state updates outside the loop
         if (visiblePostId !== null) {
-          setVisiblePostId(visiblePostId);
+          setVisiblePostId(visiblePostId);          
         }
-        if (visibleAdstId !== null) {
-          setVisibleAdstId(visibleAdstId);
+        
+        if (visibleAdsId !== null) {
+          setVisibleAdstId(visibleAdsId);
         }
     };
 
@@ -253,10 +256,10 @@ const NewsCard = () => {
     }, [])
     
     // Set Visable news ID
-    useEffect(() => {
-        visibleId && viewData(visibleId);
-        visibleAdsId && viewAdsData(visibleAdsId);
-    }, [visibleId, visibleAdsId ])
+    // useEffect(() => {
+    //     visibleId && viewData(visibleId);
+    //     visibleAdsId && viewAdsData(visibleAdsId);
+    // }, [visibleId, visibleAdsId ])
 
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   
@@ -496,9 +499,9 @@ const NewsCard = () => {
             <div className='text-center dark:text-white'>{noMore && ( langMode == 'BN' ? 'আপনি আপনার ফিডের শেষ প্রান্তে পৌঁছে গেছেন.' : 'You have reached the end of your feed.' )}</div>
             <div className='text-center dark:text-white'>{error && ( langMode == 'BN' ? 'ত্রুটি হচ্ছে...' : 'Error...' )}</div>
 
-            <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}` }} />
+            <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}.tags-item:nth-child(1){display: inline-flex}` }} />
             <div style={{opacity: 0}}>
-                {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
+                {visiblePostId && ( <style dangerouslySetInnerHTML={{ __html: `.tags-item:nth-child(1){display: none}.tags-item{display: none}#tags-item-${visiblePostId}{display: inline-flex !important}` }} /> )}
             </div>
         </div>
     )

@@ -44,6 +44,7 @@ const EditProfile = () => {
       setProfileImage(baseURL + '/' + res.data.image);
       setSuccess('success');
       setSuccessMessage(langMode === 'BN' ? 'প্রোফাইল ছবি আপডেট সফল' : 'Profile Picture update successful');
+      window.location.reload();
     } catch (error) {
       setError('error');
       setErrorMessage(langMode === 'BN' ? 'প্রোফাইল ছবি আপডেট ব্যর্থ' : 'Failed to update profile picture');

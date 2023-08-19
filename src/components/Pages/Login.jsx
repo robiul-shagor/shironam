@@ -41,6 +41,8 @@ const Login = () => {
                     };
                       
                     localStorage.setItem("userDetails", JSON.stringify(data));
+                    const currentTime = Date.now();
+                    localStorage.setItem("tokenExpiration", currentTime);
                     setUserLogin(res.data);
                     setProcessing(false);
     
