@@ -9,7 +9,6 @@ const LogoElement = () => {
 
   const handleClick = () => {
     if (isHomepage) {
-      window.location.reload();
       window.scrollTo({
         top: 0,
         behavior: 'smooth' // Optional, adds smooth scrolling animation

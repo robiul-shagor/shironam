@@ -219,8 +219,6 @@ const NewsCard = () => {
           const postId = postElement.dataset.id;
           const adstId = postElement.dataset.ads;
 
-          
-      
           if (isVisible) {
             if (postId) {
               visiblePostId = Number(postId);
