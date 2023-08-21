@@ -197,6 +197,7 @@ const NewsCard = () => {
     }, []);
       
     // Handle scroll
+    let prevScrollY = window.scrollY; 
     const handleScroll = () => {
         const postElements = document.querySelectorAll('.post-item');
         const windowHeight = window.innerHeight;
@@ -205,6 +206,7 @@ const NewsCard = () => {
         let visiblePostId = null;
         let visibleAdstId = null;
         let scrolled = false;
+       
       
         for (let i = 0; i < postElements.length; i++) {
           const postElement = postElements[i];
@@ -216,26 +218,28 @@ const NewsCard = () => {
       
           const postId = postElement.dataset.id;
           const adstId = postElement.dataset.ads;
+
+          
       
           if (isVisible) {
             if (postId) {
               visiblePostId = Number(postId);
-              if (!scrolled && window.scrollY > 0) {
+              if (window.scrollY > prevScrollY) {
                 scrolled = true;
                 setVisibleId(visiblePostId);
-                viewData(visiblePostId);
               }
             }
             if (adstId) {
-              if (!scrolled && window.scrollY > 0) {
+              if (window.scrollY > prevScrollY) {
                 scrolled = true;
                 setVisibleAdstId(Number(adstId));
-                viewAdsData(adstId);
               }
             }
             break;
           }
         }
+
+        prevScrollY = window.scrollY;
       
         // Perform state updates outside the loop
         if (visiblePostId !== null) {
@@ -256,10 +260,10 @@ const NewsCard = () => {
     }, [])
     
     // Set Visable news ID
-    // useEffect(() => {
-    //     visibleId && viewData(visibleId);
-    //     visibleAdsId && viewAdsData(visibleAdsId);
-    // }, [visibleId, visibleAdsId ])
+    useEffect(() => {
+        visibleId && viewData(visibleId);
+        visibleAdsId && viewAdsData(visibleAdsId);
+    }, [visibleId, visibleAdsId ])
 
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   

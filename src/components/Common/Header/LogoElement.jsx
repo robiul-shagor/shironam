@@ -5,8 +5,20 @@ import { UserContext } from '../../../App';
 
 const LogoElement = () => {
   const { siteSetting, baseURL } = useContext(UserContext);
+  const isHomepage = window.location.pathname === '/';
+
+  const handleClick = () => {
+    if (isHomepage) {
+      window.location.reload();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Optional, adds smooth scrolling animation
+      });      
+    }
+  };
+
   return (
-    <div className="brand-logo text-center">
+    <div className="brand-logo text-center" onClick={handleClick}>
         <Link 
             to="/"
             className="inline-block max-[575px]:-ml-8"
