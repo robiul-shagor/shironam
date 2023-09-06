@@ -1,6 +1,6 @@
 import {useEffect, useState, useContext} from 'react'
 import axios from '../../../api/axios'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../../App';
 
 
@@ -9,6 +9,7 @@ const BreakingNews = ({ navigation }) => {
     const customNavigation = navigation ? navigation : "true";
     const { langMode } = useContext(UserContext);
     const userData = JSON.parse(localStorage.getItem("userDetails"));
+    const navigate = useNavigate();
 
     const getData = async() => {
         if( userData == null ) {
@@ -35,7 +36,15 @@ const BreakingNews = ({ navigation }) => {
                     setNewsItem(res.data.data);
                 });
             } catch (e) {
-                console.log(e);
+                if(e.response?.data?.message === 'Unauthenticated.' ) {
+                    localStorage.removeItem("userDetails");
+                    localStorage.setItem("hasReloaded", "true");
+                    const hasReloaded = localStorage.getItem("hasReloaded");
+                    if (!hasReloaded) {
+                      navigate('/');
+                      window.location.reload();
+                    }
+                }
             }
         }
     };

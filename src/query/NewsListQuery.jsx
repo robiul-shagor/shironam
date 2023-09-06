@@ -109,10 +109,11 @@ export default function NewsListQuery(query, pageNumber, type) {
           debouncedFetchNewsList(query, pageNumber, type);
         }, 5000);
       } else if(e.response?.data?.message === 'Unauthenticated.' ) {
+        localStorage.removeItem("userDetails");
+        localStorage.setItem("hasReloaded", "true");
+        
         const hasReloaded = localStorage.getItem("hasReloaded");
         if (!hasReloaded) {
-          localStorage.removeItem("userDetails");
-          localStorage.setItem("hasReloaded", "true");
           navigate('/');
           window.location.reload();
         }
