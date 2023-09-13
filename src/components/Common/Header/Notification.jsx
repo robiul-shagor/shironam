@@ -122,7 +122,7 @@ const Notification = () => {
 
                     <ul className="my-4 space-y-4 ml-4 overflow-y-scroll max-h-[30rem]">
                         { notificationData.length > 0 && notificationData.map((item, index)=> (      
-                            <li className={`group flex items-center gap-4 p-4 transition-all relative hover:bg-[#F0F1F3] dark:hover:bg-dark [&.unread]:bg-[#F0F1F3] dark:[&.unread]:bg-dark ${ item.read_at == null ? 'unread' : ''  }`} key={index} data-notification={item.notifiable_id} onClick={readNotification}>
+                            <li className={`group flex items-center gap-4 p-4 transition-all relative hover:bg-[#F0F1F3] dark:hover:bg-dark [&.unread]:bg-[#F0F1F3] dark:[&.unread]:bg-dark ${ item.read_at == null ? 'unread' : ''  }`} key={index} data-notification={item.id} onClick={readNotification}>
                                 <div className="w-16 h-16 rounded-full flex items-center justify-center border text-[1.5rem] ">
                                     <i className="fas fa-badge-check"></i>
                                 </div>
