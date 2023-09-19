@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
 import Spinner from '../Elements/Spinner';
@@ -11,6 +11,7 @@ const ForgetPassword = () => {
     const [error, setError] = useState('');
     const [ loading, setLoading ] = useState(false);
     const { langMode } = useContext(UserContext);
+    const navigate = useNavigate();
     
     const forgetPassWordHanddle = async(event) => {
         event.preventDefault();
@@ -24,6 +25,7 @@ const ForgetPassword = () => {
             .then(res => {
                 setMessage(res.data.message);
                 setStatus(res.data.status);
+                navigate('/reset-password');
             });
         } catch (e) {
             if( e.response.data.status == 'Error' ) {

@@ -111,6 +111,7 @@ const Bookmarks = () => {
                         />
                     </a>
                   </div>
+
                   <div className="news_info min-w-[50rem] dark:text-white">
                     <h3 className="font-sans text-[1.4rem] sm:text-[1.6rem] leading-[1.7em] line-clamp-2">
                       <a href="#" className="hover:opacity-80">
@@ -129,6 +130,7 @@ const Bookmarks = () => {
                       </li>
                     </ul>
                   </div>
+                  
                   <div className="ml-auto dark:text-white flex max-md:flex-col max-md:space-y-4 md:space-x-4 lg:space-x-8">
                     <div className="relative">
                       <a href="#" className="transition-all opacity-50 hover:opacity-100 hover:text-theme" title="Share" onClick={(e) => socialHandle(e, item.id)}>

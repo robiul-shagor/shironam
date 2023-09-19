@@ -115,7 +115,7 @@ const MyInterests = () => {
 
     getDefault()
     
-  }, [interestsData]); 
+  }, [interestsData, parnetInterest]); 
 
   const handleSubmit = (event) => {
     event.preventDefault();

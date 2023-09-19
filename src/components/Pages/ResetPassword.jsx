@@ -1,27 +1,27 @@
 import { useState, useContext } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
 
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [[otp], setOtp] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [token, setToken] = useSearchParams();
     const { langMode } = useContext(UserContext); 
+    const navigate = useNavigate();
     // const getParms = useSearchParams();
 
     // if( getParms ) {
     //     setToken(getParms);
     // }
 
-    const gettocken = token.get("token");
 
     const resetPassWordHanddle = async(event) => {
         event.preventDefault();
 
         try {
-            await axios.post('/reset-password', {email, password, c_password: confirmPassword, token: gettocken}, {headers: {
+            await axios.post('/reset-password', {email, password, c_password: confirmPassword, token: otp}, {headers: {
                 'content-type': 'application/x-www-form-urlencoded',
                 'Access-Control-Allow-Origin': '*',
             }})
@@ -29,6 +29,9 @@ const ResetPassword = () => {
                 console.log(res);
                 setMessage(res.data.message);
                 setStatus(res.data.status);
+                setTimeout( function() {
+                    navigate('/login')
+                }, 1000)
             });
         } catch (e) {
             console.log(e);
@@ -62,6 +65,13 @@ const ResetPassword = () => {
                     <br/> <br/>
                     <div className="form-group mt-6">
                         <label>
+                        {langMode == 'BN' ? 'ইমেইল' : 'Email Address'}<span className="text-red-600">*</span>
+                        </label>
+                        <input type="email" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={email} onChange={(e)=> setEmail(e.target.value)} />
+                    </div>
+
+                    <div className="form-group mt-6">
+                        <label>
                         { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password' }<span className="text-red-600">*</span>
                         </label>
                         <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e)=> setPassword(e.target.value)} />
@@ -75,10 +85,17 @@ const ResetPassword = () => {
                     </div>
 
                     <div className="form-group mt-6">
+                        <label>
+                            { langMode == 'BN' ? 'ওটিপি কোড' : 'OTP Code'}<span className="text-red-600">*</span>
+                        </label>
+                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={otp} onChange={(e)=> setOtp(e.target.value)} />                       
+                    </div>
+
+                    <div className="form-group mt-6">
                         <button 
                             type="submit" 
                             className="btn-dark-full">
-                            { langMode == 'BN' ? 'লিঙ্ক পাঠান' : 'Send Link' }
+                            {langMode == 'BN' ? 'পাসওয়ার্ড রিসেট করুন' : 'Reset Password'}
                         </button> 
                     </div>
                     <br /><br /><br />
