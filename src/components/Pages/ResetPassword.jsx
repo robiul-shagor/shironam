@@ -6,7 +6,7 @@ import { UserContext } from '../../App';
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [[otp], setOtp] = useState('');
+    const [otp, setOtp] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const { langMode } = useContext(UserContext); 
     const navigate = useNavigate();
