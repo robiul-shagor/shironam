@@ -4,7 +4,7 @@ import axios from '../../api/axios';
 import { UserContext } from '../../App';
 
 const ResetPassword = () => {
-    const [email, setEmail] = useState('');
+    //const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [otp, setOtp] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,6 +16,8 @@ const ResetPassword = () => {
     //     setToken(getParms);
     // }
 
+    const email = localStorage.getItem('tempEmail');
+    console.log(email)
 
     const resetPassWordHanddle = async(event) => {
         event.preventDefault();
@@ -29,6 +31,7 @@ const ResetPassword = () => {
                 console.log(res);
                 setMessage(res.data.message);
                 setStatus(res.data.status);
+                localStorage.removeItem('tempEmail');
                 setTimeout( function() {
                     navigate('/login')
                 }, 1000)
@@ -67,7 +70,7 @@ const ResetPassword = () => {
                         <label>
                         {langMode == 'BN' ? 'ইমেইল' : 'Email Address'}<span className="text-red-600">*</span>
                         </label>
-                        <input type="email" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={email} onChange={(e)=> setEmail(e.target.value)} />
+                        <input type="email" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" readOnly disabled  value={email} style={{opacity: 0.5}} />
                     </div>
 
                     <div className="form-group mt-6">
