@@ -89,7 +89,7 @@ const UserData = () => {
   return (
     <li className="relative ml-auto">
       <a href="#" id="user_profile_menu" className="text-2xl flex items-center gap-2 md:gap-3 md:text-[1.8rem] xl:text-2xl dark:text-white" data-te-dropdown-toggle-ref data-te-auto-close="outside" onClick={userMenuhandle}>
-        { imgError ? (
+        { imgError || profileImage == null ? (
           <img src={'/assets/media/user-avatar.png'} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" /> 
         ) : (
           <img src={profileImage} className="user-img w-[3rem] h-[3rem] rounded-full" alt="" onError={imageError} /> 

@@ -110,7 +110,7 @@ const EditProfile = () => {
         setCountry(userData.country || '');
         setCity(userData.city || '');
         setGender(userData.gender || '');
-        setProfileImage(baseURL + '/' + userData.image);
+        setProfileImage(userData?.image ? baseURL + '/' + userData.image : null);
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -170,7 +170,7 @@ const EditProfile = () => {
             <form action="#" className="profile-edit-form" onSubmit={updateProfile}>
               <div className="card flex items-center gap-x-4 mb-20">     
                 <input type="file" id="user_profile_photo" hidden onChange={handleFileChange} />
-                <img src={ profileImage ? profileImage : '../assets/media/user-avatar.png' } className="user_profile_photo rounded-full w-[6.2rem] h-[6.2rem]" alt="profile Thumb" width="68" height='68' />
+                <img src={ (profileImage && profileImage !== null) ? profileImage : '../assets/media/user-avatar.png' } className="user_profile_photo rounded-full w-[6.2rem] h-[6.2rem]" alt="profile Thumb" width="68" height='68' />
                 <div className="text-inner">
                   <h2 className="font-sans font-bold text-3xl">{ firstName +' '+ lastName }</h2>
                   <label htmlFor="user_profile_photo" className="text-blue-600 cursor-pointer text-xl">{ langMode == 'BN' ? 'প্রোফাইল ফটো পরিবর্তন করুন' : 'Change profile photo' }</label>

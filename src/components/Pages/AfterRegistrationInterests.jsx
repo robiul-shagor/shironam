@@ -102,7 +102,7 @@ const AfterRegistrationInterests = () => {
   
   return (
     <div className='interest-pages'>
-      <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
+      <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
           <div className="brand-logo text-center">
               <LogoElement />
           </div>
