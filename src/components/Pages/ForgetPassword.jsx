@@ -26,8 +26,8 @@ const ForgetPassword = () => {
                 setMessage(res.data.message);
                 setStatus(res.data.status);
                 navigate('/reset-password');
-                
-                localStorage.setItem('tempEmail', email);
+
+                localStorage.setItem('tempEmail', res.data.email);
             });
         } catch (e) {
             if( e.response.data.status == 'Error' ) {

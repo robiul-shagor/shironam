@@ -6,8 +6,10 @@ import { UserContext } from '../../App';
 const ResetPassword = () => {
     //const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
     const [otp, setOtp] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
     const { langMode } = useContext(UserContext); 
     const navigate = useNavigate();
     // const getParms = useSearchParams();
@@ -17,8 +19,7 @@ const ResetPassword = () => {
     // }
 
     const email = localStorage.getItem('tempEmail');
-    console.log(email)
-
+    
     const resetPassWordHanddle = async(event) => {
         event.preventDefault();
 
@@ -28,16 +29,22 @@ const ResetPassword = () => {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                console.log(res);
-                setMessage(res.data.message);
-                setStatus(res.data.status);
-                localStorage.removeItem('tempEmail');
-                setTimeout( function() {
-                    navigate('/login')
-                }, 1000)
+                setMessage( langMode == 'BN' ? res.data.message_bn : res.data.message );
+
+                if( typeof res.data.status !== 'undefined' ) {
+                    setError( {
+                        'otp': langMode == 'BN' ? res.data.message_bn : res.data.message
+                    }  )
+                } else {
+                    localStorage.removeItem('tempEmail');
+                    setTimeout( function() {
+                        navigate('/login')
+                    }, 1000)
+                }
             });
         } catch (e) {
-            console.log(e);
+            console.log(e)
+            setError(e.response.data.message)
         }
     }
 
@@ -78,20 +85,23 @@ const ResetPassword = () => {
                         { langMode == 'BN' ? 'পাসওয়ার্ড' : 'Password' }<span className="text-red-600">*</span>
                         </label>
                         <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={password} onChange={(e)=> setPassword(e.target.value)} />
+                        {typeof error.password !== 'undefined' && <span className="error">{error.password}</span>}
                     </div>
 
                     <div className="form-group mt-6">
                         <label>
                             { langMode == 'BN' ? 'পাসওয়ার্ড নিশ্চিত করুন' : 'Confirm Password' }<span className="text-red-600">*</span>
                         </label>
-                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />                       
+                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />                      
+                        {typeof error.c_password !== 'undefined' && <span className="error">{error.c_password[0]}</span>} 
                     </div>
 
                     <div className="form-group mt-6">
                         <label>
                             { langMode == 'BN' ? 'ওটিপি কোড' : 'OTP Code'}<span className="text-red-600">*</span>
                         </label>
-                        <input type="text" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={otp} onChange={(e)=> setOtp(e.target.value)} />                       
+                        <input type="text" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={otp} onChange={(e)=> setOtp(e.target.value)} />    
+                        {typeof error.otp !== 'undefined' && <span className="error">{error.otp}</span>}                    
                     </div>
 
                     <div className="form-group mt-6">
