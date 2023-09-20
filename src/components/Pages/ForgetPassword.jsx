@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
 import Spinner from '../Elements/Spinner';
+import LogoElement from '../Common/Header/LogoElement';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
@@ -42,17 +43,11 @@ const ForgetPassword = () => {
         <div className='forget-password-wrappers'>
             <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
                 <div className="brand-logo text-center">
-                    <Link 
-                        to="/"
-                        className="inline-block max-[575px]:-ml-8"
-                    >
-                        <img src="/assets/media/logo.svg" className="max-[1199px]:w-[12rem] dark:show" alt="shironam.com" />
-                        <img src="/assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:hidden" alt="shironam.com" />
-                    </Link>
+                    <LogoElement />
                 </div>
             </header>
 
-            <div className="bg-white dark:bg-dark dark:text-white form_wrapper mt-32 py-24 px-6">
+            <div className="form_wrapper bg-white dark:bg-[#272727] dark:text-white mt-32 py-24 px-6 bg-white">
                 <form action="#" className="max-w-[425px] mx-auto mb-0 dark:text-white" onSubmit={forgetPassWordHanddle}>
                     <div className="form-title text-center">
                         <h1 className="text-4xl font-medium mb-2 leading-none">

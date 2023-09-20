@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import axios from '../../api/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../App';
+import LogoElement from '../Common/Header/LogoElement';
 
 const AfterRegistrationInterests = () => {
   const [interestsData, setInterestsData] = useState([]);
@@ -103,13 +104,7 @@ const AfterRegistrationInterests = () => {
     <div className='interest-pages'>
       <header className="fixed top-0 left-0 right-0 bg-white py-6 shadow-md shadow-black/10 z-[1024]">
           <div className="brand-logo text-center">
-              <Link 
-                  to="/"
-                  className="inline-block max-[575px]:-ml-8"
-              >
-                  <img src="/assets/media/logo.svg" className="max-[1199px]:w-[12rem] dark:show" alt="shironam.com" />
-                  <img src="/assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:hidden" alt="shironam.com" />
-              </Link>
+              <LogoElement />
           </div>
       </header>      
 

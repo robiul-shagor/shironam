@@ -2,6 +2,7 @@ import { useState, useContext } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import axios from '../../api/axios';
 import { UserContext } from '../../App';
+import LogoElement from '../Common/Header/LogoElement';
 
 const ResetPassword = () => {
     //const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ const ResetPassword = () => {
     // }
 
     const email = localStorage.getItem('tempEmail');
-    
+
     const resetPassWordHanddle = async(event) => {
         event.preventDefault();
 
@@ -31,12 +32,11 @@ const ResetPassword = () => {
             .then(res => {
                 setMessage( langMode == 'BN' ? res.data.message_bn : res.data.message );
 
-                if( typeof res.data.status !== 'undefined' ) {
+                if( typeof res.data.status !== 'undefined' && res.data.status == 'Error' ) {
                     setError( {
                         'otp': langMode == 'BN' ? res.data.message_bn : res.data.message
                     }  )
                 } else {
-                    localStorage.removeItem('tempEmail');
                     setTimeout( function() {
                         navigate('/login')
                     }, 1000)
@@ -52,17 +52,11 @@ const ResetPassword = () => {
         <div className='forget-password-wrappers'>
             <header className="fixed top-0 left-0 right-0 bg-white dark:bg-[#272727] dark:text-white py-6 shadow-md shadow-black/10 z-[1024]">
                 <div className="brand-logo text-center">
-                    <Link 
-                        to="/"
-                        className="inline-block max-[575px]:-ml-8"
-                    >
-                        <img src="/assets/media/logo.svg" className="max-[1199px]:w-[12rem] dark:show" alt="shironam.com" />
-                        <img src="/assets/media/logo-dark.svg" className="max-[1199px]:w-[12rem] hidden dark:hidden" alt="shironam.com" />
-                    </Link>
+                    <LogoElement />
                 </div>
             </header>
 
-            <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6">
+            <div className="form_wrapper bg-white dark:bg-[#272727] dark:text-white mt-32 py-24 px-6 bg-white">
                 <form action="#" className="max-w-[425px] mx-auto mb-0 dark:text-white" onSubmit={resetPassWordHanddle}>
                     <div className="form-title text-center">
                         <h1 className="text-4xl font-medium mb-2 leading-none">
