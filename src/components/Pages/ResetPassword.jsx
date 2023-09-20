@@ -88,7 +88,7 @@ const ResetPassword = () => {
                         <label>
                             { langMode == 'BN' ? 'ওটিপি কোড' : 'OTP Code'}<span className="text-red-600">*</span>
                         </label>
-                        <input type="password" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={otp} onChange={(e)=> setOtp(e.target.value)} />                       
+                        <input type="text" className="form-control form-input bg-white dark:bg-[#272727] dark:text-white" required value={otp} onChange={(e)=> setOtp(e.target.value)} />                       
                     </div>
 
                     <div className="form-group mt-6">
