@@ -26,11 +26,32 @@ const Login = () => {
                 'Access-Control-Allow-Origin': '*',
             }})
             .then(res => {
-                console.log(res)
                 if ( typeof res.data.status !== 'undefined') {
+                    if( res.data.status == "Warning" ) {
+                        setProcessing(false)
+                        setMessage( ( langMode == 'BN' ) ? res.data.message_bn : res.data.message)
+
+                        localStorage.setItem("newUserDetails", JSON.stringify(res.data.email));
+
+                        setTimeout(function() {
+                            navigate("/verify");
+                            setMessage('');
+                        }, 1000)
+
+                        const newOTP = axios.post('/resent-otp', {email: res.data.email }, {
+                            headers: {
+                                'content-type': 'application/x-www-form-urlencoded',
+                                'Access-Control-Allow-Origin': '*',
+                            }
+                        }) 
+                    }    
+                    
                     if( res.data.status == 'Error' ) {
                         setProcessing(false)
                         setMessage( ( langMode == 'BN' ) ? res.data.message_bn : res.data.message)
+                        setTimeout(function() {
+                            setMessage('');
+                        }, 1000)
                     }
                 } else {
                     const data = {

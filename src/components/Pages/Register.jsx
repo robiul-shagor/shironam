@@ -30,7 +30,7 @@ const Register = () => {
             }})
             .then(res => {
                 setMessage(res.data.message);
-                sessionStorage.setItem("newUserDetails", JSON.stringify(res.data.user));
+                localStorage.setItem("newUserDetails", JSON.stringify(res.data.user.email));
                 navigate("/verify");
             });
         } catch (e) {
