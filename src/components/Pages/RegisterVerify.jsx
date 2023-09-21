@@ -27,47 +27,50 @@ const RegisterVerify = () => {
 
         const userData = JSON.parse(localStorage.getItem("newUserDetails"));
 
-        try {
-            await axios.post('/verify', { email: userData, token: parseInt(verify) }, {headers: {
-                'content-type': 'application/x-www-form-urlencoded',
-                'Access-Control-Allow-Origin': '*',
-            }})
-            .then(res => {
-                if( typeof res?.data?.status !== 'undefined') {
-                    console.log(res)
-                    if( res?.data?.status == "Error" ) {
-                        setLoading(false);
-                        setError( langMode == 'BN' ? res.data.message_bn : res.data.message);
-                    }        
-                    
-                    if( res?.data?.status == "Expired" ) {
-                        setLoading(false);
-                        setError( langMode == 'BN' ? res.data.message_bn : res.data.message);
-                        setOtpBtn(true);
-                    }             
-                    
-                    if( res?.data?.status == "Success" ) {
+        if( userData !== null ) {
+            try {
+                await axios.post('/verify', { email: userData, token: parseInt(verify) }, {headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Access-Control-Allow-Origin': '*',
+                }})
+                .then(res => {
+                    if( typeof res?.data?.status !== 'undefined') {
+                        console.log(res)
+                        if( res?.data?.status == "Error" ) {
+                            setLoading(false);
+                            setError( langMode == 'BN' ? res.data.message_bn : res.data.message);
+                        }        
+                        
+                        if( res?.data?.status == "Expired" ) {
+                            setLoading(false);
+                            setError( langMode == 'BN' ? res.data.message_bn : res.data.message);
+                            setOtpBtn(true);
+                        }             
+                        
+                        if( res?.data?.status == "Success" ) {
+                            setSuccess(res.data.message);
+                            navigate('/login');
+                            setLoading(false);
+                            localStorage.removeItem('newUserDetails')
+                        }
+                    } else {
                         setSuccess(res.data.message);
                         navigate('/login');
                         setLoading(false);
-                        localStorage.removeItem('newUserDetails')
                     }
-                } else {
-                    setSuccess(res.data.message);
-                    navigate('/login');
-                    setLoading(false);
-                }
-            });
-        } catch (e) {
-            setError(e.response?.data?.errors || 'Something went wrong')
+                });
+            } catch (e) {
+                setError(e.response?.data?.errors || 'Something went wrong')
+                setLoading(false);
+            }
+        } else {
+            setError( langMode == 'BN' ? 'আপনি কিছু ভুল চেষ্টা করছেন, লগইন বা নিবন্ধন করার চেষ্টা করুন.' : 'You are trying something wrong, Please try to login or registration.' )
             setLoading(false);
+
+            setTimeout(function() {
+                navigate('/login')
+            }, 1000)
         }
-        // if (userData && userData.email_verification_token === parseInt(verify)) {            
-        // } else {
-        //     // Code verification failed
-        //     setError(langMode == 'BN' ? 'ভুল যাচাইকরণ কোড' : 'Invalid verification code');
-        //     setLoading(false);
-        // }
     }
 
     const handleResend = async(event) => {

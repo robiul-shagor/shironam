@@ -27,6 +27,7 @@ const Login = () => {
             }})
             .then(res => {
                 if ( typeof res.data.status !== 'undefined') {
+                    console.log(res)
                     if( res.data.status == "Warning" ) {
                         setProcessing(false)
                         setMessage( ( langMode == 'BN' ) ? res.data.message_bn : res.data.message)
