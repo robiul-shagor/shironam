@@ -4,6 +4,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import NewsListQuery from '../../../query/NewsListQuery';
 import Spinner from '../../Elements/Spinner';
+import FooterRegular from '../Footer/FooterRegular';
 
 const SidebarCategory = () => {
   const { langMode, globalPageNum, setGlobalPageNum } = useContext(UserContext);
@@ -74,48 +75,52 @@ const SidebarCategory = () => {
   }, [location]);
 
   return (
-    <div className='content-inner sticky top-[12rem]'>
-      <h2 className="dark:text-white">{langMode === 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
+    <div className='content-inner sticky top-[12rem] h-[calc(100vh-12rem)] flex flex-col'>
+      <div>
+        <h2 className="dark:text-white">{langMode === 'BN' ? 'ট্যাগস' : 'Tags'}</h2>
 
-      <div className='inline-flex flex-wrap gap-4 my-6'>
-        {news?.map((data, index) => (
-          <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
-            {data.tags && data.tags.map((item, index2) => (
-              <li key={index2}>
-                <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
-                  #{langMode === 'BN' ? item.name_bn : item.name_en}
-                </Link>
+        <div className='inline-flex flex-wrap gap-4 my-6'>
+          {news?.map((data, index) => (
+            <ul className="tags-item inline-flex flex-wrap gap-4 my-6" key={index} id={`tags-item-${data.id}`}>
+              {data.tags && data.tags.map((item, index2) => (
+                <li key={index2}>
+                  <Link to={`/tags/${item.slug}`} className='bg-gray-100 dark:bg-dark dark:text-white py-4 px-8 rounded-full block transition-all hover:bg-theme hover:text-white text-[1.4rem] leading-normal'>
+                    #{langMode === 'BN' ? item.name_bn : item.name_en}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ))}
+
+          <div>{loading && <Spinner />}</div>
+          <div className='text-center dark:text-white'>{noMore && (langMode === 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags')}</div>
+          <div className='text-center dark:text-white'>{error && (langMode === 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...')}</div>
+        </div>
+
+        <hr className="my-4 md:my-12" />
+
+        {loadings && <Spinner />}
+        {sideBarAds.length > 0 && (
+          <div className="ads">
+            <h5 className="font-sans mb-4 dark:text-white">{langMode === 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
+            <ul>
+              <li>
+                <a href={sideBarAds.action_url} className="flex items-start gap-6" data-id={sideBarAds.id}>
+                  <img src={sideBarAds.sponsor_image} className="md:w-2/5" alt="" />
+                  <div className="flex-1 dark:text-white">
+                    <h3 className="font-sans md:text-xl">
+                      {sideBarAds.title}
+                    </h3>
+                    <p className="text-sm mt-3">{sideBarAds.sponsor}</p>
+                  </div>
+                </a>
               </li>
-            ))}
-          </ul>
-        ))}
-
-        <div>{loading && <Spinner />}</div>
-        <div className='text-center dark:text-white'>{noMore && (langMode === 'BN' ? 'আর কোন ট্যাগ নেই' : 'No More tags')}</div>
-        <div className='text-center dark:text-white'>{error && (langMode === 'BN' ? 'Error' : 'ত্রুটি হচ্ছে...')}</div>
+            </ul>
+          </div>
+        )}
       </div>
 
-      <hr className="my-4 md:my-12" />
-
-      {loadings && <Spinner />}
-      {sideBarAds.length > 0 && (
-        <div className="ads">
-          <h5 className="font-sans mb-4 dark:text-white">{langMode === 'BN' ? 'স্পন্সর' : 'Sponsored'}</h5>
-          <ul>
-            <li>
-              <a href={sideBarAds.action_url} className="flex items-start gap-6" data-id={sideBarAds.id}>
-                <img src={sideBarAds.sponsor_image} className="md:w-2/5" alt="" />
-                <div className="flex-1 dark:text-white">
-                  <h3 className="font-sans md:text-xl">
-                    {sideBarAds.title}
-                  </h3>
-                  <p className="text-sm mt-3">{sideBarAds.sponsor}</p>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </div>
-      )}
+      <FooterRegular />
     </div>
   );
 };
