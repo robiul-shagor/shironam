@@ -47,7 +47,7 @@ const Register = () => {
             </div>
         </header>
 
-        <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6">
+        <div className="bg-white dark:bg-[#272727] dark:text-white form_wrapper mt-32 py-24 px-6 h-screen">
             <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleRegistration}>
                 <div className="form-title text-center">
                     <h1 className="text-4xl font-medium mb-2 leading-none">

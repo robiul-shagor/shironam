@@ -14,7 +14,6 @@ const SingleTags = () => {
     <div className='home'>
         <Header />
         <MainCategory category={capitalize(url_slug.tags)} type={'tags'} />
-        <Footer />
     </div>
   )
 }

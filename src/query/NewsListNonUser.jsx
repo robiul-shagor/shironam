@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import axios from '../api/axios';
+import { UserContext } from '../App';
 
 export default function NewsListNonUser(query) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [news, setNews] = useState([])
+    const { reloadFeed, setReloadFeed } = useContext(UserContext);
 
     useEffect(() => {
         setNews([])
     }, [query])
 
-    useEffect(() => {
+    const fetchData = () => {
         setLoading(true)
         setError(false)
         try {
@@ -22,8 +24,19 @@ export default function NewsListNonUser(query) {
         } catch (e) {
             setError(true)
         }
-        
-    }, [query])
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [query])  
+    
+    useEffect(() => {
+        if( reloadFeed ) {
+            setLoading(true);
+            fetchData();
+            setReloadFeed(false);
+        }
+    }, [query, reloadFeed])
 
     return { loading, error, news }
 }

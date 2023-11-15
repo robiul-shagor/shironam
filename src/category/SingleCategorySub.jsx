@@ -6,8 +6,7 @@ const SingleCategorySub = () => {
     return (
         <div className='home'>
             <Header />
-                <MainCategory type={'categories'} />
-            <Footer />
+            <MainCategory type={'categories'} />
         </div>
     )
 }

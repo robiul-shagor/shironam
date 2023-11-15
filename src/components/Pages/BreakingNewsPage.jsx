@@ -7,7 +7,6 @@ const BreakingNewsPage = () => {
     <div className='today-news'>
         <Header />
         <MainBodyBraking />
-        <Footer />
     </div>
   )
 }

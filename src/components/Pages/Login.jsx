@@ -114,7 +114,7 @@ const Login = () => {
             </div>
         </header>
 
-        <div className="form_wrapper bg-white dark:bg-[#272727] dark:text-white mt-32 py-24 px-6 bg-white">
+        <div className="form_wrapper bg-white dark:bg-[#272727] dark:text-white mt-32 py-24 px-6 bg-white h-screen">
             { !userLogin && (userLogin.normal_user !== 'undefined' ) ? (
                 <form action="#" className="max-w-[425px] mx-auto mb-0" onSubmit={hanndleLogin}>
                     <div className="form-title text-center">

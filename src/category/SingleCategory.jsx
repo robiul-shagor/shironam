@@ -13,8 +13,7 @@ const SingleCategory = () => {
     return (
         <div className='home'>
             <Header />
-                <MainCategory category={capitalize(url_slug.category)} type={'categories'} />
-            <Footer />
+            <MainCategory category={capitalize(url_slug.category)} type={'categories'} />
         </div>
     )
 }

@@ -3,7 +3,7 @@ import useIntervalAsync from './useIntervalAsync';
 import axios from '../../../api/axios';
 import { UserContext } from '../../../App';
 import moment from 'moment';
-//import 'moment/locale/bn-bd';
+import Pusher from 'pusher-js';
 
 import { Link } from 'react-router-dom';
 
@@ -11,6 +11,31 @@ const Notification = () => {
     const [notificationBtn, setNotificationBtn] = useState(false);
     const [notificationData, setNotificationData] = useState([]);
     const notificationButtonRef = useRef(null);
+
+    const [data, setData] = useState('');
+
+    
+    useEffect(() => {
+        
+        try {
+            const pusher = new Pusher("d253d6239578340fd298", {
+                cluster: "mt1"
+            });
+
+            const channel = pusher.subscribe('newsNotification');
+            channel.bind('news-notification', function(data) {
+                setData(data);
+            });
+
+        } catch (error) {
+            console.error('Error initializing Pusher:', error);
+        }
+    }, []);
+    
+
+
+    //console.log(data)
+    
     
     const { langMode } = useContext(UserContext);
     const userData = JSON.parse(localStorage.getItem("userDetails"));

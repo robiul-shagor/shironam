@@ -1,13 +1,13 @@
 import MainBody from '../Common/MainBody/MainBody'
 import Header from '../Common/Header/Header'
-import Footer from '../Common/Footer/Footer'
+import FooterModal from '../Common/Footer/FooterModal'
 
 const Home = () => {
   return (
     <div className='home'>
         <Header />
         <MainBody />
-        <Footer />
+        <FooterModal />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import SidebarNonUser from '../SideBar/SidebarNonUser';
 import SideBar from '../SideBar/SideBar';
 import { UserContext } from '../../../App';
+import PopupNews from '../Footer/popupNews';
 
 const MainBody = () => {
     const { langMode } = useContext(UserContext);
@@ -47,6 +48,8 @@ const MainBody = () => {
                     </div>
                 </div>
             </div>
+
+            <PopupNews />              
         </div>
     )
 }

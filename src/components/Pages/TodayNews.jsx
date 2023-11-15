@@ -7,7 +7,6 @@ const TodayNews = () => {
     <div className='today-news'>
         <Header />
         <MainBodyToday />
-        <Footer />
     </div>
   )
 }

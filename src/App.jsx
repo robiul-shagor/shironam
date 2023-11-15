@@ -4,6 +4,9 @@ import axios from "./api/axios";
 import { Helmet } from "react-helmet";
 import './App.css';
 
+import moment from "moment";
+import 'moment/dist/locale/bn-bd';
+
 import Home from './components/Pages/Home';
 import Login from './components/Pages/Login';
 import Register from './components/Pages/Register';
@@ -35,10 +38,12 @@ export const UserContext = createContext({
   siteSetting: '',
   footerSetting: '',
   globalPageNum: '',
+  reloadFeed: false
 });
 
 function App() {
   const [userLogin, setUserLogin] = useState(false);
+  const [reloadFeed, setReloadFeed] = useState(false);
   const [langMode, setLangMode] = useState('EN');
   const [siteSetting, setSiteSettings] = useState('');
   const [footerSetting, setFooterSettings] = useState('');
@@ -58,10 +63,18 @@ function App() {
         const res = await axios.get('/site-settings', {});
         const settingsData = JSON.parse(res.data[0]?.value || "{}");
         const footerData = JSON.parse(res.data[1]?.value || "{}");
-
         setSiteSettings(settingsData);
         setFooterSettings(footerData);
       } catch (error) {
+        if(error.response?.data?.message === 'Unauthenticated.' ) {
+          localStorage.removeItem("userDetails");
+          localStorage.setItem("hasReloaded", "true");
+          const hasReloaded = localStorage.getItem("hasReloaded");
+          if (!hasReloaded) {
+            navigate('/');
+            window.location.reload();
+          }
+        }
         if ((retryCount > 0 && error.response?.status === 429) || error.response?.status === 500) {
           await new Promise((resolve) => setTimeout(resolve, delay));
           getSettings(retryCount - 1, delay * 2);
@@ -77,29 +90,6 @@ function App() {
 
   // User Expire Set
   const baseURL = 'https://admin.shironam.live';
-  const TOKEN_EXPIRATION_DURATION = 7 * 24 * 60 * 60 * 1000; 
-  const getlogintime = localStorage.getItem("tokenExpiration");
-  useEffect(() => {
-    const checkTokenExpiration = () => {
-      if ( getlogintime ) {
-        const currentTime = Date.now();
-        const expirationTime = parseInt(getlogintime, 10) + TOKEN_EXPIRATION_DURATION;
-        
-        if (currentTime >= expirationTime) {
-          // Token has expired, handle accordingly
-          const hasReloaded = localStorage.getItem("hasReloaded");
-          if (!hasReloaded) {
-            localStorage.removeItem("userDetails");
-            localStorage.setItem("hasReloaded", "true");
-            // Reload the window only if it hasn't been reloaded before
-            window.location.reload();
-          }
-        }
-      }
-    };
-    checkTokenExpiration();
-  }, [getlogintime]);
-
   return (
     <>
       <Helmet>
@@ -110,6 +100,8 @@ function App() {
         value={{
           userLogin,
           setUserLogin,
+          reloadFeed,
+          setReloadFeed,
           langMode,
           setLangMode,
           siteSetting,

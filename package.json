@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@pusher/push-notifications-web": "^1.1.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "axios": "^1.4.0",
@@ -17,6 +18,7 @@
     "lodash.debounce": "^4.0.8",
     "match-sorter": "^6.3.1",
     "moment": "^2.29.4",
+    "pusher-js": "^8.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",

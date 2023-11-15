@@ -118,13 +118,16 @@ const NewsCard = () => {
 
         const currentItem = event.currentTarget.getAttribute('data-source');
         const currentURL = event.currentTarget.getAttribute('href');
+        const currentiframe = document.getElementById('displayPopupSource');
+        const currentModal = document.getElementById('readMoreNews');
         try {           
             await axios.post('/source-click', {news_id: currentItem}, {headers: {
                 'Authorization': bearer_token
             }})
             .then(res => {
                 if( res.data.status == "Success" ) {
-                    window.open(currentURL, '_blank');
+                    currentModal.style.display = "block";
+                    currentiframe.src = currentURL;
                 }
             });
         } catch (e) {
@@ -263,6 +266,8 @@ const NewsCard = () => {
         visibleAdsId && viewAdsData(visibleAdsId);
     }, [visibleId, visibleAdsId ])
 
+    console.log(news)
+
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   
             {news?.map((newsData, index) => {
@@ -285,14 +290,24 @@ const NewsCard = () => {
                                     ) }
                                 </a>           
                             ) : (
-                                <a href={newsData.source}>
-                                    <LazyLoadImage src={newsData.thumbnail}
-                                        alt=""
-                                        placeholderSrc='/assets/media/placeholder.webp'
-                                        className="thumbnail w-full object-cover"
-                                        effect="blur"
-                                    />
-                                </a>
+                                <div className='post-thumbnail relative'>
+                                    <a href={newsData.source}>
+                                        <LazyLoadImage src={newsData.crop_size}
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
+                                    </a>
+                                    <span className='src-logo absolute right-0 bottom-0 w-[10rem] p-2 px-4 bg-white/80'>
+                                        <LazyLoadImage src={newsData.news_vendor_logo}
+                                            alt={newsData.news_vendor_en}
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
+                                    </span>
+                                </div>
                             ) }
 
                             { !newsData.ads_image && (
@@ -313,11 +328,11 @@ const NewsCard = () => {
                             ) }
 
                             { newsData.ads_image ? (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
                                     {newsData.title}
                                 </h1>
                             ) : (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
                                     { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                                 </h1>         
                             ) }                    
@@ -334,7 +349,7 @@ const NewsCard = () => {
                                         <ul className="flex gap-6">
                                             <li>
                                                 <i className="fal fa-clock"></i>&nbsp;
-                                                { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
+                                                { langMode == 'BN' ?  moment(new Date(newsData.publish_date)).startOf('seconds').locale('bn-bd').fromNow() : moment(new Date(newsData.publish_date)).startOf('seconds').locale("en").fromNow() }
                                             </li>
                                             <li>
                                                 <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>
@@ -397,14 +412,24 @@ const NewsCard = () => {
                                     ) }
                                 </a>           
                             ) : (
-                                <a href={newsData.source}>
-                                    <LazyLoadImage src={newsData.thumbnail}
-                                        alt=""
-                                        placeholderSrc='/assets/media/placeholder.webp'
-                                        className="thumbnail w-full object-cover"
-                                        effect="blur"
-                                    />
-                                </a>
+                                <div className='post-thumbnail relative'>
+                                    <a href={newsData.source}>
+                                        <LazyLoadImage src={newsData.crop_size}
+                                            alt=""
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
+                                    </a>
+                                    <span className='src-logo absolute right-0 bottom-0 w-[10rem] p-2 px-4 bg-white/80'>
+                                        <LazyLoadImage src={newsData.news_vendor_logo}
+                                            alt={newsData.news_vendor_en}
+                                            placeholderSrc='/assets/media/placeholder.webp'
+                                            className="thumbnail w-full object-cover"
+                                            effect="blur"
+                                        />
+                                    </span>
+                                </div>
                             ) }
 
                             { !newsData.ads_image && (
@@ -425,11 +450,11 @@ const NewsCard = () => {
                             ) }
 
                             { newsData.ads_image ? (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
                                     {newsData.title}
                                 </h1>
                             ) : (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme line-clamp-3 dark:text-white">
+                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
                                     { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                                 </h1>         
                             ) }                    
@@ -443,10 +468,11 @@ const NewsCard = () => {
                             ) : (
                                 <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
                                     <li>
-                                        <ul className="flex gap-6">
+                                        <ul className="flex gap-6 text-[12px]">
                                             <li>
                                                 <i className="fal fa-clock"></i>&nbsp;
-                                                { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
+
+                                                { langMode == 'BN' ?  moment(new Date(newsData.publish_date)).startOf('seconds').locale('bn-bd').fromNow() : moment(new Date(newsData.publish_date)).startOf('seconds').locale("en").fromNow() }
                                             </li>
                                             <li>
                                                 <a href={newsData.source} className="transition-all hover:text-theme" data-source={newsData.id} onClick={clickSource}>

@@ -30,7 +30,6 @@ const BreakingNews = ({ navigation }) => {
                       'Authorization': bearer_token
                     }
                 };
-
                 await axios.get('/breaking-news', config)
                 .then(res => {
                     setNewsItem(res.data.data);

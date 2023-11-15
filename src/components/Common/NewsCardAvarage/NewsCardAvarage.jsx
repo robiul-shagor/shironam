@@ -1,6 +1,7 @@
 import {React, useEffect,useContext } from 'react'
 import { useState } from 'react';
 import moment from 'moment';
+
 import { UserContext } from '../../../App';
 import NewsListNonUser from '../../../query/NewsListNonUser';
 import { Link } from 'react-router-dom';
@@ -88,7 +89,7 @@ const NewsCardAvarage = () => {
                                 ) }
                             </a>           
                         ) : (
-                            <LazyLoadImage src={newsData.thumbnail}
+                            <LazyLoadImage src={newsData.crop_image}
                                 alt=""
                                 placeholderSrc='/assets/media/placeholder.webp'
                                 className="thumbnail w-full object-cover"
@@ -115,10 +116,10 @@ const NewsCardAvarage = () => {
                         ) : (
                             <ul className="flex items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white">
                                 <li>
-                                    <ul className="flex gap-6">
+                                    <ul className="flex gap-6 text-[12px]">
                                         <li>
                                             <i className="fal fa-clock"></i> &nbsp;
-                                            { moment(new Date(newsData.datetime)).startOf('seconds').fromNow() }
+                                            { getUserLang == 'BN' ?  moment(new Date(newsData.datetime)).startOf('seconds').locale('bn-bd').fromNow() : moment(new Date(newsData.datetime)).startOf('seconds').locale("en").fromNow() }
                                         </li>
                                         <li>
                                             <Link to='/login' className='transition-all hover:text-theme'>

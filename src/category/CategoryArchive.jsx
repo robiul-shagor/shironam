@@ -7,7 +7,6 @@ const CategoryArchive = () => {
       <div>
         <Header />
         <CategoryBody />
-        <Footer />
       </div>
     );
 };

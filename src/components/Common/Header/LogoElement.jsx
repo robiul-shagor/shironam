@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 import {  useContext } from 'react'
 import { UserContext } from '../../../App';
 
-
 const LogoElement = () => {
-  const { siteSetting, baseURL } = useContext(UserContext);
+  const { siteSetting, baseURL, setReloadFeed } = useContext(UserContext);
   const isHomepage = window.location.pathname === '/';
 
   const handleClick = () => {
@@ -12,7 +11,8 @@ const LogoElement = () => {
       window.scrollTo({
         top: 0,
         behavior: 'smooth' // Optional, adds smooth scrolling animation
-      });      
+      }); 
+      setReloadFeed(true);     
     }
   };
 
