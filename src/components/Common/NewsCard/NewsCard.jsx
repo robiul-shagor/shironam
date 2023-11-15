@@ -266,8 +266,6 @@ const NewsCard = () => {
         visibleAdsId && viewAdsData(visibleAdsId);
     }, [visibleId, visibleAdsId ])
 
-    console.log(news)
-
     return (
         <div className="space-y-8 lg:space-y-12 col-span-2">   
             {news?.map((newsData, index) => {
@@ -347,7 +345,7 @@ const NewsCard = () => {
                                 <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
                                     <li>
                                         <ul className="flex gap-6">
-                                            <li>
+                                            <li title={newsData.publish_date}>
                                                 <i className="fal fa-clock"></i>&nbsp;
                                                 { langMode == 'BN' ?  moment(new Date(newsData.publish_date)).startOf('seconds').locale('bn-bd').fromNow() : moment(new Date(newsData.publish_date)).startOf('seconds').locale("en").fromNow() }
                                             </li>
@@ -450,11 +448,11 @@ const NewsCard = () => {
                             ) }
 
                             { newsData.ads_image ? (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
+                                <h1 className={`post-title ${ newsData?.is_read ? '' : 'is_read' } text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white`}>
                                     {newsData.title}
                                 </h1>
                             ) : (
-                                <h1 className="post-title font-semibold text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white">
+                                <h1 className={`post-title ${ newsData?.is_read ? '' : 'is_read' } text-2xl md:text-3xl mt-6 !leading-[1.7em] transition-all hover:text-theme dark:text-white`}>
                                     { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                                 </h1>         
                             ) }                    
@@ -469,9 +467,8 @@ const NewsCard = () => {
                                 <ul className={`flex flex-wrap items-center justify-between border-b-2 pt-7 pb-5 text-xl dark:text-white ${ newsData.ads ? 'ads-with-list' : '' }`}>
                                     <li>
                                         <ul className="flex gap-6 text-[12px]">
-                                            <li>
+                                            <li title={newsData.publish_date}>
                                                 <i className="fal fa-clock"></i>&nbsp;
-
                                                 { langMode == 'BN' ?  moment(new Date(newsData.publish_date)).startOf('seconds').locale('bn-bd').fromNow() : moment(new Date(newsData.publish_date)).startOf('seconds').locale("en").fromNow() }
                                             </li>
                                             <li>

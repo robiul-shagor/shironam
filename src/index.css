@@ -288,3 +288,7 @@ header .dropdown-notification .overflow-y-scroll::-webkit-scrollbar-thumb {
     display: none;
   }
 }
+
+#root.BN h1, #root.BN h2, #root.BN h3, #root.BN h4, #root.BN h5, #root.BN h6, #root.BN p, #root.BN ul, #root.BN ol {
+  font-family: Arial, Helvetica, sans-serif;
+}

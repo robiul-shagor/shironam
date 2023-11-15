@@ -34,6 +34,10 @@ const LanguageSwitcher = () => {
         localStorage.setItem('lang', currentLang);
     }
 
+    useEffect(() => {
+        document.getElementById('root').className = langMode;
+    }, [langMode]); 
+
     return (
         <li className="relative">
             <a href="#" 
