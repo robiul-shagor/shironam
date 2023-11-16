@@ -5,7 +5,7 @@ import NewsCardAvarage from '../NewsCardAvarage/NewsCardAvarage';
 import SidebarNonUser from '../SideBar/SidebarNonUser';
 import SideBar from '../SideBar/SideBar';
 import { UserContext } from '../../../App';
-import PopupNews from '../Footer/popupNews';
+import PopupNews from '../Footer/PopupNews';
 
 const MainBody = () => {
     const { langMode } = useContext(UserContext);
