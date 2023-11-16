@@ -297,7 +297,7 @@ const NewsCard = () => {
                                             effect="blur"
                                         />
                                     </a>
-                                    <span className='src-logo absolute right-0 bottom-0 w-[10rem] p-2 px-4 bg-white/80'>
+                                    <span className='src-logo absolute right-0 top-full w-[10rem] p-2 px-4 bg-white/80'>
                                         <LazyLoadImage src={newsData.news_vendor_logo}
                                             alt={newsData.news_vendor_en}
                                             placeholderSrc='/assets/media/placeholder.webp'
@@ -419,7 +419,7 @@ const NewsCard = () => {
                                             effect="blur"
                                         />
                                     </a>
-                                    <span className='src-logo absolute right-0 bottom-0 w-[10rem] p-2 px-4 bg-white/80'>
+                                    <span className='src-logo absolute right-0 top-full w-[10rem] p-2 px-4 bg-white/80'>
                                         <LazyLoadImage src={newsData.news_vendor_logo}
                                             alt={newsData.news_vendor_en}
                                             placeholderSrc='/assets/media/placeholder.webp'
