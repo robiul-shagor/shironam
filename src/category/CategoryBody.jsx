@@ -4,6 +4,7 @@ import axios from '../api/axios';
 import BreakingNews from '../components/Common/BreakingNews/BreakingNews';
 import moment from 'moment';
 import { UserContext } from '../App';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const CategoryBody = () => {
     const [newsItem, setNewsItem ] = useState([]);
@@ -40,10 +41,12 @@ const CategoryBody = () => {
                     { newsItem.map((item, index) => (    
                         item.name ? (    
                             <div className="news_category_item group relative shadow-lg dark:shadow-slate-100/10 rounded-xl overflow-hidden" key={index} data-news-id={item.id}>
-                                <img 
-                                    src={ item.category_image } 
-                                    className="w-full h-[180px] sm:h-[220px] object-cover object-center" 
-                                    alt=""/>
+                                <LazyLoadImage src={item.category_image}
+                                    alt=''
+                                    placeholderSrc='/assets/media/placeholder.webp'
+                                    className="w-full h-[180px] sm:h-[220px] object-cover object-center"
+                                    effect="blur"
+                                />
 
                                 <div className="text-info px-4 sm:px-6 py-6 relative">
                                     <h3 className="text-3xl font-semibold group-hover:text-theme">
@@ -91,38 +94,52 @@ const CategoryBody = () => {
                                         { (item.media[0].original_url) && (
                                             <div className="rounded-xl overflow-hidden">
                                                 <a href={item.action_url} className="stretched-link">
-                                                    <img src={item.media[0].original_url} alt=""/>
+                                                    <LazyLoadImage src={item.media[0].original_url}
+                                                        alt=''
+                                                        placeholderSrc='/assets/media/placeholder.webp'
+                                                        effect="blur"
+                                                    />
                                                 </a>
                                             </div>
                                         ) }                
                                         { item.media[1].original_url && (
                                             <div className="rounded-xl overflow-hidden">
-                                                <img src={item.media[1].original_url} alt=""/>
+                                                <LazyLoadImage src={item.media[1].original_url}
+                                                    alt=''
+                                                    placeholderSrc='/assets/media/placeholder.webp'
+                                                    effect="blur"
+                                                />
                                             </div>
                                         ) }                 
                                         
                                         { item.media[2].original_url && (
                                             <div className="rounded-xl overflow-hidden">
-                                                <img src={item.media[2].original_url} alt=""/>
+                                                <LazyLoadImage src={item.media[2].original_url}
+                                                    alt=''
+                                                    placeholderSrc='/assets/media/placeholder.webp'
+                                                    effect="blur"
+                                                />
                                             </div>
                                         ) }          
                                         
                                         { item.media[3].original_url && (         
                                             <div className="relative rounded-xl overflow-hidden">
-                                                <img src={item.media[3].original_url} alt=""/>
+                                                <LazyLoadImage src={item.media[3].original_url}
+                                                    alt=''
+                                                    placeholderSrc='/assets/media/placeholder.webp'
+                                                    effect="blur"
+                                                />
                                                 <div className="absolute bottom-0 left-0 right-0 action flex items-center px-8 py-4 text-[1.4rem] justify-between text-white z-[1] before:content-[''] before:absolute before:inset-0 before:backdrop-blur-2xl before:-z-[1]">
                                                     <span className="leading-normal">{ item.button_title }</span>
                                                     <i className="fal fa-arrow-right -rotate-45"></i>
                                                 </div>
                                             </div>
                                         ) }
-
                                     </div>
                                 </div>
                             ) 
                         )
                     )) }
-                    
                 </div>
             </div>
         </div>

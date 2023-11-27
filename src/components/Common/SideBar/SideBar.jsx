@@ -9,7 +9,7 @@ import FooterRegular from '../Footer/FooterRegular';
 const SideBar = () => {
   const { langMode, globalPageNum } = useContext(UserContext);
   const userData = JSON.parse(localStorage.getItem("userDetails"));
-  const bearer_token = `Bearer ${userData.token}`;
+  const bearer_token = `Bearer ${userData?.token}`;
   const [loadings, setLoadings] = useState(true);
   const [query, setQuery] = useState('');
   const [type, setType] = useState('');

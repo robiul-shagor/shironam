@@ -6,6 +6,7 @@ import moment from 'moment';
 import Spinner from '../Elements/Spinner';
 import { UserContext } from '../../App';
 import SocialShare from '../Common/Component/SocialShare';
+import PopupNews from '../Common/Footer/PopupNews';
 
 
 const Search = () => {
@@ -41,7 +42,13 @@ const Search = () => {
         // Set a new timeout to wait before making the API call
         const newTypingTimeout = setTimeout(() => {
             // Make the API call with the search keyword
-            fetchData(keyword);
+
+            if (keyword.trim() !== '') {
+                fetchData(keyword);
+            } else {
+                // Clear or set to an initial state if the keyword is empty
+                setNewsItem([]);
+            }
             setLoading(false);
         }, 500); // Adjust the delay time (in milliseconds) according to your preference
         setTypingTimeout(newTypingTimeout);
@@ -93,6 +100,28 @@ const Search = () => {
         }
     };
 
+    const clickSource = async(event) => {
+        event.preventDefault();
+
+        const currentItem = event.currentTarget.getAttribute('data-source');
+        const currentURL = event.currentTarget.getAttribute('href');
+        const currentiframe = document.getElementById('displayPopupSource');
+        const currentModal = document.getElementById('readMoreNews');
+        try {           
+            await axios.post('/source-click', {news_id: currentItem}, {headers: {
+                'Authorization': bearer_token
+            }})
+            .then(res => {
+                if( res.data.status == "Success" ) {
+                    currentModal.style.display = "block";
+                    currentiframe.src = currentURL;
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <div className='dark:bg-dark'>
             <Header />
@@ -110,8 +139,12 @@ const Search = () => {
                 </div>
 
                 <div className="news_wrapper w-full max-w-screen-lg mx-auto mt-20 dark:text-white">
-                    <hr/>
-                    <p className="mb-8 mt-16">{ langMode == 'BN' ? `${serachData}-এর জন্য ${count}-এর মধ্যে 1-${count} ফলাফল দেখানো হচ্ছে` : `Displaying  1-${count} results out of ${count} for "${serachData}"`}</p>
+                    { serachData && (
+                        <>                   
+                            <hr/>
+                            <p className="mb-8 mt-16">{ langMode == 'BN' ? `${serachData}-এর জন্য ${count}-এর মধ্যে 1-${count} ফলাফল দেখানো হচ্ছে` : `Displaying  1-${count} results out of ${count} for "${serachData}"`}</p>
+                        </>
+                    ) }
 
                     <div className="block_news space-y-12">
                         { loading && <Spinner /> }
@@ -142,11 +175,11 @@ const Search = () => {
                                 </div>
                                 <div className="news_content sm:col-span-7 md:col-span-8 flex flex-col shrink-0 py-6">
                                     { newsData.ads_image ? (
-                                    <h3 className="font-semibold leading-[1.7em] group-hover:text-theme">
+                                    <h3 className="font-semibold leading-[1.7em]">
                                         {newsData.title}
                                     </h3>
                                     ) : (
-                                    <h3 className="font-semibold leading-[1.7em] group-hover:text-theme">
+                                    <h3 className="font-semibold leading-[1.7em]">
                                         { langMode == 'BN' ? newsData.summary_bn : newsData.summary_en}
                                     </h3>         
                                     ) }    
@@ -162,11 +195,12 @@ const Search = () => {
                                             <li>
                                                 <ul className="flex gap-6">
                                                     <li>
-                                                        <i className="fal fa-clock"></i>
+                                                        <i className="fal fa-clock"></i>&nbsp;
                                                         { moment(new Date(newsData.publish_date)).startOf('seconds').fromNow() }
                                                     </li>
                                                     <li>
-                                                        <a href={newsData.source} className="transition-all hover:text-theme">
+                                                        <a href={newsData.source} className="transition-all hover:text-theme"
+                                                        data-source={newsData.id} onClick={clickSource}>
                                                             { langMode == 'BN' ? 'বিস্তারিত' : 'Read More'}
                                                             <i className="fal fa-arrow-up rotate-45"></i>
                                                         </a>
@@ -214,6 +248,7 @@ const Search = () => {
             </div>
             </div>
             <Footer />
+            <PopupNews />
         </div>
     )
 }

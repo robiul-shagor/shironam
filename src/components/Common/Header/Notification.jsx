@@ -114,8 +114,9 @@ const Notification = () => {
             await axios.post('/mark-all-read-notifications', {}, {headers: {
                 'Authorization': bearer_token
             }})
-            .then(res => {
-                console.log(res);
+            .then(async (res) => {
+                // After marking all as read, update the notification data
+                await updateState();
             });
         } catch (e) {
             console.log(e);

@@ -3,6 +3,7 @@ import axios from '../../api/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../../App';
 import LogoElement from '../Common/Header/LogoElement';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const AfterRegistrationInterests = () => {
   const [interestsData, setInterestsData] = useState([]);
@@ -115,11 +116,12 @@ const AfterRegistrationInterests = () => {
             <div className="items_wrapper grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-10">
               {interestsData.length > 0 && interestsData.map((item, index) => (
               <div className="item group relative z-[1] before:content-[''] before:inset-0 before:absolute before:bg-black before:opacity-25 before:z-[1] before:rounded-xl" key={index}>
-                  <img 
-                      src={item.image} 
-                      className="w-full h-[180px] sm:h-[220px] object-cover object-center rounded-xl" 
-                      alt="Interest Title" />
-
+                  <LazyLoadImage src={item.image}
+                      alt=''
+                      placeholderSrc='/assets/media/placeholder.webp'
+                      effect="blur"
+                      className='w-full h-[180px] sm:h-[220px] object-cover object-center rounded-xl'
+                  />
                   <p className="name absolute bottom-5 left-5 text-white font-medium text-3xl z-10">
                       #{ langMode == 'BN' ? item.name_bn : item.name_en }
                   </p>
